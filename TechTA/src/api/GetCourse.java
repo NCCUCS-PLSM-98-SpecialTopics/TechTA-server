@@ -30,7 +30,7 @@ public class GetCourse extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
-        out.println("{[\n {\n   \"cid\":\"000001\",\n   \"name\":\"­pºâ¾÷·§½×\",\n   \"class\":[\n	  {\n		   \"clid\":\"001\",\n		   \"title\":\"²Ä¤@°ó½Ò:Â²¤¶\",\n		   \"rid\":\"123456\"\n	  },\n	  {\n		   \"clid\":\"002\",\n		   \"title\":\"²Ä¤G°ó½Ò:¾ú¥v\",\n		   \"rid\":\"123456\"\n	  }\n   ]\n },\n {\n   \"cid\":\"000002\",\n   \"name\":\"­pºâ¾÷µ{¦¡³]­p\",\n   \"class\":[\n	  {\n		   \"clid\":\"001\",\n		   \"title\":\"²Ä¤@°ó½Ò:½Òºõ¤¶²Ğ\",\n		   \"rid\":\"123456\"\n	  },\n	  {\n		   \"clid\":\"002\",\n		   \"title\":\"²Ä¤G°ó½Ò:»y¨¥¾ú¥v\",\n		   \"rid\":\"123456\"\n	  }\n   ]\n }\n]}");
+        out.println("{[\n {\n   \"cid\":\"000001\",\n   \"name\":\"è¨ˆç®—æ©Ÿæ¦‚è«–\",\n   \"class\":[\n	  {\n		   \"clid\":\"001\",\n		   \"title\":\"ç¬¬ä¸€å ‚èª²:ç°¡ä»‹\",\n		   \"rid\":\"123456\"\n	  },\n	  {\n		   \"clid\":\"002\",\n		   \"title\":\"ç¬¬äºŒå ‚èª²:æ­·å²\",\n		   \"rid\":\"123456\"\n	  }\n   ]\n },\n {\n   \"cid\":\"000002\",\n   \"name\":\"è¨ˆç®—æ©Ÿç¨‹å¼è¨­è¨ˆ\",\n   \"class\":[\n	  {\n		   \"clid\":\"001\",\n		   \"title\":\"ç¬¬ä¸€å ‚èª²:èª²ç¶±ä»‹ç´¹\",\n		   \"rid\":\"123456\"\n	  },\n	  {\n		   \"clid\":\"002\",\n		   \"title\":\"ç¬¬äºŒå ‚èª²:èªè¨€æ­·å²\",\n		   \"rid\":\"123456\"\n	  }\n   ]\n }\n]}");
         out.close();
 	}
 

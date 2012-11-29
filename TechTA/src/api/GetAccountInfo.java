@@ -30,7 +30,7 @@ public class GetAccountInfo extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
-        out.println("{\n     \"account\":\"98703005\",\n     \"name\":\"ßıæ«•“\",\n     \"email\":\"98703005@nccu.edu.tw\",\n     \"chatid\":\"123456\"\n }");
+        out.println("{\n     \"account\":\"98703005\",\n     \"name\":\"ÊùéÂ≠∏Áî≤\",\n     \"email\":\"98703005@nccu.edu.tw\",\n     \"chatid\":\"123456\"\n }");
         out.close();  
 		
 	}
