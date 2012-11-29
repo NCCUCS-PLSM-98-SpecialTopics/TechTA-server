@@ -28,6 +28,7 @@ public class GetAccountInfo extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
         out.println("{\n     \"account\":\"98703005\",\n     \"name\":\"§õ¾Ç¥Ò\",\n     \"email\":\"98703005@nccu.edu.tw\",\n     \"chatid\":\"123456\"\n }");
         out.close();  
