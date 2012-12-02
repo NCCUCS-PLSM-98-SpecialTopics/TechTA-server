@@ -29,8 +29,11 @@ public class hello extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		 PrintWriter out = response.getWriter();
-         out.println("{\"Account\":\"98703005\", \"Name\":\"ßıæ«•“\"}");
+         out.println("{\"Account\":\"98703005\", \"Name\":\"Êç∑ÂÖãË£°\"}");
          out.close();
+         
+         //jdbcmysql.execute();
+         jdbc2.execute();
 	}
 
 	/**
