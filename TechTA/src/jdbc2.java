@@ -7,7 +7,7 @@ public class jdbc2 {
 	try{
 	Class.forName("com.mysql.jdbc.Driver");
 
-	Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/資料庫名稱","帳號","密碼");
+	Connection con = DriverManager.getConnection("jdbc:mysql://140.119.164.163:3306/test","techta","DXGwxYjGuD6VuJz8");
 
 
 	System.out.println("資料庫連線成功");

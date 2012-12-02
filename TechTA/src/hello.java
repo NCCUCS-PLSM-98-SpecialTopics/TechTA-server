@@ -1,7 +1,10 @@
 
-
+import java.sql.*;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -30,10 +33,19 @@ public class hello extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		 PrintWriter out = response.getWriter();
          out.println("{\"Account\":\"98703005\", \"Name\":\"捷克裡\"}");
-         out.close();
          
+         jdbcmysql sql = new jdbcmysql();
+         sql.execute(out);
+         
+         //test.dropTable(); 
+         sql.createTable(); 
+         sql.insertTable("yku", "12356"); 
+         sql.insertTable("yku2", "7890"); 
+         sql.SelectTable(); 
+         
+         out.close();
          //jdbcmysql.execute();
-         jdbc2.execute();
+         //jdbc2.execute();
 	}
 
 	/**

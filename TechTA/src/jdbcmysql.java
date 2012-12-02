@@ -1,5 +1,6 @@
 //package db; 
 
+import java.io.PrintWriter;
 import java.sql.Connection; 
 import java.sql.DriverManager; 
 import java.sql.PreparedStatement; 
@@ -8,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement; 
 
 public class jdbcmysql { 
+  private PrintWriter out =null;
   private Connection con = null; //Database objects 
   //連接object 
   private Statement stat = null; 
@@ -36,8 +38,8 @@ public class jdbcmysql {
       Class.forName("com.mysql.jdbc.Driver"); 
       //註冊driver 
       con = DriverManager.getConnection( 
-      "jdbc:mysql://http://140.119.164.163/test?useUnicode=true&characterEncoding=utf-8", 
-      "techta","DXGwxYjGuD6VuJz8"); 
+	  "jdbc:mysql://localhost/test?useUnicode=true&characterEncoding=Big5", 
+      "root","0000"); 
       //取得connection
 
 //jdbc:mysql://localhost/test?useUnicode=true&characterEncoding=Big5
@@ -47,10 +49,10 @@ public class jdbcmysql {
     } 
     catch(ClassNotFoundException e) 
     { 
-      System.out.println("DriverClassNotFound :"+e.toString()); 
+      out.println("DriverClassNotFound :"+e.toString()); 
     }//有可能會產生sqlexception 
     catch(SQLException x) { 
-      System.out.println("Exception :"+x.toString()); 
+      out.println("Exception :"+x.toString()); 
     } 
     
   } 
@@ -65,7 +67,7 @@ public class jdbcmysql {
     } 
     catch(SQLException e) 
     { 
-      System.out.println("CreateDB Exception :" + e.toString()); 
+      out.println("CreateDB Exception :" + e.toString()); 
     } 
     finally 
     { 
@@ -86,7 +88,7 @@ public class jdbcmysql {
     } 
     catch(SQLException e) 
     { 
-      System.out.println("InsertDB Exception :" + e.toString()); 
+      out.println("InsertDB Exception :" + e.toString()); 
     } 
     finally 
     { 
@@ -104,7 +106,7 @@ public class jdbcmysql {
     } 
     catch(SQLException e) 
     { 
-      System.out.println("DropDB Exception :" + e.toString()); 
+      out.println("DropDB Exception :" + e.toString()); 
     } 
     finally 
     { 
@@ -122,13 +124,13 @@ public class jdbcmysql {
       System.out.println("ID\t\tName\t\tPASSWORD"); 
       while(rs.next()) 
       { 
-        System.out.println(rs.getInt("id")+"\t\t"+ 
+        out.println(rs.getInt("id")+"\t\t"+ 
             rs.getString("name")+"\t\t"+rs.getString("passwd")); 
       } 
     } 
     catch(SQLException e) 
     { 
-      System.out.println("DropDB Exception :" + e.toString()); 
+      out.println("DropDB Exception :" + e.toString()); 
     } 
     finally 
     { 
@@ -159,20 +161,21 @@ public class jdbcmysql {
     } 
     catch(SQLException e) 
     { 
-      System.out.println("Close Exception :" + e.toString()); 
+      out.println("Close Exception :" + e.toString()); 
     } 
   } 
   
 
-  public static void execute() 
+  public void execute(PrintWriter out) 
   { 
+	this.out = out;
     //測看看是否正常 
-    jdbcmysql test = new jdbcmysql(); 
+   // jdbcmysql test = new jdbcmysql(); 
     //test.dropTable(); 
-    test.createTable(); 
-    test.insertTable("yku", "12356"); 
-    test.insertTable("yku2", "7890"); 
-    test.SelectTable(); 
+    //test.createTable(); 
+    //test.insertTable("yku", "12356"); 
+   // test.insertTable("yku2", "7890"); 
+   // test.SelectTable(); 
   
   } 
 }
