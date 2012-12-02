@@ -10,19 +10,14 @@ import java.sql.Statement;
 
 public class jdbcmysql { 
   private PrintWriter out =null;
-  private Connection con = null; //Database objects 
-  //連接object 
-  private Statement stat = null; 
-  //執行,傳入之sql為完整字串 
-  private ResultSet rs = null; 
-  //結果集 
+  private Connection con = null; //Database objects //連接object 
+  private Statement stat = null; //執行,傳入之sql為完整字串 
+  private ResultSet rs = null; //結果集 
   private PreparedStatement pst = null; 
   //執行,傳入之sql為預儲之字申,需要傳入變數之位置 
-  //先利用?來做標示 
   
   private String dropdbSQL = "DROP TABLE User "; 
-  
-  private String createdbSQL = "CREATE TABLE User (" + 
+    private String createdbSQL = "CREATE TABLE User (" + 
     "    id     INTEGER " + 
     "  , name    VARCHAR(20) " + 
     "  , passwd  VARCHAR(20))"; 
@@ -32,14 +27,16 @@ public class jdbcmysql {
   
   private String selectSQL = "select * from User "; 
   
-  public jdbcmysql() 
+  public jdbcmysql(PrintWriter out2) 
   { 
+	this.out = out2;
     try { 
       Class.forName("com.mysql.jdbc.Driver"); 
       //註冊driver 
-      con = DriverManager.getConnection( 
-	  "jdbc:mysql://localhost/test?useUnicode=true&characterEncoding=Big5", 
-      "root","0000"); 
+      //con = DriverManager.getConnection("jdbc:mysql://localhost/test?useUnicode=true&characterEncoding=Big5", "root","0000"); 
+      con = DriverManager.getConnection("jdbc:mysql://140.119.164.163/test?useUnicode=true&characterEncoding=Big5", "techta","0000"); 
+      
+      
       //取得connection
 
 //jdbc:mysql://localhost/test?useUnicode=true&characterEncoding=Big5
@@ -49,10 +46,10 @@ public class jdbcmysql {
     } 
     catch(ClassNotFoundException e) 
     { 
-      out.println("DriverClassNotFound :"+e.toString()); 
+    	this.out.println("DriverClassNotFound :"+e.toString()); 
     }//有可能會產生sqlexception 
     catch(SQLException x) { 
-      out.println("Exception :"+x.toString()); 
+    	this.out.println("Exception :"+x.toString()); 
     } 
     
   } 
@@ -67,7 +64,7 @@ public class jdbcmysql {
     } 
     catch(SQLException e) 
     { 
-      out.println("CreateDB Exception :" + e.toString()); 
+    	this.out.println("CreateDB Exception :" + e.toString()); 
     } 
     finally 
     { 
@@ -88,7 +85,42 @@ public class jdbcmysql {
     } 
     catch(SQLException e) 
     { 
-      out.println("InsertDB Exception :" + e.toString()); 
+    	this.out.println("InsertDB Exception :" + e.toString()); 
+    } 
+    finally 
+    { 
+      Close(); 
+    } 
+  } 
+  
+  //新增資料 
+  //可以看看PrepareStatement的使用方式 
+  public void insertTable( String table ,String [] data ) 
+  { 
+    try 
+    { 
+    	
+    	String sql = "";
+       	String chatSql ="INSERT INTO 'chat'('ch_id', 'content', 'cl_id', 'account') VALUES (?,?,?,?)";
+		String classSql ="INSERT INTO 'class'('cl_id', 'cl_name', 'number', 'co_id') VALUES (?,?,?,?)";
+		String courseSql ="INSERT INTO 'course'('co_id', 'c_name') VALUES (?,?)";
+		String enrollSql ="INSERT INTO 'enroll'('account', 'co_id') VALUES (?,?)";
+		String quizSql = "INSERT INTO 'quiz'('question', 'answer', 'correct_answer', 'q_id') VALUES (?,?,?,?)";
+		String takequizSql ="INSERT INTO 'takequiz'('account', 'q_id', 'answer') VALUES (?,?,?)";
+		String userSql ="INSERT INTO 'user'('account', 'password', 'name', 'email', 'department') VALUES (?,?,?,?,?)";
+		
+      pst = con.prepareStatement(insertdbSQL); 
+      
+      int count = 1;
+      for(String adata : data){
+    	  pst.setString(count, adata); 
+    	  count++;
+      }
+      pst.executeUpdate(); 
+    } 
+    catch(SQLException e) 
+    { 
+    	this.out.println("InsertDB Exception :" + e.toString()); 
     } 
     finally 
     { 
@@ -106,7 +138,7 @@ public class jdbcmysql {
     } 
     catch(SQLException e) 
     { 
-      out.println("DropDB Exception :" + e.toString()); 
+    	this.out.println("DropDB Exception :" + e.toString()); 
     } 
     finally 
     { 
@@ -124,13 +156,13 @@ public class jdbcmysql {
       System.out.println("ID\t\tName\t\tPASSWORD"); 
       while(rs.next()) 
       { 
-        out.println(rs.getInt("id")+"\t\t"+ 
+    	  this.out.println(rs.getInt("id")+"\t\t"+ 
             rs.getString("name")+"\t\t"+rs.getString("passwd")); 
       } 
     } 
     catch(SQLException e) 
     { 
-      out.println("DropDB Exception :" + e.toString()); 
+    	this.out.println("DropDB Exception :" + e.toString()); 
     } 
     finally 
     { 
@@ -161,7 +193,7 @@ public class jdbcmysql {
     } 
     catch(SQLException e) 
     { 
-      out.println("Close Exception :" + e.toString()); 
+    	this.out.println("Close Exception :" + e.toString()); 
     } 
   } 
   
