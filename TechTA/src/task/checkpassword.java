@@ -1,4 +1,4 @@
-
+package task;
 import java.util.Properties;
 
 import javax.mail.Folder;

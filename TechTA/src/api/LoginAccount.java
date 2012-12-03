@@ -1,5 +1,5 @@
 package api;
-
+import task.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -37,7 +37,21 @@ public class LoginAccount extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
-        out.println("{ \"result\":0 }");
+		String username = "";
+		String password = "";
+		
+		if(request.getParameter("account")!=null)
+		 username = request.getParameter("account").toString();
+		if(request.getParameter("password")!=null)
+		 password = request.getParameter("password").toString();
+		
+		if(/*checkpassword.execute(username, password)*/true){
+			out.println("{ \"result\":\"0\" }");
+		}else{
+			out.println("{ \"result\":\"2\" }");
+		}
+      //out.println("{ \"result\":1 }");
+        
         out.close();
 	}
 
