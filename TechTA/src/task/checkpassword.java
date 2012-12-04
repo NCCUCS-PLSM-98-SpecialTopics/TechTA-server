@@ -14,16 +14,16 @@ public class checkpassword {
 
   public static Boolean  execute(String username,String password) /*throws Exception */{
 
-    Properties props = new Properties();
 
-    String host = "nccu.edu.tw";
-   // String username = "98703005";
-   // String password = "123456";
-    String provider = "pop3";
-
-    Session session = Session.getDefaultInstance(props, null);
     
     try{
+        Properties props = new Properties();
+
+        String host = "nccu.edu.tw";
+       // String username = "98703005";
+       // String password = "123456";
+        String provider = "pop3";
+    	Session session = Session.getDefaultInstance(props, null);
         Store store = session.getStore(provider);
         store.connect(host, username, password);
         store.close();

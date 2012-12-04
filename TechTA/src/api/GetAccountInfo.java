@@ -3,6 +3,15 @@ package api;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import model.UserModel;
+import model.UserModel;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import task.dbTask;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,7 +39,17 @@ public class GetAccountInfo extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
-        out.println("{\n     \"account\":\"98703005\",\n     \"name\":\"李學甲\",\n     \"email\":\"98703005@nccu.edu.tw\",\n     \"chatid\":\"123456\"\n }");
+		String account = "";
+		
+		if(request.getParameter("account")!=null){
+			account = request.getParameter("account");
+		}
+				
+		UserModel user = dbTask.getInstance().GetUser(account);
+		
+		JSONObject jsonUser = new JSONObject(user);
+		jsonUser.remove("password");
+        out.println(jsonUser.toString());
         out.close();  
 		
 	}

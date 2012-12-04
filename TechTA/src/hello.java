@@ -33,7 +33,7 @@ public class hello extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		 PrintWriter out = response.getWriter();
          //out.println("{\"Account\":\"98703005\", \"Name\":\"捷克裡\"}");
-         
+          /*
          jdbcmysql sql = new jdbcmysql(out);
         // sql.execute();
          
@@ -43,7 +43,7 @@ public class hello extends HttpServlet {
          sql.insertTable("yku2", "7890"); 
          sql.SelectTable(); 
          
-         
+        
  
 		if(checkpassword.execute("98703005","123456")){
 			out.println("The password is correct!");
@@ -51,7 +51,7 @@ public class hello extends HttpServlet {
 			out.println("The password is Worng!");
 		}
 			
-
+          	*/
          //jdbcmysql.execute();
          //jdbc2.execute();
          out.close();

@@ -1,6 +1,9 @@
 package task; 
 
+import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.sql.Connection; 
 import java.sql.DriverManager; 
 import java.sql.PreparedStatement; 
@@ -53,6 +56,31 @@ public class jdbcmysql {
     } 
     
   } 
+  
+  
+  public jdbcmysql() 
+  { 
+	  try {
+		this.out =   new PrintWriter(new OutputStreamWriter(System.out, "UTF-8"));
+	} catch (UnsupportedEncodingException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
+    try { 
+      Class.forName("com.mysql.jdbc.Driver"); 
+      //註冊driver 
+      con = DriverManager.getConnection("jdbc:mysql://140.119.164.163/test?useUnicode=true&characterEncoding=Big5", "techta","0000"); 
+    } 
+    catch(ClassNotFoundException e) 
+    { 
+    	this.out.println("DriverClassNotFound :"+e.toString()); 
+    }//有可能會產生sqlexception 
+    catch(SQLException x) { 
+    	this.out.println("Exception :"+x.toString()); 
+    } 
+    
+  } 
+  
   //建立table的方式 
   //可以看看Statement的使用方式 
   public void createTable() 
@@ -95,28 +123,31 @@ public class jdbcmysql {
   
   //新增資料 
   //可以看看PrepareStatement的使用方式 
-  public void insertTable( String table ,String [] data ) 
+  public int ChangeData( String sql ,String [] data ) 
   { 
     try 
     { 
     	
-    	String sql = "";
-       	String chatSql ="INSERT INTO 'chat'('ch_id', 'content', 'cl_id', 'account') VALUES (?,?,?,?)";
-		String classSql ="INSERT INTO 'class'('cl_id', 'cl_name', 'number', 'co_id') VALUES (?,?,?,?)";
-		String courseSql ="INSERT INTO 'course'('co_id', 'c_name') VALUES (?,?)";
-		String enrollSql ="INSERT INTO 'enroll'('account', 'co_id') VALUES (?,?)";
-		String quizSql = "INSERT INTO 'quiz'('question', 'answer', 'correct_answer', 'q_id') VALUES (?,?,?,?)";
-		String takequizSql ="INSERT INTO 'takequiz'('account', 'q_id', 'answer') VALUES (?,?,?)";
-		String userSql ="INSERT INTO 'user'('account', 'password', 'name', 'email', 'department') VALUES (?,?,?,?,?)";
+		/*
+		String userSql = "INSERT INTO `user`(`account`, `password`, `name`, `email`, `department`, `role`, `chatid`) VALUES (?,?,?,?,?,?,?)";
+		String classSql = "INSERT INTO `class`(`cl_id`, `cl_name`, `week`, `active`, `co_id`) VALUES (?,?,?,?,?)";
+		String courseSql = "INSERT INTO `course`(`co_id`, `c_name`, `year`, `semester`) VALUES (?,?,?,?)";
+		String enrollSql = "INSERT INTO `enroll`(`account`, `co_id`) VALUES (?,?)";
+		String messageSql = "INSERT INTO `message`(`m_id`, `content`, `cl_id`, `account`) VALUES (?,?,?,?)";
+		String quizSql = "INSERT INTO `quiz`(`q_id`, `question`, `correct_answer`, `answer`, `active`) VALUES (?,?,?,?,?)";
+		String takequizSql = "INSERT INTO `takequiz`(`account`, `q_id`, `answer`) VALUES (?,?,?)";
+		 
+		*/
 		
-      pst = con.prepareStatement(insertdbSQL); 
+      pst = con.prepareStatement(sql); 
       
       int count = 1;
       for(String adata : data){
     	  pst.setString(count, adata); 
     	  count++;
       }
-      pst.executeUpdate(); 
+      int result = pst.executeUpdate(); 
+      return result;  //return 1  success!
     } 
     catch(SQLException e) 
     { 
@@ -125,6 +156,7 @@ public class jdbcmysql {
     finally 
     { 
       Close(); 
+      return -1;
     } 
   } 
   //刪除Table, 
@@ -147,8 +179,37 @@ public class jdbcmysql {
   } 
   //查詢資料 
   //可以看看回傳結果集及取得資料方式 
-  public void SelectTable() 
+  public ResultSet SelectTable(String queryStr, String [] data) 
   { 
+    try 
+    { 
+      pst = con.prepareStatement(queryStr); 
+      int count = 1;
+      for(String adata : data){
+    	  pst.setString(count, adata); 
+    	  count++;
+      }
+      rs = pst.executeQuery(); 
+      
+      return rs;
+   
+    } 
+    catch(SQLException e) 
+    { 
+    	this.out.println("DropDB Exception :" + e.toString()); 
+    } 
+    finally 
+    { 
+      Close(); 
+      return null;
+    } 
+  } 
+  
+
+  public void query(String queryStr, String [] data) 
+  { 
+	  
+	  //SELECT `account` FROM `user` WHERE account = '98703005'
     try 
     { 
       stat = con.createStatement(); 

@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class LoginAccount
@@ -40,15 +41,30 @@ public class LoginAccount extends HttpServlet {
 		String username = "";
 		String password = "";
 		
+		HttpSession session = request.getSession();
+		/*
+		if(session.getAttribute("account") == null){
+			out.println("{ \"error\":\"you should login\" }");
+			out.close();
+			return;
+		}*/
+		
+		
 		if(request.getParameter("account")!=null)
 		 username = request.getParameter("account").toString();
 		if(request.getParameter("password")!=null)
 		 password = request.getParameter("password").toString();
 		
-		if(/*checkpassword.execute(username, password)*/true){
-			out.println("{ \"result\":\"0\" }");
+		if(checkpassword.execute(username, password)){
+			
+			if(dbTask.getInstance().GetUser(username) != null){
+				out.println("{ \"result\":\"0\" }");
+			}else{
+				out.println("{ \"result\":\"2\" }");
+			}
+			session.setAttribute("account", username);
 		}else{
-			out.println("{ \"result\":\"2\" }");
+			out.println("{ \"result\":\"1\" }");
 		}
       //out.println("{ \"result\":1 }");
         
