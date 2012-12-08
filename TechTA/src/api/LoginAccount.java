@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.UserModel;
+
 /**
  * Servlet implementation class LoginAccount
  */
@@ -55,9 +57,10 @@ public class LoginAccount extends HttpServlet {
 		if(request.getParameter("password")!=null)
 		 password = request.getParameter("password").toString();
 		
-		if(checkpassword.execute(username, password)){
+		if(true || checkpassword.execute(username, password)){
+			UserModel user = dbTask.getInstance().GetUser(username);
 			
-			if(dbTask.getInstance().GetUser(username) != null){
+			if(user != null && user.getPassword().equals(password)){
 				out.println("{ \"result\":\"0\" }");
 			}else{
 				out.println("{ \"result\":\"2\" }");

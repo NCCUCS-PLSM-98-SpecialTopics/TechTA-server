@@ -10,6 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.gson.Gson;
+
 import task.dbTask;
 
 import javax.servlet.ServletException;
@@ -17,6 +19,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class LoginAccount
@@ -41,15 +44,26 @@ public class GetAccountInfo extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		String account = "";
 		
-		if(request.getParameter("account")!=null){
-			account = request.getParameter("account");
+
+		HttpSession session = request.getSession();
+		
+		if(session.getAttribute("account") == null){
+			out.println("{ \"error\":\"you should login\" }");
+			out.close();
+			return;
 		}
+		
+		account = (String) session.getAttribute("account");
+		
 				
 		UserModel user = dbTask.getInstance().GetUser(account);
+		user.setPassword(null);
+		JSONObject jsonUser = new JSONObject(user);//user.getJsonObj();
+		Gson gson = new Gson();
+		String jsonString = gson.toJson(user);
 		
-		JSONObject jsonUser = new JSONObject(user);
-		jsonUser.remove("password");
-        out.println(jsonUser.toString());
+		
+        out.println(jsonString);
         out.close();  
 		
 	}

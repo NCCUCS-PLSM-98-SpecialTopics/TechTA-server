@@ -15,5 +15,7 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="WebContent/lib/mysql-connector-java-5.1.22-bin.jar"/>
 	<classpathentry kind="lib" path="WebContent/lib/mail.jar"/>
+	<classpathentry kind="lib" path="WebContent/lib/gson-2.2.2.jar"/>
+	<classpathentry kind="lib" path="WebContent/lib/JcManager.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

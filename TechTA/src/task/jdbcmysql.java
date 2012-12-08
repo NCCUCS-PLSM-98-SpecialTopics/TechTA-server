@@ -32,7 +32,7 @@ public class jdbcmysql {
   
   public jdbcmysql(PrintWriter out2) 
   { 
-	this.out = out2;
+	
     try { 
       Class.forName("com.mysql.jdbc.Driver"); 
       //註冊driver 
@@ -49,10 +49,10 @@ public class jdbcmysql {
     } 
     catch(ClassNotFoundException e) 
     { 
-    	this.out.println("DriverClassNotFound :"+e.toString()); 
+    	System.out.println("DriverClassNotFound :"+e.toString()); 
     }//有可能會產生sqlexception 
     catch(SQLException x) { 
-    	this.out.println("Exception :"+x.toString()); 
+    	System.out.println("Exception :"+x.toString()); 
     } 
     
   } 
@@ -60,23 +60,18 @@ public class jdbcmysql {
   
   public jdbcmysql() 
   { 
-	  try {
-		this.out =   new PrintWriter(new OutputStreamWriter(System.out, "UTF-8"));
-	} catch (UnsupportedEncodingException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	}
+	 
     try { 
       Class.forName("com.mysql.jdbc.Driver"); 
       //註冊driver 
-      con = DriverManager.getConnection("jdbc:mysql://140.119.164.163/test?useUnicode=true&characterEncoding=Big5", "techta","0000"); 
+      con = DriverManager.getConnection("jdbc:mysql://140.119.164.163/tech_ta?useUnicode=true&characterEncoding=Big5", "techta","0000"); 
     } 
     catch(ClassNotFoundException e) 
     { 
-    	this.out.println("DriverClassNotFound :"+e.toString()); 
+    	System.out.println("DriverClassNotFound :"+e.toString()); 
     }//有可能會產生sqlexception 
     catch(SQLException x) { 
-    	this.out.println("Exception :"+x.toString()); 
+    	System.out.println("Exception :"+x.toString()); 
     } 
     
   } 
@@ -85,6 +80,7 @@ public class jdbcmysql {
   //可以看看Statement的使用方式 
   public void createTable() 
   { 
+	Close();
     try 
     { 
       stat = con.createStatement(); 
@@ -92,17 +88,15 @@ public class jdbcmysql {
     } 
     catch(SQLException e) 
     { 
-    	this.out.println("CreateDB Exception :" + e.toString()); 
+    	System.out.println("CreateDB Exception :" + e.toString()); 
     } 
-    finally 
-    { 
-      Close(); 
-    } 
+
   } 
   //新增資料 
   //可以看看PrepareStatement的使用方式 
   public void insertTable( String name,String passwd) 
   { 
+	Close();  
     try 
     { 
       pst = con.prepareStatement(insertdbSQL); 
@@ -113,18 +107,16 @@ public class jdbcmysql {
     } 
     catch(SQLException e) 
     { 
-    	this.out.println("InsertDB Exception :" + e.toString()); 
+    	System.out.println("InsertDB Exception :" + e.toString()); 
     } 
-    finally 
-    { 
-      Close(); 
-    } 
+
   } 
   
   //新增資料 
   //可以看看PrepareStatement的使用方式 
   public int ChangeData( String sql ,String [] data ) 
   { 
+	Close();
     try 
     { 
     	
@@ -151,11 +143,11 @@ public class jdbcmysql {
     } 
     catch(SQLException e) 
     { 
-    	this.out.println("InsertDB Exception :" + e.toString()); 
+    	System.out.println("InsertDB Exception :" + e.toString()); 
     } 
     finally 
     { 
-      Close(); 
+
       return -1;
     } 
   } 
@@ -163,6 +155,7 @@ public class jdbcmysql {
   //跟建立table很像 
   public void dropTable() 
   { 
+	  Close();
     try 
     { 
       stat = con.createStatement(); 
@@ -170,17 +163,15 @@ public class jdbcmysql {
     } 
     catch(SQLException e) 
     { 
-    	this.out.println("DropDB Exception :" + e.toString()); 
+    	System.out.println("DropDB Exception :" + e.toString()); 
     } 
-    finally 
-    { 
-      Close(); 
-    } 
+
   } 
   //查詢資料 
   //可以看看回傳結果集及取得資料方式 
   public ResultSet SelectTable(String queryStr, String [] data) 
   { 
+	Close();
     try 
     { 
       pst = con.prepareStatement(queryStr); 
@@ -191,24 +182,24 @@ public class jdbcmysql {
       }
       rs = pst.executeQuery(); 
       
-      return rs;
+      
    
     } 
     catch(SQLException e) 
     { 
-    	this.out.println("DropDB Exception :" + e.toString()); 
+    	System.out.println("DropDB Exception :" + e.toString()); 
     } 
-    finally 
-    { 
-      Close(); 
-      return null;
-    } 
+    
+    
+    return rs;
+    
   } 
   
 
   public void query(String queryStr, String [] data) 
   { 
 	  
+	Close();
 	  //SELECT `account` FROM `user` WHERE account = '98703005'
     try 
     { 
@@ -217,22 +208,19 @@ public class jdbcmysql {
       System.out.println("ID\t\tName\t\tPASSWORD"); 
       while(rs.next()) 
       { 
-    	  this.out.println(rs.getInt("id")+"\t\t"+ 
+    	  System.out.println(rs.getInt("id")+"\t\t"+ 
             rs.getString("name")+"\t\t"+rs.getString("passwd")); 
       } 
     } 
     catch(SQLException e) 
     { 
-    	this.out.println("DropDB Exception :" + e.toString()); 
+    	System.out.println("DropDB Exception :" + e.toString()); 
     } 
-    finally 
-    { 
-      Close(); 
-    } 
+
   } 
   //完整使用完資料庫後,記得要關閉所有Object 
   //否則在等待Timeout時,可能會有Connection poor的狀況 
-  private void Close() 
+  public void Close() 
   { 
     try 
     { 
@@ -254,14 +242,14 @@ public class jdbcmysql {
     } 
     catch(SQLException e) 
     { 
-    	this.out.println("Close Exception :" + e.toString()); 
+    	System.out.println("Close Exception :" + e.toString()); 
     } 
   } 
   
 
   public void execute(PrintWriter out) 
   { 
-	this.out = out;
+	//System.out = out;
     //測看看是否正常 
    // jdbcmysql test = new jdbcmysql(); 
     //test.dropTable(); 

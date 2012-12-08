@@ -1,5 +1,8 @@
 package model;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public  class   UserModel {
 	private String account ="";
 	private String password ="";
@@ -64,7 +67,6 @@ public  class   UserModel {
 	public void setChatid(String chatid) {
 		this.chatid = chatid;
 	}
-	
 	
 	
 	
