@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import model.UserModel;
 
+import task.MD5;
 import task.dbTask;
 
 /**
@@ -58,7 +59,7 @@ public class UpdateAccount extends HttpServlet {
 		if(request.getParameter("account")!=null)
 			account = request.getParameter("account").toString();
 		if(request.getParameter("password")!=null)
-			password = request.getParameter("password").toString();
+			password = MD5.encode(request.getParameter("password").toString());
 		if(request.getParameter("name")!=null)
 			name = request.getParameter("name").toString();
 		if(request.getParameter("email")!=null)
@@ -80,6 +81,14 @@ public class UpdateAccount extends HttpServlet {
 			}
 			
 		}else{                                                //create account
+			
+			//-----驗證密碼?
+						
+			
+			
+			//-------		
+			
+			
 			//註冊chatID----------
 			//model.setChatid(chatid);
 			

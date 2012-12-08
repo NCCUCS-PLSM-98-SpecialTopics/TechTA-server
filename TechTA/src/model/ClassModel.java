@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -8,23 +10,29 @@ public class ClassModel {
 	private String name ="";
 	private String week ="";
 	private String active ="";
-	private CourseModel courseModel = null;
-	
+	private String parentCourseId = null;
+	private List<QuizModel> quizzes = null;
+	private List<MessageModel> messages = null;
 	/**
 	 * @param clid
 	 * @param name
 	 * @param week
 	 * @param active
-	 * @param courseModel
+	 * @param parentCourseId
+	 * @param quizzes
+	 * @param messages
 	 */
 	public ClassModel(String clid, String name, String week, String active,
-			CourseModel courseModel) {
+			String parentCourseId, List<QuizModel> quizzes,
+			List<MessageModel> messages) {
 		super();
 		this.clid = clid;
 		this.name = name;
 		this.week = week;
 		this.active = active;
-		this.courseModel = courseModel;
+		this.parentCourseId = parentCourseId;
+		this.quizzes = quizzes;
+		this.messages = messages;
 	}
 	public String getClid() {
 		return clid;
@@ -50,12 +58,25 @@ public class ClassModel {
 	public void setActive(String active) {
 		this.active = active;
 	}
-	public CourseModel getCourseModel() {
-		return courseModel;
+	public String getParentCourseId() {
+		return parentCourseId;
 	}
-	public void setCourseModel(CourseModel courseModel) {
-		this.courseModel = courseModel;
+	public void setParentCourseId(String parentCourseId) {
+		this.parentCourseId = parentCourseId;
 	}
+	public List<QuizModel> getQuizzes() {
+		return quizzes;
+	}
+	public void setQuizzes(List<QuizModel> quizzes) {
+		this.quizzes = quizzes;
+	}
+	public List<MessageModel> getMessages() {
+		return messages;
+	}
+	public void setMessages(List<MessageModel> messages) {
+		this.messages = messages;
+	}
+	
 	
 	
 	
