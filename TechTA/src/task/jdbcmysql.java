@@ -117,6 +117,7 @@ public class jdbcmysql {
   public int ChangeData( String sql ,String [] data ) 
   { 
 	Close();
+	int result = -1;
     try 
     { 
     	
@@ -138,18 +139,14 @@ public class jdbcmysql {
     	  pst.setString(count, adata); 
     	  count++;
       }
-      int result = pst.executeUpdate(); 
-      return result;  //return 1  success!
+      result = pst.executeUpdate(); 
+      
     } 
     catch(SQLException e) 
     { 
     	System.out.println("InsertDB Exception :" + e.toString()); 
     } 
-    finally 
-    { 
-
-      return -1;
-    } 
+    return result;  //return 1  success!
   } 
   //刪除Table, 
   //跟建立table很像 

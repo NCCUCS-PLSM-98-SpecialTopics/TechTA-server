@@ -71,10 +71,9 @@ public class UpdateAccount extends HttpServlet {
 		UserModel model = new UserModel(account, password, name, email, department, role, chatid);
 		if(dbTask.getInstance().GetUser(account) != null){ //update account
 			
-			
 			int resultUpdate  = dbTask.getInstance().UpdateAccount(model);
 			 
-			if(resultUpdate == 1){
+			if(resultUpdate == 0){
 				returnResult = 0;
 			}else{
 				returnResult = 1;
