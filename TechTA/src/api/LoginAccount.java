@@ -58,7 +58,7 @@ public class LoginAccount extends HttpServlet {
 		if(request.getParameter("password")!=null)
 		 password = request.getParameter("password").toString();
 		
-		if(true || checkpassword.execute(username, MD5.encode(password))){
+		if(true || checkpassword.execute(username,password)){
 			UserModel user = dbTask.getInstance().GetUser(username);
 			
 			if(user != null && user.getPassword().equals(MD5.encode(password))){

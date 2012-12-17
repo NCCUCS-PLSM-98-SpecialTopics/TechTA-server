@@ -34,7 +34,8 @@ function login(){
 	    		//var jdata = JSON.parse(data);
 	    		//if(jdata.result == "2")alert("您的帳號密碼錯誤");
 	    		//if(jdata.result == "0")alert("恭喜您登入!");
-	    		if(data.result == "2")$("#LoginAccount").html("您的帳號密碼錯誤");
+	    		if(data.result == "1")$("#LoginAccount").html("您的帳號密碼錯誤");
+	    		if(data.result == "2")$("#LoginAccount").html("請申請帳號");
 	    	    if(data.result == "0")$("#LoginAccount").html("恭喜您登入!");
 	    	},
 	        error:function(thrownError){

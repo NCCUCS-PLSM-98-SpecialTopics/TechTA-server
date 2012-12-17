@@ -1,0 +1,438 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>無標題文件</title>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.min.js" ></script>
+<!--<link rel="stylesheet" type="text/css" href="hex.css" />-->
+<link rel="stylesheet" type="text/css" href="animate.css" />
+<link rel="stylesheet" type="text/css" href="main.css" />
+<style>
+
+</style>
+
+</head>
+<body>
+
+<div class="header">
+	<div class="middleArea">
+        <div class="topic">
+            <h1>TechTA</h1>
+        </div>
+        <div class="menu">
+            <a id="homepageBtn">HOME</a>
+            <a id="courseBtn">MY Course</a>
+            <a>MY Profile</a>
+            <a><span id="UserNameSpan">JACK</span> 您好, 登出</a>
+        </div>
+    </div>
+</div>
+
+<div id="workshop">
+
+    <div id="banner" class="banner" >
+      <div class="photo">
+          <div class="topic">
+            <h1>TECHNOLOGY TEACHING ASSISTANT</h1>
+            <h2>The Most Immediate Method To Learn </h2>
+              <br/>
+              <br/>
+            
+              <a class="get-started" href="/templates/">Get Started</a>
+              <a href=".watch-video" class="watch-demo">Watch Demo</a>
+            
+          
+          </div>
+      </div>
+    </div>
+    <div id="course">
+        <div id="courseContainer" class="middleArea clearfix" style="display:none;"  >
+        
+        
+            
+               <div class="box"><h2>計算機概論</h2></div>
+               <div class="box"><h2>計算機程式設計</h2></div>
+               <div class="box"><h2>程式語言</h2></div>
+               <div class="box"><h2>系統程式</h2></div>
+               <div class="box"><h2>人工智慧</h2></div>
+               <div class="box"><h2>計算機組織與結構</h2></div>
+                <!--<div class="hex-row">
+                    <div class="hex"><div class="top"></div><div class="middle"><div class="text">計算機概論</div></div><div class="bottom"></div></div>
+                    <div class="hex"><div class="top"></div><div class="middle"></div><div class="bottom"></div></div>
+                    <div class="hex"><div class="top"></div><div class="middle"></div><div class="bottom"></div></div>
+                </div>
+                
+                
+                <div class="hex-row even">
+                    <div class="hex"><div class="top"></div><div class="middle"></div><div class="bottom"></div></div>
+                    <div class="hex"><div class="top"></div><div class="middle"></div><div class="bottom"></div></div>
+                </div>
+                <div class="hex-row">
+                    <div class="hex"><div class="top"></div><div class="middle"></div><div class="bottom"></div></div>
+                    <div class="hex"><div class="top"></div><div class="middle"></div><div class="bottom"></div></div>
+                    <div class="hex"><div class="top"></div><div class="middle"></div><div class="bottom"></div></div>
+                </div>-->
+           
+        
+        </div>
+        
+        <div id="addcourse" class="middleArea clearfix" style="display:none;"  >
+            <form onsubmit="return AddCourse(this);">
+                課程名稱:<input type="text" name="name"/>
+                年份:<select name="year">
+                        <option value="98">98</option>
+                        <option value="99">99</option>
+                        <option value="100">100</option>
+                    </select>
+                學期:<select name="semester">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                <input type="button" value="取消"/>
+                <input type="submit" value="新增"/>
+            </form>
+        </div>
+        
+        <div id="addclass" class="middleArea clearfix" style="display:none;"  >
+             <form onsubmit="return AddClass(this);">
+                課堂名稱:<input type="text"/>
+                周次:<select name="week">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                    </select>
+                <input type="button" value="取消"/>
+                <input type="submit" value="新增"/>
+            </form>
+        </div>
+        
+        <div id="class" class="clearfix" style="display:;"  >
+                
+        
+            <div class="class-menu middleArea">
+                <div class="sidebar">
+                    <span class="title" >計算機概論</span>
+                    <nav>
+                        <ul>
+                            <li id="ActiveClass"  class="teacherFunc"><a class="classfuncLink ActiveClass" linkDiv="" >Active Class</a></li>
+                            <li id="DeAtiveClass" class="teacherFunc"><a class="classfuncLink DeAtiveClass" linkDiv="" >Deactive Class</a></li>
+                            <li class="teacherFunc">     <a class="classfuncLink" linkDiv="#class .content .answerQuiz" >Quiz</a></li>
+                            <li class="nonteacherFunc">  <a class="classfuncLink" linkDiv="#class .content .answerQuizTeacher" >Quiz</a></li>
+                            <li >                        <a class="classfuncLink" linkDiv="#class .content .message" >Message</a></li>
+                            <li class="teacherFunc" ><a class="classfuncLink" linkDiv="#class .content .control" >Control</a></li>
+                            <li class="teacherFunc" ><a class="classfuncLink" linkDiv="#class .content .student" >Student</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="content">
+                    
+                    <div class="classFunc answerQuiz">
+                        <div id ="aQuiz">
+                            <div class = "question">What is array?</div>
+                            <div class = "answerContainer">
+                                <div class = "answer box">A</div>
+                                <div class = "answer box">B</div>
+                                <div class = "answer box">C</div>
+                                <div class = "answer box">D</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="classFunc message">
+                        
+                        <!--訊息框--><div id="messagebox" class="messagebox" placeholder="目前無新訊息"></div>
+                        
+                        <!--發送框--><input type="text" placeholder="請輸入訊息..." />
+                    </div>
+                    
+                    <div class="classFunc answerQuizTeacher">
+                        <div class ="quiz">
+                            <form onsubmit="changeQuestion">
+                                <div class = "question"><input type="text" required="required" placeholder="請輸入問題.."/></div>
+                                <div class = "answerContainer" style="width:500px">
+                                    <ul>
+                                        <li><input type="radio" class="regular-radio" name="answer" value="A"/>A&nbsp;
+                                             <input type="text" required="required" placeholder="答案A" /></li>
+                                        <li><input type="radio" class="regular-radio"  name="answer" value="B"/>B&nbsp;
+                                             <input type="text" required="required" placeholder="答案B" /></li>
+                                        <li><input type="radio" class="regular-radio"  name="answer" value="C"/>C&nbsp;
+                                            <input type="text" required="required" placeholder="答案C" /></li>
+                                        <li><input type="radio" class="regular-radio"  name="answer" value="D"/>D&nbsp;
+                                            <input type="text" required="required" placeholder="答案D" /></li>
+                                    </ul>
+                                </div>
+                                <div class ="buttonContainer">
+                                    <input type="button" value="啟動"/>
+                                    <input type="button" value="修改"/>
+                                    <input type="button" value="刪除"/>
+                                    <input type="submit" value="確認"/>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="classFunc control">
+                        <!--啟動問題-->
+                        <!--問題統計-->
+                        <!--Message-->
+                        <!--加分-->
+                    </div>
+                    
+                    <div class="classFunc student">
+                        <!--學生名單-->
+                        <table border="1">
+                        <tbody><tr>
+                            <td>學號</td>
+                            <td>姓名</td>
+                            <td>回答紀錄</td>
+                            <td>發問次數</td>
+                            <td>刪除學生</td>
+                        </tr>
+                        <tr>
+                            <td>98703005</td>
+                            <td>李學甲</td>
+                            <td>19/20(正確/總題數)</td>
+                            <td>20次</td>
+                            <td>刪除</td>
+                        </tr>
+                        <tr>
+                            <td>98703005</td>
+                            <td>李學乙</td>
+                            <td>19/20(正確/總題數)</td>
+                            <td>20次</td>
+                            <td>刪除</td>
+                        </tr>
+                        
+                        
+                        </tbody></table>
+                        
+                    </div>
+                </div>
+            </div>
+          
+        
+        </div>
+    </div>
+</div>
+
+<div class="floor">
+    <div>
+    	TechTA<br/><br/><br/>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+/////////////////////Share Global///////////////////
+var Request = function(path,method,data,callback){
+	$.ajax({
+		url: path,
+		data: data,
+		type: method,
+		dataType: "json",
+		success: callback,
+		error: function(e){
+				alert("ERROR : "+e.responseText)
+		},
+	});	
+}
+
+var MyCourses;
+var MyClasses;
+var NowClass;
+var IsTeacher = null; // not null is teacher  class="teacherFunc"
+
+/////////////////Main menu Contral///////////////////
+
+$("#homepageBtn").click(function(){
+	//$("#course").addClass("animated fadeInDown");
+		$("#course").hide();
+		$("#banner").show();
+})
+
+$("#courseBtn").click(
+	function(){
+		$("#course").show();
+		$("#banner").hide();
+	}
+)
+
+
+//////////////////template//////////////
+
+//box
+//var template_box = $.template( null, "<div class='box'  ><h2>{name}</h2></div>"); 
+
+
+///////////////////////////////////////
+
+
+
+
+var init = function(){
+	//清空course
+	$("#courseContainer").html("");
+	
+	$("#courseContainer").show();
+	$("#addcourse").hide();
+	$("#addclass").hide();
+	$("#class").hide();
+	
+	//取得UserInfo
+	/*Request("api/TestMe","GET",null,function(info){
+			alert("me:"+info.me);
+		});*/
+	
+	//取得UserInfo
+	Request("api/GetAccountInfo","GET",null,function(info){
+			$("#UserNameSpan").html(info.name);
+			if(info.role == "teacher"){IsTeacher = true;}
+			if(IsTeacher){
+				$(".teacherFunc").show();
+				$(".nonteacherFunc").hide();
+			}
+			
+			
+		});
+	//開啟teacher功能
+	
+
+	
+	
+	
+	//取得課程
+	Request("api/GetCourse","GET",null,function(info){
+		MyCourses = info;
+		for(var num in MyCourses){
+			var node = "<div class='box course' datanum="+num+"><h2>"+MyCourses[num].name+"</h2></div>";
+			$(node).appendTo("#courseContainer");
+		}
+		
+		//老師增加課程
+		var node = "<div class='box addCourseBtn teacherFunc' datanum="+num+"><h2>+新增課程</h2></div>";
+			$(node).appendTo("#courseContainer");
+		
+		$("#courseContainer .addCourseBtn").click(function(){
+				$("#addcourse").show();
+				$("#addcourse form").submit(function(target){
+					var currentFrom = target.currentTarget;
+					var data = {
+						name : currentFrom.name.value,
+						year : currentFrom.year.value,
+						semester : currentFrom.semester.value,
+					}
+					
+					
+					//取資料
+					
+					//發request
+					//清空資料
+					//隱藏表單
+					return false;
+				})
+		})
+		
+		
+	});
+}
+
+
+$('#courseContainer .box.course').click(function(target){ 
+     //$(target).index();
+	 var num = $(target).attr("datanum");
+	 MyClasses = MyCourses[num].classes;
+	 //hide all others
+	 for(var i in MyCourses){
+		if(i==num)continue;
+		$(".box.course[datanum="+i+"]").hide();
+	 }
+	 
+	 
+	for(var num in MyCourses){
+		var node = "<div class='box class' datanum="+num+"><h2>"+MyCourses[num].name+"</h2></div>";
+		$(node).appendTo("#courseContainer");
+	}
+	 
+	 
+	 //老師增加課堂
+	var node = "<div class='box addClassBtn teacherFunc' datanum="+num+"><h2>+新增課堂</h2></div>";
+		$(node).appendTo("#courseContainer");
+	
+	$("#courseContainer .addClassBtn").click(function(){
+			$("#addclass").show();
+	})
+	
+})
+
+$('#courseContainer .box.class').click(function(target){ 
+    
+	 var num = $(target).attr("datanum");
+	 NowClass = MyClasses[num];
+	 
+	 //hide all others course and classes
+	 $(".box").hide();
+	 
+	 
+	 //go to class
+	  $("#courseContainer").hide();
+	  $("#class").show();
+	  ClassInit();
+	  
+})
+
+
+
+/*************** Class *************/
+
+var ClassInit = function(){
+	//抓message資料
+	Request("api/GetMessageByClass","GET",{clid: NowClass.clid},function(msgs){
+		
+		for(var num in msgs){
+			var node = "<p class='box msg' datanum="+num+">"+msg[num].account+" : "+msg[num].content+"</p>";
+			$(node).appendTo("#messagebox");
+		}
+	});
+	
+	//開啟quiz 的websocket
+	//************************
+		
+}
+
+$('.classfuncLink').click(function(target){
+	$("#class .content .classFunc").hide();
+	
+	var testTarget = $(target);
+	var divToShow = $(target.currentTarget).attr("linkDiv");
+	$(divToShow).show();
+})
+
+
+
+init();
+
+
+</script>
+
+
+
+</body>
+</html>
