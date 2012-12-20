@@ -70,7 +70,8 @@ public class UpdateAccount extends HttpServlet {
 			role = request.getParameter("role").toString();
 		
 		UserModel model = new UserModel(account, password, name, email, department, role, chatid);
-		if(dbTask.getInstance().GetUser(account) != null){ //update account
+		if(dbTask.getInstance().GetUser(account) != null){ 
+			//update account
 			
 			int resultUpdate  = dbTask.getInstance().UpdateAccount(model);
 			 
@@ -80,7 +81,8 @@ public class UpdateAccount extends HttpServlet {
 				returnResult = 1;
 			}
 			
-		}else{                                                //create account
+		}else{     
+			//create account
 			
 			//-----驗證密碼?
 						

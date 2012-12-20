@@ -51,70 +51,56 @@ public class jdbcmysql {
     
   } 
   
-  //建立table的方式 
-  //可以看看Statement的使用方式 
-  public void createTable() 
-  { 
-	Close();
-    try 
-    { 
-      stat = con.createStatement(); 
-      stat.executeUpdate(createdbSQL); 
-    } 
-    catch(SQLException e) 
-    { 
-    	System.out.println("CreateDB Exception :" + e.toString()); 
-    } 
 
-  } 
-  //新增資料 
-  //可以看看PrepareStatement的使用方式 
-  public void insertTable( String name,String passwd) 
-  { 
-	Close();  
-    try 
-    { 
-      pst = con.prepareStatement(insertdbSQL); 
-      
-      pst.setString(1, name); 
-      pst.setString(2, passwd); 
-      pst.executeUpdate(); 
-    } 
-    catch(SQLException e) 
-    { 
-    	System.out.println("InsertDB Exception :" + e.toString()); 
-    } 
-
-  } 
   
   //新增資料 
   //可以看看PrepareStatement的使用方式 
   public int ChangeData( String sql ,String [] data ) 
   { 
 	Close();
-	int result = -1;
+	String result = null;
+	int resultNumber = -1;
     try 
     { 
-    	
-		/*
-		String userSql = "INSERT INTO `user`(`account`, `password`, `name`, `email`, `department`, `role`, `chatid`) VALUES (?,?,?,?,?,?,?)";
-		String classSql = "INSERT INTO `class`(`cl_id`, `cl_name`, `week`, `active`, `co_id`) VALUES (?,?,?,?,?)";
-		String courseSql = "INSERT INTO `course`(`co_id`, `c_name`, `year`, `semester`) VALUES (?,?,?,?)";
-		String enrollSql = "INSERT INTO `enroll`(`account`, `co_id`) VALUES (?,?)";
-		String messageSql = "INSERT INTO `message`(`m_id`, `content`, `cl_id`, `account`) VALUES (?,?,?,?)";
-		String quizSql = "INSERT INTO `quiz`(`q_id`, `question`, `correct_answer`, `answer`, `active`) VALUES (?,?,?,?,?)";
-		String takequizSql = "INSERT INTO `takequiz`(`account`, `q_id`, `answer`) VALUES (?,?,?)";
-		 
-		*/
-		
-      pst = con.prepareStatement(sql); 
+      pst = con.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS); 
       
       int count = 1;
       for(String adata : data){
     	  pst.setString(count, adata); 
     	  count++;
       }
-      result = pst.executeUpdate(); 
+      resultNumber = pst.executeUpdate(); 
+      
+    } 
+    catch(SQLException e) 
+    { 
+    	System.out.println("InsertDB Exception :" + e.toString()); 
+    } 
+    return resultNumber;  //return 1  success!
+  } 
+  
+  
+  public String ChangeDataAndGetKey( String sql ,String [] data ) 
+  { 
+	Close();
+	String result = null;
+	int resultNumber = -1;
+    try 
+    { 
+      pst = con.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS); 
+      
+      int count = 1;
+      for(String adata : data){
+    	  pst.setString(count, adata); 
+    	  count++;
+      }
+
+ 	
+      resultNumber = pst.executeUpdate(); 
+      rs = pst.getGeneratedKeys();
+      rs.next();
+      result = rs.getString(1);
+ 	   
       
     } 
     catch(SQLException e) 
@@ -122,22 +108,6 @@ public class jdbcmysql {
     	System.out.println("InsertDB Exception :" + e.toString()); 
     } 
     return result;  //return 1  success!
-  } 
-  //刪除Table, 
-  //跟建立table很像 
-  public void dropTable() 
-  { 
-	  Close();
-    try 
-    { 
-      stat = con.createStatement(); 
-      stat.executeUpdate(dropdbSQL); 
-    } 
-    catch(SQLException e) 
-    { 
-    	System.out.println("DropDB Exception :" + e.toString()); 
-    } 
-
   } 
   //查詢資料 
   //可以看看回傳結果集及取得資料方式 
@@ -166,8 +136,58 @@ public class jdbcmysql {
     return rs;
     
   } 
-  
 
+  //建立table的方式 
+  //可以看看Statement的使用方式 
+  public void createTable() 
+  { 
+	Close();
+    try 
+    { 
+      stat = con.createStatement(); 
+      stat.executeUpdate(createdbSQL); 
+    } 
+    catch(SQLException e) 
+    { 
+    	System.out.println("CreateDB Exception :" + e.toString()); 
+    } 
+
+  } 
+  //刪除Table, 
+  //跟建立table很像 
+  public void dropTable() 
+  { 
+	  Close();
+    try 
+    { 
+      stat = con.createStatement(); 
+      stat.executeUpdate(dropdbSQL); 
+    } 
+    catch(SQLException e) 
+    { 
+    	System.out.println("DropDB Exception :" + e.toString()); 
+    } 
+
+  } 
+  //新增資料 
+  //可以看看PrepareStatement的使用方式 
+  public void insertTable( String name,String passwd) 
+  { 
+	Close();  
+    try 
+    { 
+      pst = con.prepareStatement(insertdbSQL); 
+      
+      pst.setString(1, name); 
+      pst.setString(2, passwd); 
+      pst.executeUpdate(); 
+    } 
+    catch(SQLException e) 
+    { 
+    	System.out.println("InsertDB Exception :" + e.toString()); 
+    } 
+
+  } 
   public void query(String queryStr, String [] data) 
   { 
 	  
@@ -219,16 +239,4 @@ public class jdbcmysql {
   } 
   
 
-  public void execute(PrintWriter out) 
-  { 
-	//System.out = out;
-    //測看看是否正常 
-   // jdbcmysql test = new jdbcmysql(); 
-    //test.dropTable(); 
-    //test.createTable(); 
-    //test.insertTable("yku", "12356"); 
-   // test.insertTable("yku2", "7890"); 
-   // test.SelectTable(); 
-  
-  } 
 }

@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 
+import task.TATool;
 import task.dbTask;
 
 import javax.servlet.ServletException;
@@ -46,12 +47,8 @@ public class GetAccountInfo extends HttpServlet {
 		
 
 		HttpSession session = request.getSession();
-		
-		if(session.getAttribute("account") == null){
-			out.println("{ \"error\":\"you should login\" }");
-			out.close();
-			return;
-		}
+		//驗證登入狀態
+		if(!TATool.CheckLogin(session,out)) {return;}
 		
 		account = (String) session.getAttribute("account");
 		

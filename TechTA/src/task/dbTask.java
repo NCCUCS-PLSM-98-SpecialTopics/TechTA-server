@@ -69,7 +69,7 @@ public class dbTask {
 		int result = db.ChangeData(queryStr, strArray);
 
 		db.Close();
-		if(result==1)return 0 ;  //success
+		if(result == 1)return 0 ;  //success
 		else return 1;
 		
 	}
@@ -90,7 +90,7 @@ public class dbTask {
 		int result = db.ChangeData(userSql, strArray);
 
 		db.Close();
-		if(result==1)return 0 ;  //success
+		if(result == 1)return 0 ;  //success
 		else return 1;
 		
 	}
@@ -135,17 +135,17 @@ public class dbTask {
 	}
 	
 	
-	public  int CreateCourse(CourseModel model){
+	public  String CreateCourse(CourseModel model){
 		
 		String userSql = "INSERT INTO `course`(`c_name`, `year`, `semester`) VALUES (?,?,?)";
 		
 		String[] strArray = {model.getName(),model.getYear(), model.getSemester() };
 		
-		int result = db.ChangeData(userSql, strArray);
-		
+		String result = db.ChangeDataAndGetKey(userSql, strArray);
+
 		db.Close();
-		if(result==1)return 0 ;  //success
-		else return 1;
+
+		return result;// if null then error
 	}
 
 
@@ -157,7 +157,7 @@ public class dbTask {
 		int result = db.ChangeData(userSql, strArray);
 
 		db.Close();
-		if(result==1)return 0 ;  //success
+		if(result == 1)return 0 ;  //success
 		else return 1;
 	}
 	
@@ -174,7 +174,7 @@ public class dbTask {
 		int result = db.ChangeData(userSql, strArray);
 
 		db.Close();
-		if(result==1)return 0 ;  //success
+		if(result == 1)return 0 ;  //success
 		else return 1;
 	}
 	
@@ -236,17 +236,16 @@ public class dbTask {
 	}
 	
 	
-	public  int CreateClassFromCourse(ClassModel model){
+	public  String CreateClassFromCourse(ClassModel model){
 		String userSql = "INSERT INTO `class`(`cl_name`, `week`, `active`, `co_id`) VALUES (?,?,?,?)";
 		
 		String[] strArray = {model.getName(),model.getWeek(),model.getActive(),model.getParentCourseId()};
 		
-		int result = db.ChangeData(userSql, strArray);
+		String result = db.ChangeDataAndGetKey(userSql, strArray);
 
 		db.Close();
-		if(result==1)return 0 ;  //success
-		else return 1;
-	
+
+		return result;// if null then error
 	
 	}
 
@@ -259,7 +258,7 @@ public class dbTask {
 		int result = db.ChangeData(userSql, strArray);
 
 		db.Close();
-		if(result==1)return 0 ;  //success
+		if(result == 1)return 0 ;  //success
 		else return 1;
 	}
 
@@ -273,7 +272,7 @@ public class dbTask {
 		int result = db.ChangeData(userSql, strArray);
 
 		db.Close();
-		if(result==1)return 0 ;  //success
+		if(result == 1)return 0 ;  //success
 		else return 1;
 	
 	}
@@ -289,7 +288,7 @@ public class dbTask {
 		int result = db.ChangeData(userSql, strArray);
 
 		db.Close();
-		if(result==1)return 0 ;  //success
+		if(result == 1)return 0 ;  //success
 		else return 1;
 	
 	}
@@ -329,7 +328,7 @@ public class dbTask {
 		int result = db.ChangeData(userSql, strArray);
 
 		db.Close();
-		if(result==1)return 0 ;  //success
+		if(result == 1)return 0 ;  //success
 		else return 1;
 	}
 	public  int RemoveUserFromCourse(String account, String coid){
@@ -339,7 +338,7 @@ public class dbTask {
 		int result = db.ChangeData(userSql, strArray);
 
 		db.Close();
-		if(result==1)return 0 ;  //success
+		if(result == 1)return 0 ;  //success
 		else return 1;
 	}
 
@@ -375,7 +374,7 @@ public class dbTask {
 	}
 	
 	
-	public  int AddQuizToClass(QuizModel model){
+	public  String AddQuizToClass(QuizModel model){
 		String userSql = "INSERT INTO `quiz`(`q_id`, `question`, `correct_answer`, `choices`, `active`, `cl_id`) VALUES (?,?,?,?,?,?) ";
 		String[] strArray = {model.getQid(),
 							model.getQuestion(),
@@ -384,11 +383,11 @@ public class dbTask {
 							model.getActive(),
 							model.getClid()};
 		
-		int result = db.ChangeData(userSql, strArray);
+		String result = db.ChangeDataAndGetKey(userSql, strArray);
 
 		db.Close();
-		if(result==1)return 0 ;  //success
-		else return 1;
+
+		return result;// if null then error
 	}
 
 	public  int UpdateQuiz(QuizModel model){
@@ -403,7 +402,7 @@ public class dbTask {
 		int result = db.ChangeData(userSql, strArray);
 
 		db.Close();
-		if(result==1)return 0 ;  //success
+		if(result == 1)return 0 ;  //success
 		else return 1;
 	}
 
@@ -414,7 +413,7 @@ public class dbTask {
 		int result = db.ChangeData(userSql, strArray);
 
 		db.Close();
-		if(result==1)return 0 ;  //success
+		if(result == 1)return 0 ;  //success
 		else return 1;
 	}
 
@@ -425,7 +424,7 @@ public class dbTask {
 		int result = db.ChangeData(userSql, strArray);
 
 		db.Close();
-		if(result==1)return 0 ;  //success
+		if(result == 1)return 0 ;  //success
 		else return 1;
 	}
 
@@ -461,15 +460,15 @@ public class dbTask {
 		}
 		
 		
-		public  int AddMessage(MessageModel model){
+		public  String AddMessage(MessageModel model){
 			String userSql = "INSERT INTO `message`(`m_id`, `content`, `cl_id`, `account`, `time`) VALUES (?,?,?,?)";
 			String[] strArray = {model.getMid(),model.getContent(),model.getClid(),model.getAccount()};
 			
-			int result = db.ChangeData(userSql, strArray);
+			String result = db.ChangeDataAndGetKey(userSql, strArray);
 
 			db.Close();
-			if(result==1)return 0 ;  //success
-			else return 1;
+
+			return result;// if null then error
 		}
 
 		public  int RemoveMessageByClass(String clid){
@@ -479,7 +478,7 @@ public class dbTask {
 			int result = db.ChangeData(userSql, strArray);
 
 			db.Close();
-			if(result==1)return 0 ;  //success
+			if(result == 1)return 0 ;  //success
 			else return 1;
 		}
 

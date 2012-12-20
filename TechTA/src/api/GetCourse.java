@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 
+import task.TATool;
 import task.dbTask;
 
 import model.CourseModel;
@@ -44,12 +45,9 @@ public class GetCourse extends HttpServlet {
 		
 
 		HttpSession session = request.getSession();
+		//驗證登入狀態
+		if(!TATool.CheckLogin(session,out)) {return;}
 		
-		if(session.getAttribute("account") == null){
-			out.println("{ \"error\":\"you should login\" }");
-			out.close();
-			return;
-		}
 		String account = (String) session.getAttribute("account");
 		
 		

@@ -4,13 +4,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>無標題文件</title>
 
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.min.js" ></script>
+<script type="text/javascript" src="jquery-1.8.2.min.js" ></script>
+<script type="text/javascript" src="jquery.liveready-1.0-min.js"></script>
 <!--<link rel="stylesheet" type="text/css" href="hex.css" />-->
 <link rel="stylesheet" type="text/css" href="animate.css" />
 <link rel="stylesheet" type="text/css" href="main.css" />
-<style>
 
-</style>
 
 </head>
 <body>
@@ -48,16 +47,15 @@
     </div>
     <div id="course">
         <div id="courseContainer" class="middleArea clearfix" style="display:none;"  >
-        
-        
-            
+                    
                <div class="box"><h2>計算機概論</h2></div>
                <div class="box"><h2>計算機程式設計</h2></div>
                <div class="box"><h2>程式語言</h2></div>
                <div class="box"><h2>系統程式</h2></div>
                <div class="box"><h2>人工智慧</h2></div>
                <div class="box"><h2>計算機組織與結構</h2></div>
-                <!--<div class="hex-row">
+                <!--六角形
+                <div class="hex-row">
                     <div class="hex"><div class="top"></div><div class="middle"><div class="text">計算機概論</div></div><div class="bottom"></div></div>
                     <div class="hex"><div class="top"></div><div class="middle"></div><div class="bottom"></div></div>
                     <div class="hex"><div class="top"></div><div class="middle"></div><div class="bottom"></div></div>
@@ -78,7 +76,7 @@
         </div>
         
         <div id="addcourse" class="middleArea clearfix" style="display:none;"  >
-            <form onsubmit="return AddCourse(this);">
+            <form onsubmit="return false;">
                 課程名稱:<input type="text" name="name"/>
                 年份:<select name="year">
                         <option value="98">98</option>
@@ -95,8 +93,8 @@
         </div>
         
         <div id="addclass" class="middleArea clearfix" style="display:none;"  >
-             <form onsubmit="return AddClass(this);">
-                課堂名稱:<input type="text"/>
+             <form onsubmit="return false;">
+                課堂名稱:<input type="text" name="name"/>
                 周次:<select name="week">
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -124,18 +122,18 @@
             </form>
         </div>
         
-        <div id="class" class="clearfix" style="display:;"  >
+        <div id="class" class="clearfix" style="display:none;"  >
                 
         
-            <div class="class-menu middleArea">
+            <div class="class-menu middleArea" style="">
                 <div class="sidebar">
                     <span class="title" >計算機概論</span>
                     <nav>
                         <ul>
-                            <li id="ActiveClass"  class="teacherFunc"><a class="classfuncLink ActiveClass" linkDiv="" >Active Class</a></li>
-                            <li id="DeAtiveClass" class="teacherFunc"><a class="classfuncLink DeAtiveClass" linkDiv="" >Deactive Class</a></li>
-                            <li class="teacherFunc">     <a class="classfuncLink" linkDiv="#class .content .answerQuiz" >Quiz</a></li>
-                            <li class="nonteacherFunc">  <a class="classfuncLink" linkDiv="#class .content .answerQuizTeacher" >Quiz</a></li>
+                            <li class="teacherFunc"><a class="classActiveLink" linkDiv="" value="active" >Active Class</a></li>
+                            <!--<li class="teacherFunc DeAtiveClass" style="display:none;"><a class="classfuncLink DeAtiveClass" linkDiv="" >Deactive Class</a></li>-->
+                            <li class="nonteacherFunc">     <a class="classfuncLink" linkDiv="#class .content .answerQuiz" >Quiz</a></li>
+                            <li class="teacherFunc">  <a class="classfuncLink" linkDiv="#class .content .answerQuizTeacher" >Quiz</a></li>
                             <li >                        <a class="classfuncLink" linkDiv="#class .content .message" >Message</a></li>
                             <li class="teacherFunc" ><a class="classfuncLink" linkDiv="#class .content .control" >Control</a></li>
                             <li class="teacherFunc" ><a class="classfuncLink" linkDiv="#class .content .student" >Student</a></li>
@@ -144,7 +142,7 @@
                 </div>
                 <div class="content">
                     
-                    <div class="classFunc answerQuiz">
+                    <div class="classFunc answerQuiz" style="display: none">
                         <div id ="aQuiz">
                             <div class = "question">What is array?</div>
                             <div class = "answerContainer">
@@ -156,14 +154,16 @@
                         </div>
                     </div>
                     
-                    <div class="classFunc message">
+                    <div class="classFunc message" style="display: none">
                         
                         <!--訊息框--><div id="messagebox" class="messagebox" placeholder="目前無新訊息"></div>
                         
                         <!--發送框--><input type="text" placeholder="請輸入訊息..." />
+                        			<input type="button" value="送出"/>
+
                     </div>
                     
-                    <div class="classFunc answerQuizTeacher">
+                    <div class="classFunc answerQuizTeacher" style="display: none">
                         <div class ="quiz">
                             <form onsubmit="changeQuestion">
                                 <div class = "question"><input type="text" required="required" placeholder="請輸入問題.."/></div>
@@ -189,14 +189,14 @@
                         </div>
                     </div>
                     
-                    <div class="classFunc control">
+                    <div class="classFunc control" style="display: none">
                         <!--啟動問題-->
                         <!--問題統計-->
                         <!--Message-->
                         <!--加分-->
                     </div>
                     
-                    <div class="classFunc student">
+                    <div class="classFunc student" style="display: none">
                         <!--學生名單-->
                         <table border="1">
                         <tbody><tr>
@@ -240,199 +240,8 @@
 </div>
 
 
-<script type="text/javascript">
-/////////////////////Share Global///////////////////
-var Request = function(path,method,data,callback){
-	$.ajax({
-		url: path,
-		data: data,
-		type: method,
-		dataType: "json",
-		success: callback,
-		error: function(e){
-				alert("ERROR : "+e.responseText)
-		},
-	});	
-}
-
-var MyCourses;
-var MyClasses;
-var NowClass;
-var IsTeacher = null; // not null is teacher  class="teacherFunc"
-
-/////////////////Main menu Contral///////////////////
-
-$("#homepageBtn").click(function(){
-	//$("#course").addClass("animated fadeInDown");
-		$("#course").hide();
-		$("#banner").show();
-})
-
-$("#courseBtn").click(
-	function(){
-		$("#course").show();
-		$("#banner").hide();
-	}
-)
 
 
-//////////////////template//////////////
-
-//box
-//var template_box = $.template( null, "<div class='box'  ><h2>{name}</h2></div>"); 
-
-
-///////////////////////////////////////
-
-
-
-
-var init = function(){
-	//清空course
-	$("#courseContainer").html("");
-	
-	$("#courseContainer").show();
-	$("#addcourse").hide();
-	$("#addclass").hide();
-	$("#class").hide();
-	
-	//取得UserInfo
-	/*Request("api/TestMe","GET",null,function(info){
-			alert("me:"+info.me);
-		});*/
-	
-	//取得UserInfo
-	Request("api/GetAccountInfo","GET",null,function(info){
-			$("#UserNameSpan").html(info.name);
-			if(info.role == "teacher"){IsTeacher = true;}
-			if(IsTeacher){
-				$(".teacherFunc").show();
-				$(".nonteacherFunc").hide();
-			}
-			
-			
-		});
-	//開啟teacher功能
-	
-
-	
-	
-	
-	//取得課程
-	Request("api/GetCourse","GET",null,function(info){
-		MyCourses = info;
-		for(var num in MyCourses){
-			var node = "<div class='box course' datanum="+num+"><h2>"+MyCourses[num].name+"</h2></div>";
-			$(node).appendTo("#courseContainer");
-		}
-		
-		//老師增加課程
-		var node = "<div class='box addCourseBtn teacherFunc' datanum="+num+"><h2>+新增課程</h2></div>";
-			$(node).appendTo("#courseContainer");
-		
-		$("#courseContainer .addCourseBtn").click(function(){
-				$("#addcourse").show();
-				$("#addcourse form").submit(function(target){
-					var currentFrom = target.currentTarget;
-					var data = {
-						name : currentFrom.name.value,
-						year : currentFrom.year.value,
-						semester : currentFrom.semester.value,
-					}
-					
-					
-					//取資料
-					
-					//發request
-					//清空資料
-					//隱藏表單
-					return false;
-				})
-		})
-		
-		
-	});
-}
-
-
-$('#courseContainer .box.course').click(function(target){ 
-     //$(target).index();
-	 var num = $(target).attr("datanum");
-	 MyClasses = MyCourses[num].classes;
-	 //hide all others
-	 for(var i in MyCourses){
-		if(i==num)continue;
-		$(".box.course[datanum="+i+"]").hide();
-	 }
-	 
-	 
-	for(var num in MyCourses){
-		var node = "<div class='box class' datanum="+num+"><h2>"+MyCourses[num].name+"</h2></div>";
-		$(node).appendTo("#courseContainer");
-	}
-	 
-	 
-	 //老師增加課堂
-	var node = "<div class='box addClassBtn teacherFunc' datanum="+num+"><h2>+新增課堂</h2></div>";
-		$(node).appendTo("#courseContainer");
-	
-	$("#courseContainer .addClassBtn").click(function(){
-			$("#addclass").show();
-	})
-	
-})
-
-$('#courseContainer .box.class').click(function(target){ 
-    
-	 var num = $(target).attr("datanum");
-	 NowClass = MyClasses[num];
-	 
-	 //hide all others course and classes
-	 $(".box").hide();
-	 
-	 
-	 //go to class
-	  $("#courseContainer").hide();
-	  $("#class").show();
-	  ClassInit();
-	  
-})
-
-
-
-/*************** Class *************/
-
-var ClassInit = function(){
-	//抓message資料
-	Request("api/GetMessageByClass","GET",{clid: NowClass.clid},function(msgs){
-		
-		for(var num in msgs){
-			var node = "<p class='box msg' datanum="+num+">"+msg[num].account+" : "+msg[num].content+"</p>";
-			$(node).appendTo("#messagebox");
-		}
-	});
-	
-	//開啟quiz 的websocket
-	//************************
-		
-}
-
-$('.classfuncLink').click(function(target){
-	$("#class .content .classFunc").hide();
-	
-	var testTarget = $(target);
-	var divToShow = $(target.currentTarget).attr("linkDiv");
-	$(divToShow).show();
-})
-
-
-
-init();
-
-
-</script>
-
-
-
+<script type="text/javascript" src="mainMVC.js" ></script>
 </body>
 </html>

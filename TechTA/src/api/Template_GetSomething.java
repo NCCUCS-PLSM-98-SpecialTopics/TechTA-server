@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 
+import task.TATool;
 import task.dbTask;
 
 import model.CourseModel;
@@ -41,12 +42,9 @@ public class Template_GetSomething extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		HttpSession session = request.getSession();
-		if(session.getAttribute("account") == null){
-			out.println("{ \"error\":\"you should login\" }");
-			out.close();
-			return;
-		}
-		String account = (String) session.getAttribute("account");
+		//驗證登入狀態
+		if(!TATool.CheckLogin(session,out)) {return;}
+		
 		/*Start coding*/
 		
 		

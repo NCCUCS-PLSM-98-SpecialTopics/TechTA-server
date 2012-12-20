@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.sun.corba.se.pept.protocol.MessageMediator;
 import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
 
+import task.TATool;
 import task.dbTask;
 
 import model.CourseModel;
@@ -44,11 +45,9 @@ public class GetMessageByClass extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		HttpSession session = request.getSession();
-		if(session.getAttribute("account") == null){
-			out.println("{ \"error\":\"you should login\" }");
-			out.close();
-			return;
-		}
+		//驗證登入狀態
+		if(!TATool.CheckLogin(session,out)) {return;}
+		
 		String account = (String) session.getAttribute("account");
 		/*Start coding*/
 		String clid ="";
