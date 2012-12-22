@@ -261,7 +261,32 @@ public class dbTask {
 		if(result == 1)return 0 ;  //success
 		else return 1;
 	}
+	
+	public  int ActiveClass(String clid){
+		
+		String userSql = "UPDATE `class` SET `active`=`1`  WHERE  `cl_id`=? ";
+		
+		String[] strArray = {clid};
+		int result = db.ChangeData(userSql, strArray);
 
+		db.Close();
+		if(result == 1)return 0 ;  //success
+		else return 1;
+	}
+
+	
+	public  int DeActiveClass(String clid){
+		
+		String userSql = "UPDATE `class` SET `active`=`0`   WHERE  `cl_id`=? ";
+		
+		String[] strArray = {clid};
+		int result = db.ChangeData(userSql, strArray);
+
+		db.Close();
+		if(result == 1)return 0 ;  //success
+		else return 1;
+	}
+	
 	public  int RemoveClass(String clid){
 		
 		
@@ -349,7 +374,7 @@ public class dbTask {
 		
 		List<QuizModel> modelList = new  ArrayList<QuizModel>();
 		QuizModel model = null;
-		String queryStr = "SELECT `q_id`, `question`, `correct_answer`, `choices`, `active` FROM `quiz` WHERE `cl_id` = ?";
+		String queryStr = "SELECT `q_id`, `question`, `correct_answer`, `choices`, `active`, `cl_id` FROM `quiz` WHERE `cl_id` = ?";
 		String[] strArray = {clid};
 		ResultSet result = db.SelectTable(queryStr, strArray);
 		try {
@@ -358,7 +383,7 @@ public class dbTask {
 				model = new QuizModel(result.getString("q_id"), 
 						result.getString("question"),
 						result.getString("correct_answer"),
-						result.getString("choice"),
+						result.getString("choices"),
 						result.getString("active"),
 						result.getString("cl_id"));
 				modelList.add(model);
@@ -375,8 +400,8 @@ public class dbTask {
 	
 	
 	public  String AddQuizToClass(QuizModel model){
-		String userSql = "INSERT INTO `quiz`(`q_id`, `question`, `correct_answer`, `choices`, `active`, `cl_id`) VALUES (?,?,?,?,?,?) ";
-		String[] strArray = {model.getQid(),
+		String userSql = "INSERT INTO `quiz`(`question`, `correct_answer`, `choices`, `active`, `cl_id`) VALUES (?,?,?,?,?) ";
+		String[] strArray = {
 							model.getQuestion(),
 							model.getCorrectAnswer(),
 							model.getChoice(),

@@ -5,6 +5,7 @@
 <title>無標題文件</title>
 
 <script type="text/javascript" src="jquery-1.8.2.min.js" ></script>
+<script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
 <script type="text/javascript" src="jquery.liveready-1.0-min.js"></script>
 <!--<link rel="stylesheet" type="text/css" href="hex.css" />-->
 <link rel="stylesheet" type="text/css" href="animate.css" />
@@ -23,7 +24,7 @@
             <a id="homepageBtn">HOME</a>
             <a id="courseBtn">MY Course</a>
             <a>MY Profile</a>
-            <a><span id="UserNameSpan">JACK</span> 您好, 登出</a>
+            <a id="LogoutBtn"><span id="UserNameSpan">JACK</span> 您好, 登出</a>
         </div>
     </div>
 </div>
@@ -164,29 +165,49 @@
                     </div>
                     
                     <div class="classFunc answerQuizTeacher" style="display: none">
-                        <div class ="quiz">
-                            <form onsubmit="changeQuestion">
-                                <div class = "question"><input type="text" required="required" placeholder="請輸入問題.."/></div>
-                                <div class = "answerContainer" style="width:500px">
-                                    <ul>
-                                        <li><input type="radio" class="regular-radio" name="answer" value="A"/>A&nbsp;
-                                             <input type="text" required="required" placeholder="答案A" /></li>
-                                        <li><input type="radio" class="regular-radio"  name="answer" value="B"/>B&nbsp;
-                                             <input type="text" required="required" placeholder="答案B" /></li>
-                                        <li><input type="radio" class="regular-radio"  name="answer" value="C"/>C&nbsp;
-                                            <input type="text" required="required" placeholder="答案C" /></li>
-                                        <li><input type="radio" class="regular-radio"  name="answer" value="D"/>D&nbsp;
-                                            <input type="text" required="required" placeholder="答案D" /></li>
-                                    </ul>
-                                </div>
-                                <div class ="buttonContainer">
-                                    <input type="button" value="啟動"/>
-                                    <input type="button" value="修改"/>
-                                    <input type="button" value="刪除"/>
-                                    <input type="submit" value="確認"/>
-                                </div>
-                            </form>
+                        
+                        <div id="quizContainer">
+                            <div class ="quiz">
+                                
+                                    <div class = "question">WHY  A.AAAA?</div>
+                                    <div class = "answerContainer" style="width:500px">
+                                        <ul>
+                                            <li><span class="correctAnswer"></span> <span class="Answer" > A.AAAA</span></li>
+                                            <li><span class="correctAnswer"></span> <span class="Answer" > A.AAAA</span></li>
+                                            <li><span class="correctAnswer"></span> <span class="Answer" > A.AAAA</span></li>
+                                            <li><span class="correctAnswer"></span> <span class="Answer" > A.AAAA</span></li>
+                                        </ul>
+                                    </div>
+                                    <div class ="buttonContainer">
+                                        <input type="button" value="啟動"/>
+                                        <input type="button" value="關閉" style="display:none"/>
+                                        <input type="button" value="刪除"/>
+                                        <input type="button" value="修改"/>
+                                    </div>
+                            </div>
+                            <div class ="quiz">
+                                <form >
+                                    <div class = "question"><input type="text" required="required" name="question" placeholder="請輸入問題.." value=""/></div>
+                                    <div class = "answerContainer" style="width:500px">
+                                        <ul>
+                                            <li><input type="radio" class="regular-radio" name="answer" value="A"/>A&nbsp;
+                                                 <input type="text" required="required" name="A" placeholder="答案A" /></li>
+                                            <li><input type="radio" class="regular-radio"  name="answer" value="B"/>B&nbsp;
+                                                 <input type="text" required="required" name="B" placeholder="答案B" /></li>
+                                            <li><input type="radio" class="regular-radio"  name="answer" value="C"/>C&nbsp;
+                                                <input type="text" required="required" name="C" placeholder="答案C" /></li>
+                                            <li><input type="radio" class="regular-radio"  name="answer" value="D"/>D&nbsp;
+                                                <input type="text" required="required" name="D"  placeholder="答案D" /></li>
+                                        </ul>
+                                    </div>
+                                    <div class ="buttonContainer">
+                                        <input type="button" value="刪除"/>
+                                        <input type="submit" value="確認"/>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
+                        <div id="AddQuestionBtn" > 新增問題 + </div>
                     </div>
                     
                     <div class="classFunc control" style="display: none">
@@ -239,7 +260,52 @@
     </div>
 </div>
 
+<script id="quiz-template" type="text/x-jquery-tmpl">
 
+				<div class ="quiz" index="${index}" qid="${qid}">
+					
+						<div class = "question">${question}</div>
+						<div class = "answerContainer" style="width:500px">
+							<ul>
+								<li><span class="correctAnswer">${correctA}</span> <span class="Answer" > ${A}</span></li>
+								<li><span class="correctAnswer">${correctB}</span> <span class="Answer" > ${B}</span></li>
+								<li><span class="correctAnswer">${correctC}</span> <span class="Answer" > ${C}</span></li>
+								<li><span class="correctAnswer">${correctD}</span> <span class="Answer" > ${D}</span></li>
+							</ul>
+						</div>
+						<div class ="buttonContainer">
+							<input type="button"class="ActiveQuiz"  value="啟動" style="${openStyle}" />
+							<input type="button" class="DeActiveQuiz" value="關閉" style="${closeStyle}"/>
+							<input type="button" class="RemoveQuiz" value="刪除"/>
+							<input type="button" class="ModifyQuiz" value="修改"/>
+						</div>
+				</div>
+</script>
+
+<script id="quiz-add-template" type="text/x-jquery-tmpl">
+
+			<div class ="quiz" index="${index}" qid="${qid}">
+				<form>
+					<div class = "question"><input type="text" required="required" name="question" placeholder="請輸入問題.." value="${question}" /></div>
+					<div class = "answerContainer" style="width:500px">
+						<ul>
+							<li><input type="radio" class="regular-radio" name="answer" value="A" ${correctA}/>A&nbsp;
+								 <input type="text" required="required" name="A" placeholder="答案A" value="${A}" /></li>
+							<li><input type="radio" class="regular-radio"  name="answer" value="B" ${correctB}/>B&nbsp;
+								 <input type="text" required="required" name="B" placeholder="答案B" value="${B}" /></li>
+							<li><input type="radio" class="regular-radio"  name="answer" value="C" ${correctC}/>C&nbsp;
+								<input type="text" required="required" name="C" placeholder="答案C" value="${C}" /></li>
+							<li><input type="radio" class="regular-radio"  name="answer" value="D" ${correctD}/>D&nbsp;
+								<input type="text" required="required" name="D" placeholder="答案D" value="${D}" /></li>
+						</ul>
+					</div>
+					<div class ="buttonContainer">
+						<input type="button" class="RemoveQuiz" value="刪除"/>
+						<input type="submit" value="確認"/>
+					</div>
+				</form>
+			</div>
+</script>
 
 
 <script type="text/javascript" src="mainMVC.js" ></script>

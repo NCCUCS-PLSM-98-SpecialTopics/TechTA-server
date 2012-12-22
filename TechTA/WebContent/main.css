@@ -172,20 +172,6 @@ body{
 	font-family: 'proxima-nova', 'Open Sans', Helvetica, Arial, sans-serif;
 	
 }
-
-.class-menu .sidebar .title{
-	
-	text-transform: uppercase;
-	font-weight: 600;
-	padding: 0.5em 2em .75em 0;
-	display: block;
-	letter-spacing: 1px;
-	line-height: 2em;
-	color: #222;
-	font-family: 'proxima-nova', 'Open Sans', Helvetica, Arial, sans-serif;
-	
-}
-
 .class-menu .sidebar nav a {
 	color: #999;
 	font-weight: 500;
@@ -197,8 +183,6 @@ body{
 	padding: 0.5em 2em 0.5em 1em;
 	display: block;
 }
-
-
 .class-menu .sidebar nav li {
 	-webkit-transition: background ease-out 0.1s;
 	-moz-transition: background ease-out 0.1s;
@@ -206,14 +190,13 @@ body{
 	transition: background ease-out 0.1s;
 	margin-bottom: 1px;
 }
-
-
 .class-menu .sidebar  nav li:hover, .class-menu .sidebar nav li.active-link {
 	background: #f5f5f5;
 }
 .class-menu .sidebar  nav li:hover a,.class-menu .sidebar  nav li.active-link a {
 color: #222;
 }
+
 .class-menu .content {
 	width: 638px;
 	padding-left: 72px;
@@ -222,7 +205,6 @@ color: #222;
 	border-left: none;
 	margin-top: 72px;
 }
-
 .class-menu .content h1 {
 	font-family: 'proxima-nova', 'Open Sans', Helvetica, Arial, sans-serif;
 	font-weight: 600;
@@ -244,13 +226,24 @@ color: #222;
 	margin: 0;
 }
 
+.class-menu #AddQuestionBtn{
+	margin: 20px 0px;
+	width:100%;
+	padding: 10px 0px;
+	font-weight:bolder;
+	font-size:20px;
+	background-color:#CCC;
+	color:#666;
+	text-align:center;
+	
+}
+
 nav ul, nav ol {
 	list-style: none;
 	list-style-image: none;
 	margin: 0;
 	padding: 0;
 }
-
 div {
 	display: block;
 }
@@ -385,7 +378,9 @@ div {
 	width: 80%;
 }
 /*老師填寫問題*/
-
+.answerQuizTeacher input {
+	font-size:16px;	
+}
 .answerQuizTeacher input:not([type="radio"]),
 .answerQuizTeacher select{
 	width: 80%;

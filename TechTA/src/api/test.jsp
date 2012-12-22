@@ -21,7 +21,7 @@ function login(){
 		if(jdata.result == "2")alert("您的帳號密碼錯誤");
 		if(jdata.result == "0")alert("恭喜您登入!");
 	});*/
-
+	
 	 $.ajax({
 	        type: "POST",
 	        url: "api/LoginAccount",
@@ -42,15 +42,15 @@ function login(){
 	        	$("LoginAccount").html(thrownError.responseText);
 	        }
       }); 
-
+	 
 	return false;
 }
 
 
 $("html").ready(function(){
-
+	
 	$("#GetCourseBtn").click(
-
+		
 		function(){
 			$("#GetCourse").html("");
 			 $.ajax({
@@ -62,20 +62,20 @@ $("html").ready(function(){
 			    	},
 			        dataType: "json",
 			        success:function (data){
-
+			        	
 			        	$("#GetCourse").html(JSON.stringify(data));
-
+			    		
 			    	},
 			        error:function(thrownError){
 			        	$("#GetCourse").html(thrownError.responseText);
 			        }
 		      }); 
-
+			
 		}	
 	)
-
+	
 	$("#GetAccountBtn").click(
-
+		
 		function(){
 			$("#GetAccount").html("");
 			 $.ajax({
@@ -87,7 +87,7 @@ $("html").ready(function(){
 			    	},
 			        dataType: "json",
 			        success:function (data){
-
+			        	
 			        	$("#GetAccount").html(JSON.stringify(data));
 			        	$("#U_account").val(data.account);
 			        	$("#U_name").val(data.name);
@@ -99,14 +99,14 @@ $("html").ready(function(){
 			        	$("#GetAccount").html(thrownError.responseText);
 			        }
 		      }); 
-
+			
 		}	
 	)
-
-
-
+	
+	
+	
 	$(".UpdateAccountBtn").click(
-
+		
 		function(){
 			$("#UpdateAccount").html("");
 			 $.ajax({
@@ -119,30 +119,30 @@ $("html").ready(function(){
 			    		email:     $("#U_email").val(),
 						department:$("#U_department").val(),
 						role:$("#U_role").val(),
-
+						
 			    	},
 			        dataType: "json",
 			        success:function (data){
-
+			        	
 			        	$("#UpdateAccount").html(JSON.stringify(data));
 			    	},
 			        error:function(thrownError){
 			        	$("#UpdateAccount").html(thrownError.responseText);
 			        }
 		      }); 
-
+			
 		}	
 	)
-
+	
 	$("#CLEAR").click(
-
+			
 			function(){
 				$("#GetAccount").html(" ");
 				$("#GetCourse").html(" ");
 				$("#LoginAccount").html(" ");
 			}	
 		)
-
+	
 })
 
 
@@ -205,8 +205,8 @@ $("html").ready(function(){
 	    <!-- <input type="submit" name="button" id="button" value="送出" /> -->
 	  </p>
 	</form>
-
-
+	
+	
 
 <div style="width:50%; background-color:#578" id="UpdateAccount">
 </div>
@@ -216,3 +216,4 @@ $("html").ready(function(){
 </div>
 </body>
 </html>
+    
