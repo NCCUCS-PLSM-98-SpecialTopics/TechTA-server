@@ -3,22 +3,55 @@ jQuery(document).ready(function() {
 
 
 //////////////////////////////////Share Global/////////////////////////////////////////////
+var RequestObj = new Array(); ;
+var RequestOccupied =false;
+
 var Request = function(path,method,data,callback){
-	$.ajax({
-		url: path,
-		data: data,
-		type: method,
-		dataType: "json",
-		success: function(result){
-				if(result&&result.error){
-					if(result.code =="100"){alert("請重新登入!"); return;}
-				}
-				callback(result);
-		},
-		error: function(e){
-				alert("ERROR : "+e.responseText)
-		},
-	});	
+
+	if(RequestObj.length == 0){
+		RequestObj[RequestObj.length] = {
+			path:path,
+			method:method,
+			data:data,
+			callback:callback
+		}
+		DoRequest(path,method,data,callback);
+	}else{
+		RequestObj[RequestObj.length] = {
+			path:path,
+			method:method,
+			data:data,
+			callback:callback
+		}
+	}
+	
+
+}
+
+var DoRequest = function(path,method,data,callback){
+		$.ajax({
+			url: path,
+			data: data,
+			type: method,
+			dataType: "json",
+			success: function(result){
+					RequestObj.splice(0,1);
+					if(RequestObj.length != 0){
+						var a = RequestObj[0];
+						DoRequest(a.path,a.method,a.data,a.callback);
+					}
+					timer = null;
+					if(result&&result.error){
+						if(result.code =="100"){alert("請重新登入!"); return;}
+					}
+					callback(result);
+			},
+			error: function(e){
+					
+					timer = null;
+					alert("ERROR : "+e.responseText)
+			},
+		});	
 }
 
 var MyCourses;
@@ -29,7 +62,8 @@ var MyClasses;
 var NowClassIndex;
 var NowClass;
 
-var NowQuiz;
+var MyQuizzes;
+var MyStudents;
 
 var IsTeacher = false; // not null is teacher  class="teacherFunc"
 
@@ -56,6 +90,8 @@ var TA = {
 			$('#quizContainer .RemoveQuiz').live("click",this.RemoveQuizForm);
 			$('#quizContainer .ActiveQuiz').live("click",this.ActiveQuizForm);
 			$('#quizContainer .DeActiveQuiz').live("click",this.DeActiveQuizForm);
+			$('#AddStudentBtn').live("click",this.AddStudentClick);
+			$('.RemoveStudentBtn').live("click",this.RemoveStudentClick);
 			
 			//share
 			$.liveReady('.teacherFunc', function() { if(IsTeacher) {$(this[0]).show();}else {$(this[0]).hide();}});
@@ -92,8 +128,7 @@ var TA = {
 				
 			}
 
-			
-			
+		
 	//////// main menu //////////
 	,HomepageBtnClick:function(){
 						//$("#course").addClass("animated fadeInDown");
@@ -145,7 +180,7 @@ var TA = {
 						 NowCourse = MyCourses[num];
 						 
 						 //hide all others
-						  $('#courseContainer .box:not([datanum = "0"]),#courseContainer .box:not(.course)').remove();
+						  $('#courseContainer .box:not([datanum = "'+num+'"]),#courseContainer .box:not(.course)').remove();
 						 
 						 //add all class
 						for(var num in MyClasses){
@@ -258,61 +293,63 @@ var TA = {
 				Request("api/GetMessageByClass","GET",{clid: NowClass.clid},function(msgs){
 					
 					for(var num in msgs){
-						var node = "<p class='box msg' datanum="+num+">"+msgs[num].account+" : "+msgs[num].content+"</p>";
+						var node = "<p class='msg' datanum="+num+">"+msgs[num].account+" : "+msgs[num].content+"</p>";
 						$(node).appendTo("#messagebox");
 					}
 				});
-				
 				//抓Quiz資料
-				Request("api/GetQuizByClass","GET",{clid: NowClass.clid},function(r){
-					$('#quizContainer').html("");
-					
-					NowQuiz = r;
-					for(var num in r){
-						var quiz = r[num];
-						var data =	{
-							qid: quiz.qid,
-							question: quiz.question
-						}
+					Request("api/GetQuizByClass","GET",{clid: NowClass.clid},function(r){
+						$('#quizContainer').html("");
 						
-						var choices = JSON.parse(quiz.choice)
-						data.A = choices.A;
-						data.B = choices.B;
-						data.C = choices.C;
-						data.D = choices.D;
-						
-						data.correctA ="　";
-						data.correctB ="　";
-						data.correctC ="　";
-						data.correctD ="　";
-						
-						switch(quiz.correctAnswer){
-							case 'A':data.correctA ="Ｖ";break;
-							case 'B':data.correctB ="Ｖ";break;
-							case 'C':data.correctC ="Ｖ";break;
-							case 'D':data.correctD ="Ｖ";break;
+						MyQuizzes = r;
+						for(var i in MyQuizzes){
+							var dataToTemplate = TA.quizModelToTemplate(MyQuizzes[i],i);
+							$( "#quiz-template" ).tmpl( dataToTemplate ).appendTo( "#quizContainer");
 						}
-						if(quiz.active == "0"){
-							data.openStyle="";
-							data.closeStyle="display:none;";
-						}else{
-							data.openStyle="";
-							data.closeStyle="display:none;";
-						}
-						data.index = num;	
-						data.qid = quiz.qid ;
-						var a = $( "#quiz-template" ).tmpl( null );
-						$( "#quiz-template" ).tmpl( data ).appendTo( "#quizContainer");
-					}
-				});
-				//開啟quiz 的websocket
+					});
+				
+				//開啟quiz. message 的websocket
 				//**********************
 				
 				if(IsTeacher){
 					
-					
 					//抓學生資料
-					//
+					Request("api/GetAllStudentInfoByCourse", "GET",{coid:NowCourse.coid},function(r){
+						if(r.result == "0" ){
+							MyStudents = r.list;
+							var c =$('.studentContainer').find("tr:not(.title):not(.BigTitle)").remove();
+							$( "#student-template" ).tmpl( MyStudents ).appendTo( ".studentContainer");
+						}
+					});
+					
+					Request("api/GetAllStudent", "GET",null,function(r){
+
+						if(r){
+							for(var i in r){
+								r[i].value = r[i].account +" "+ r[i].name;
+							}
+							$( "#AddStudentText" ).autocomplete({
+								minLength: 0,
+								source: r,
+								focus: function( event, ui ) {
+									$( "#AddStudentText" ).val( ui.item.account );
+									return false;
+								},
+								select: function( event, ui ) {
+									$( "#AddStudentText" ).val( ui.item.account );
+									$( "#AddStudentName" ).html( ui.item.name );
+									return false;
+								}
+							}).data( "autocomplete" )._renderItem = function( ul, item ) {
+								return $( "<li>" )
+									.data( "item.autocomplete", item )
+									.append( "<a>" + item.account + " (" + item.name + ")</a>" )
+									.appendTo( ul );
+							};
+						}
+					});
+					
+				
 				
 				}
 				
@@ -367,12 +404,9 @@ var TA = {
 			C:form.C.value,
 			D:form.D.value
 		}
-		var test = $(form).children('input[name=answer]:checked');
-		var test2 = $(form).children('input[name=answer]');
-		var test3 = $(form).children('input');
-		var test4 = $(form).children();
-		var answer = $(form).children('input[name=answer]:checked').val();
-		
+		$(form.answer).each(function(i){
+			if(form.answer[i].checked) answer = form.answer[i].value;
+		});
 		var data =	{
 			question: form.question.value,
 			choices:JSON.stringify(choices),
@@ -380,14 +414,41 @@ var TA = {
 			clid:NowClass.clid,
 		}
 		
-		if($(form).parent().attr("qid") != undefined){
+		if($(form).parent().attr("qid")){
 			data.qid = $(form).parent().attr("qid");
 		}
 		
+		
 		Request("api/AddQuizToClass","GET",data,function(r){
-			//把它從form變成div
-			//$(form).parent().Remove();
-			$( "#quiz-template" ).tmpl( null ).insertAfter(quizDIV);
+			if(r.result == "0"){
+				//把它從form變成div
+				
+				var dataToTemplate ;
+				
+				if(r.quiz)  { //如果是新增的資料
+					MyQuizzes.push(r.quiz);	
+					var index = MyQuizzes.length - 1;
+					dataToTemplate = TA.quizModelToTemplate(MyQuizzes[index],index);
+					
+				}else{  //如果只是更新
+					var index ;
+					//update
+					for(var i in MyQuizzes){
+						if(MyQuizzes[i].qid == data.qid){
+							index = i;
+							var quiz = MyQuizzes[i];
+							quiz.choice        = data.choices;
+							quiz.correctAnswer = data.correctanswer;
+							quiz.question      = data.question;
+						}
+					}
+					
+					dataToTemplate = TA.quizModelToTemplate(MyQuizzes[index],index);
+				}
+				
+				$( "#quiz-template" ).tmpl( dataToTemplate ).insertAfter(quizDIV);
+				$(quizDIV).remove();
+			}
 		});
 		
 		
@@ -402,61 +463,130 @@ var TA = {
 			//var form = $(t).parent().parent();
 			var thisquiz = $(t).parent().parent();
 			var index = thisquiz.attr("index");
+			var data = TA.quizModelToTemplate(MyQuizzes[index],index);
+			$( "#quiz-add-template" ).tmpl( data ).insertAfter(thisquiz);
+			$(thisquiz).remove();
+	}
+	,RemoveQuizForm:function(e){
+			var t = e.target;
+			var thisquiz = $(t).parent().parent();
+			Request("api/RemoveQuiz","GET",{qid:thisquiz.attr("qid") },function(r){
+				if(r.result = "0"){
+					$(thisquiz).remove();
+				}
+			});
+			//*****************
 			
-			var quiz = NowQuiz[index];
+	}
+	,ActiveQuizForm:function(e){
+			var t = e.target;
+			var thisquiz = $(t).parent().parent();
+			$(t).css("display","none");
+			$(t).siblings(".DeActiveQuiz").css("display","");
+			Request("api/ActiveQuiz","GET",{qid:thisquiz.attr("qid"), active:true},function(r){
+				if(r.result == "0"){
+					
+				}else if(r.result == "1"){
+					alert("啟動失敗!");
+					$(t).css("display","");
+					$(t).siblings(".DeActiveQuiz").css("display","none");
+				}
+			});
+	}
+	,DeActiveQuizForm:function(e){
+			var t = e.target;
+			var thisquiz = $(t).parent().parent();
+			$(t).css("display","none");
+			$(t).siblings(".ActiveQuiz").css("display","");
+			Request("api/ActiveQuiz","GET",{qid:thisquiz.attr("qid"), active:false},function(r){
+				if(r.result == "0"){
+					
+				}else if(r.result == "1"){
+					alert("關閉失敗!");
+					$(t).css("display","");
+					$(t).siblings(".DeActiveQuiz").css("display","none");
+				}
+			});
+	}
+	,quizModelToTemplate:function(quiz,index){
 			var choices = JSON.parse(quiz.choice);
-			var data =	{
+			var dataToTemplate =	{
 				qid: quiz.qid,
 				question: quiz.question,
 				A :choices.A,
 				B :choices.B,
 				C :choices.C,
 				D :choices.D,
-				correctA:'　',
-				correctB:'　',
-				correctC:'　',
-				correctD:'　',
+				//correctA:false,
+				//correctB:false,
+				//correctC:false,
+				//correctD:false,
 				openStyle:'',
 				closeStyle:''
 			}
 			
 			switch(quiz.correctAnswer){
-				case 'A':data.correctA ="checked";break;
-				case 'B':data.correctB ="checked";break;
-				case 'C':data.correctC ="checked";break;
-				case 'D':data.correctD ="checked";break;
+				case 'A':dataToTemplate.correctA =true;break;
+				case 'B':dataToTemplate.correctB =true;break;
+				case 'C':dataToTemplate.correctC =true;break;
+				case 'D':dataToTemplate.correctD =true;break;
 			}
 			if(quiz.active == "0"){
-				data.closeStyle="display:none;";
+				dataToTemplate.closeStyle="display:none;";
 			}else{
-				data.openStyle="display:none;";
+				dataToTemplate.openStyle="display:none;";
 			}
-			data.index = index;					
-			data.qid = quiz.qid ;
-			$( "#quiz-add-template" ).tmpl( data ).insertAfter(thisquiz);
-			$(thisquiz).remove();
-	}
-	,RemoveQuizForm:function(e){
-			var t = e.target;
-			var form = $(t).parent().parent();
-			var thisquiz = $(t).parent().parent().parent();
-			//Request
-			//*****************
-			$(thisquiz).Remove();
+			dataToTemplate.index = index;					
+			dataToTemplate.qid = quiz.qid ;
 			
+			return dataToTemplate;
+	
+	}	
+	
+	,AddStudentClick:function(){
+		var account = $("#AddStudentText").val();
+		var data = {coid:NowCourse.coid, account:account};
+		Request("api/AddStudentToCourse","GET",data,function(r){
+			if(r.result == "0"){
+				//抓學生資料
+				Request("api/GetAllStudentInfoByCourse", "GET",{coid:NowCourse.coid},function(r){
+					if(r.result == "0" ){
+						MyStudents = r.list;
+						var c =$('.studentContainer').find("tr:not(.title):not(.BigTitle)").remove();
+						$( "#student-template" ).tmpl( MyStudents ).appendTo( ".studentContainer");
+					}
+				});
+			}else if(r.result == "1"){
+				alert("錯誤:此帳號已在課程!");
+			}else if(r.result == "2"){
+				alert("錯誤:無此帳號!");
+			}
+		});
 	}
-	,ActiveQuizForm:function(e){
-			$( "#quiz-add-template" ).tmpl( null ).appendTo( "#quizContainer");
-	}
-	,DeActiveQuizForm:function(e){
-			$( "#quiz-add-template" ).tmpl( null ).appendTo( "#quizContainer");
+	,RemoveStudentClick:function(e){
+		var t = e.target;
+		var account = $(t).attr("account");
+		if(confirm("您確定要刪除"+account+"嗎?")){
+			var data = {coid:NowCourse.coid, account:account};
+			Request("api/RemoveStudentFromCourse","GET",data,function(r){
+				if(r.result == "0"){
+					//抓學生資料
+					Request("api/GetAllStudentInfoByCourse", "GET",{coid:NowCourse.coid},function(r){
+						if(r.result == "0" ){
+							MyStudents = r.list;
+							var c =$('.studentContainer').find("tr:not(.title):not(.BigTitle)").remove();
+							$( "#student-template" ).tmpl( MyStudents ).appendTo( ".studentContainer");
+						}
+					});
+				}else if(r.result == "1"){
+					alert("錯誤:此帳號已在課程!");
+				}else if(r.result == "2"){
+					alert("錯誤:無此帳號!");
+				}
+			});
+		}
 	}
 	
-	/*
-			$('#quizContainer .ModifyQuiz').live("click",this.ModifyQuizForm);
-			$('#quizContainer .RemoveQuiz').live("click",this.RemoveQuizForm);
-			$('#quizContainer .ActiveQuiz').live("click",this.ActiveQuizForm);
-			$('#quizContainer .DeActiveQuiz').live("click",this.DeActiveQuizForm);*/
 	
 	//----------------------------share function---------------------
 	,RefershCourse: function(){

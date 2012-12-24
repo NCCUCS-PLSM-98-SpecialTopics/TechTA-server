@@ -23,7 +23,7 @@ import model.CourseModel;
 /**
  * Servlet implementation class LoginAccount
  */
-@WebServlet("/api/GetMessageByClass")  /*<<<<<<<<<CHANG HERE**/
+@WebServlet("/api/123")  /*<<<<<<<<<CHANG HERE**/
 public class Template_GetSomething extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

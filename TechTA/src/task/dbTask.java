@@ -52,6 +52,32 @@ public class dbTask {
 	}
 	
 
+	public  List<UserModel> GetAllUser(){
+		
+		
+		String queryStr = "SELECT * FROM `user`";
+		List<UserModel> list = new ArrayList<UserModel>();
+		ResultSet result = db.SelectTable(queryStr, null);
+		try {
+			while(result.next()) 
+			{ 
+				list.add( new UserModel(result.getString("account"),
+										result.getString("password"),
+										result.getString("name"),
+										result.getString("email"),
+										result.getString("department"),
+										result.getString("role"),
+										result.getString("chatid") ));
+			}
+	
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		db.Close();
+		return list;
+	}
+	
 	public  int UpdateAccount(UserModel model){
 		
 		//UserModel model = null;
@@ -264,7 +290,7 @@ public class dbTask {
 	
 	public  int ActiveClass(String clid){
 		
-		String userSql = "UPDATE `class` SET `active`=`1`  WHERE  `cl_id`=? ";
+		String userSql = "UPDATE `class` SET `active`='1' WHERE  `cl_id`=? ";
 		
 		String[] strArray = {clid};
 		int result = db.ChangeData(userSql, strArray);
@@ -277,7 +303,7 @@ public class dbTask {
 	
 	public  int DeActiveClass(String clid){
 		
-		String userSql = "UPDATE `class` SET `active`=`0`   WHERE  `cl_id`=? ";
+		String userSql = "UPDATE `class` SET `active`='0'  WHERE  `cl_id`=? ";
 		
 		String[] strArray = {clid};
 		int result = db.ChangeData(userSql, strArray);
@@ -346,6 +372,36 @@ public class dbTask {
 		return modelList;
 		
 	}
+	public  int CheckUserToCourse(String coid, String account){
+
+		boolean AlreadyInThisClass = false;
+		String queryStr = "SELECT `account` FROM `enroll` WHERE `co_id` = ? AND `account` = ?";
+		String[] strArray = {coid,account};
+		ResultSet result = db.SelectTable(queryStr, strArray);
+		try {
+			while(result.next()) 
+			{ 
+				AlreadyInThisClass = true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
+		db.Close();
+
+		if(!AlreadyInThisClass){
+			if(this.GetUser(account) != null){
+				return 0;
+			}else{
+				return 2;
+			}
+		}else{
+			return 1;
+		}
+		
+		
+	}
 	public  int AddUserToCourse(String account, String coid){
 		String userSql = "INSERT INTO `enroll`(`account`, `co_id`) VALUES (?,?) ";
 		String[] strArray = {account,coid};
@@ -368,7 +424,7 @@ public class dbTask {
 	}
 
 	
-//-------question---
+//-------Quiz---
 	
 	public  List<QuizModel> GetQuizByClassid(String clid){
 		
@@ -431,6 +487,17 @@ public class dbTask {
 		else return 1;
 	}
 
+	public  int ActiveQuiz(String qid, String active){
+		String userSql = "UPDATE `quiz` SET `active`=? WHERE `q_id`=?";
+		String[] strArray = {active,qid};
+		
+		int result = db.ChangeData(userSql, strArray);
+
+		db.Close();
+		if(result == 1)return 0 ;  //success
+		else return 1;
+	}
+	
 	public  int RemoveQuiz(String qid){
 		String userSql = "DELETE FROM `quiz` WHERE `q_id`=?";
 		String[] strArray = {qid};
@@ -505,6 +572,62 @@ public class dbTask {
 			db.Close();
 			if(result == 1)return 0 ;  //success
 			else return 1;
+		}
+// ----------GET ALL STUDENT Of  A Course ----------
+		
+		public  List<Map<String, String>> GetAllStudentInfoByCourse(String coid){
+			String queryStr = 
+		" SELECT P.account,P.name ,ifnull(Q.TQ, 0) TQ ,ifnull(Q.CQ, 0) CQ,ifnull(M.TM, 0) TM FROM" +
+		" 	(SELECT  c.account, c.name, enroll.co_id FROM enroll  NATURAL  join ("+
+		" 		SELECT  * FROM user where role = 'student'"+
+		" 		)c where enroll.co_id = ?"+
+		" 	)P	"+
+		" left join"+
+		" 	(SELECT account, count(m_id) TM FROM message NATURAL  join ("+
+		" 		SELECT * FROM class NATURAL  join ("+
+		" 			SELECT  c.account, c.name, enroll.co_id FROM enroll  NATURAL  join ("+
+		" 				SELECT  * FROM user"+
+		" 			)c where enroll.co_id = ?"+
+		" 		) b  "+
+		" 	)a GROUP BY account) M"+
+		" ON P.account = M.account"+
+		" left join"+
+		"  	(SELECT account ,count(q_id) CQ,TQ ,question  FROM("+
+		" 		SELECT *,count(q_id) TQ FROM takequiz   NATURAL join ("+
+		" 			SELECT cl_id, q_id,correct_answer, question, account, name FROM quiz NATURAL  join ("+
+		" 				SELECT * FROM class NATURAL  join ("+
+		" 					SELECT  c.account, c.name, enroll.co_id FROM enroll  NATURAL  join ("+
+		" 						SELECT  * FROM user"+
+		" 					)c where enroll.co_id = ?"+
+		" 				) b  "+
+		" 			)a"+
+		" 		)z GROUP BY z.account HAVING answer = correct_answer"+
+		" 	)x GROUP BY account ) Q"+
+		" ON P.account = Q.account";
+			
+			String[] strArray = {coid,coid,coid};
+			ResultSet result = db.SelectTable(queryStr, strArray);
+			List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+			
+			try {
+				while(result.next()) 
+				{ 
+					Map<String, String> map = new HashMap<String,String>();
+					map.put("account", result.getString("account"));
+					map.put("name", result.getString("name"));
+					map.put("TQ", result.getString("TQ"));
+					map.put("CQ", result.getString("CQ"));
+					map.put("TM", result.getString("TM"));
+					list.add(map);
+				}
+		
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				list = null;
+				e.printStackTrace();
+			} 
+			db.Close();
+			return list;
 		}
 
 		

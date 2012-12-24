@@ -118,9 +118,11 @@ public class jdbcmysql {
     { 
       pst = con.prepareStatement(queryStr); 
       int count = 1;
-      for(String adata : data){
-    	  pst.setString(count, adata); 
-    	  count++;
+      if(data!=null){
+	      for(String adata : data){
+	    	  pst.setString(count, adata); 
+	    	  count++;
+	      }
       }
       rs = pst.executeQuery(); 
       

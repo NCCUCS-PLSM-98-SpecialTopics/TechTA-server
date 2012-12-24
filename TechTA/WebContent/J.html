@@ -4,12 +4,18 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>無標題文件</title>
 
-<script type="text/javascript" src="jquery-1.8.2.min.js" ></script>
-<script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<!--<script type="text/javascript" src="jquery-1.8.2.min.js" ></script>-->
+<script type="text/javascript" src="jquery.tmpl.min.js"></script>
+<!--<script type="text/javascript" src="jquery-ui-1.9.2.custom.min.js"></script>-->
 <script type="text/javascript" src="jquery.liveready-1.0-min.js"></script>
 <!--<link rel="stylesheet" type="text/css" href="hex.css" />-->
 <link rel="stylesheet" type="text/css" href="animate.css" />
 <link rel="stylesheet" type="text/css" href="main.css" />
+<link rel="stylesheet" type="text/css" href="table.css" />
+<!--<link rel="stylesheet" type="text/css" href="jquery-ui-1.9.2.custom.min.css" /> -->
 
 
 </head>
@@ -46,7 +52,7 @@
           </div>
       </div>
     </div>
-    <div id="course">
+    <div id="course" style="display:none;" >
         <div id="courseContainer" class="middleArea clearfix" style="display:none;"  >
                     
                <div class="box"><h2>計算機概論</h2></div>
@@ -212,6 +218,35 @@
                     
                     <div class="classFunc control" style="display: none">
                         <!--啟動問題-->
+						<div>
+							<h2>及時測驗</h2>
+							<p>問題:XXXXXX 
+								<input type="button" value="啟動" >
+								<input type="button" value="詳細" >
+							</p>
+							<p>問題2:XXXXXX 
+								<input type="button" value="啟動" >
+								<input type="button" value="詳細" >
+							</p>
+							<p>　　> 詳細資料:XXXXXX <br/>
+								　　1.統計圖
+							</p>
+						</div>	
+						<div >
+							<h2>訊息</h2>
+							<div style="border:2px solid;">
+								匿名:剛剛那個是什麼意思?<br/>
+								匿名:什麼是sort<br/>
+								匿名:這個系統真不錯<br/>
+							</div>
+						
+						</div>
+						<div >
+							<h2>加分</h2>
+							<input type="text"><input type="button" value="send">
+						
+						</div>
+						
                         <!--問題統計-->
                         <!--Message-->
                         <!--加分-->
@@ -219,39 +254,50 @@
                     
                     <div class="classFunc student" style="display: none">
                         <!--學生名單-->
-                        <table border="1">
-                        <tbody><tr>
-                            <td>學號</td>
-                            <td>姓名</td>
-                            <td>回答紀錄</td>
-                            <td>發問次數</td>
-                            <td>刪除學生</td>
-                        </tr>
-                        <tr>
-                            <td>98703005</td>
-                            <td>李學甲</td>
-                            <td>19/20(正確/總題數)</td>
-                            <td>20次</td>
-                            <td>刪除</td>
-                        </tr>
-                        <tr>
-                            <td>98703005</td>
-                            <td>李學乙</td>
-                            <td>19/20(正確/總題數)</td>
-                            <td>20次</td>
-                            <td>刪除</td>
-                        </tr>
-                        
-                        
-                        </tbody></table>
+						<table border="0" cellpadding="0" cellspacing="0" class="horizontal studentContainer">
+							<tr class="BigTitle">
+								<th colspan="5">Student Management</th>
+							</tr>
+							<tr class="title">
+								<td>學號</td>
+								<td>姓名</td>
+								<td>回答紀錄</td>
+								<td>發問次數</td>
+								<td>刪除學生</td>
+							</tr>
+							<tr>
+								<td>98703005</td>
+								<td>張學友</td>
+								<td>19/20(正確/總題數)</td>
+								<td>20次</td>
+								<td>刪除</td>
+							</tr>
+							
+                        </table>
+						
+						<div class="AddStudent">
+							<div class="ui-widget">
+								<input type="text"  id="AddStudentText" />
+								<span  id="AddStudentName" ></span>
+								<input type="button" id="AddStudentBtn" value="新增學生+"/>
+							</div>
+							
+							
+						</div>
                         
                     </div>
+					
                 </div>
             </div>
           
         
         </div>
-    </div>
+		
+		
+	</div>
+	<div id="profile" class="clearfix" style="display:none;" >
+		
+	</div>
 </div>
 
 <div class="floor">
@@ -267,10 +313,10 @@
 						<div class = "question">${question}</div>
 						<div class = "answerContainer" style="width:500px">
 							<ul>
-								<li><span class="correctAnswer">${correctA}</span> <span class="Answer" > ${A}</span></li>
-								<li><span class="correctAnswer">${correctB}</span> <span class="Answer" > ${B}</span></li>
-								<li><span class="correctAnswer">${correctC}</span> <span class="Answer" > ${C}</span></li>
-								<li><span class="correctAnswer">${correctD}</span> <span class="Answer" > ${D}</span></li>
+								<li><span class="correctAnswer">{{if correctA}}●{{else}}○{{/if}}</span> <span class="Answer" > ${A}</span></li>
+								<li><span class="correctAnswer">{{if correctB}}●{{else}}○{{/if}}</span> <span class="Answer" > ${B}</span></li>
+								<li><span class="correctAnswer">{{if correctC}}●{{else}}○{{/if}}</span> <span class="Answer" > ${C}</span></li>
+								<li><span class="correctAnswer">{{if correctD}}●{{else}}○{{/if}}</span> <span class="Answer" > ${D}</span></li>
 							</ul>
 						</div>
 						<div class ="buttonContainer">
@@ -289,25 +335,32 @@
 					<div class = "question"><input type="text" required="required" name="question" placeholder="請輸入問題.." value="${question}" /></div>
 					<div class = "answerContainer" style="width:500px">
 						<ul>
-							<li><input type="radio" class="regular-radio" name="answer" value="A" ${correctA}/>A&nbsp;
+							<li><input type="radio" class="regular-radio" name="answer" value="A" {{if correctA}}checked{{/if}}/>A&nbsp;
 								 <input type="text" required="required" name="A" placeholder="答案A" value="${A}" /></li>
-							<li><input type="radio" class="regular-radio"  name="answer" value="B" ${correctB}/>B&nbsp;
+							<li><input type="radio" class="regular-radio"  name="answer" value="B" {{if correctB}}checked{{/if}}/>B&nbsp;
 								 <input type="text" required="required" name="B" placeholder="答案B" value="${B}" /></li>
-							<li><input type="radio" class="regular-radio"  name="answer" value="C" ${correctC}/>C&nbsp;
+							<li><input type="radio" class="regular-radio"  name="answer" value="C" {{if correctC}}checked{{/if}}/>C&nbsp;
 								<input type="text" required="required" name="C" placeholder="答案C" value="${C}" /></li>
-							<li><input type="radio" class="regular-radio"  name="answer" value="D" ${correctD}/>D&nbsp;
+							<li><input type="radio" class="regular-radio"  name="answer" value="D" {{if correctD}}checked{{/if}}/>D&nbsp;
 								<input type="text" required="required" name="D" placeholder="答案D" value="${D}" /></li>
 						</ul>
 					</div>
 					<div class ="buttonContainer">
-						<input type="button" class="RemoveQuiz" value="刪除"/>
+						<!--<input type="button" class="RemoveQuiz" value="刪除"/>-->
 						<input type="submit" value="確認"/>
 					</div>
 				</form>
 			</div>
 </script>
-
-
+<script id="student-template" type="text/x-jquery-tmpl">
+							<tr>
+								<td>${account}</td>
+								<td>${name}</td>
+								<td>${CQ}/${TQ}/(正確/總題數)</td>
+								<td>${TM}次</td>
+								<td account=${account} class="RemoveStudentBtn">刪除</td>
+							</tr>
+</script>
 <script type="text/javascript" src="mainMVC.js" ></script>
 </body>
 </html>

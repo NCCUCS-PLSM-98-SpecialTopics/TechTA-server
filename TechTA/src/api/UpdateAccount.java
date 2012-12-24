@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import model.UserModel;
 
 import task.MD5;
+import task.TATool;
 import task.dbTask;
 
 /**
@@ -45,27 +46,20 @@ public class UpdateAccount extends HttpServlet {
 		
 		int returnResult = -1;
 		
+		if(!TATool.CheckPerem(new String[]{"account","password","name","email","department"}, request, out)){return;}
+		String clid  = TATool.utf8Perem(request, "clid");
 		
 		
-		String account ="";
-		String password ="";
-		String name ="";
-		String email ="";
-		String department ="";
+		
+		String account =TATool.utf8Perem(request, "account");
+		String password =TATool.utf8Perem(request, "password");
+		String name =TATool.utf8Perem(request, "name");
+		String email =TATool.utf8Perem(request, "email");
+		String department =TATool.utf8Perem(request, "department");
 		String role ="student";
 		String chatid ="";
 		
-
-		if(request.getParameter("account")!=null)
-			account = request.getParameter("account").toString();
-		if(request.getParameter("password")!=null)
-			password = MD5.encode(request.getParameter("password").toString());
-		if(request.getParameter("name")!=null)
-			name = request.getParameter("name").toString();
-		if(request.getParameter("email")!=null)
-			email = request.getParameter("email").toString();
-		if(request.getParameter("department")!=null)
-			department = request.getParameter("department").toString();
+ 
 		if(request.getParameter("role")!=null)
 			role = request.getParameter("role").toString();
 		

@@ -28,14 +28,14 @@ import model.QuizModel;
 /**
  * Servlet implementation class LoginAccount
  */
-@WebServlet("/api/AddQuizToClass")   
-public class AddQuizToClass extends HttpServlet {
+@WebServlet("/api/RemoveQuiz")   
+public class RemoveQuiz extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddQuizToClass() {
+    public RemoveQuiz() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -52,42 +52,16 @@ public class AddQuizToClass extends HttpServlet {
 		String account = (String) session.getAttribute("account");
 		/*Start coding*/
 
-		String [] params = new String[]{"question","choices","correctanswer","clid"};
+		String [] params = new String[]{"qid"};
 		if(!TATool.CheckPerem(params, request, out)){return;}
 		
-
-
-		String qid = null;
-		String question = TATool.utf8Perem(request,"question");
-		String correctAnswer =TATool.utf8Perem(request,"correctanswer");
-		String choice =TATool.utf8Perem(request,"choices");
-		String active ="0";
-		String clid =TATool.utf8Perem(request,"clid");
-		
-		Boolean IS_UPDATE =false;
-		if(request.getParameter("qid")!=null){
-			qid = TATool.utf8Perem(request,"qid");
-			IS_UPDATE = true;
-		}
-		
-		QuizModel model = new QuizModel(qid, question, correctAnswer, choice, active, clid);
+		String qid = TATool.utf8Perem(request,"qid");
 		
 		int resultNumber = -1;		
-		String result = null;
-		
-		if(IS_UPDATE){
-			resultNumber =  dbTask.getInstance().UpdateQuiz(model);
-			
-		}else{
-			result = dbTask.getInstance().AddQuizToClass(model);
-			model.setQid(result);
-			resultNumber = (result != null)?0:1;
-		}
-		
+		resultNumber = dbTask.getInstance().RemoveQuiz(qid);
 		
 		Map map = new HashMap<>();
 		map.put("result", resultNumber);
-		map.put("quiz", model);
 		
 		Gson gson = new Gson();
 		String jsonString = gson.toJson(map);

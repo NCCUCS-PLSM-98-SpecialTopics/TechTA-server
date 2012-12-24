@@ -1,0 +1,38 @@
+/*--------------------------------------CSS3 Table---------------------------------------*/
+tr:last-child td {border-bottom: none !important;}
+tr:first-child td {border-top: none !important;}
+td:last-child {border-right: none !important;}
+
+table {
+    margin: auto;
+    margin-top: 30px;
+    margin-bottom:20px;
+    width: 100%;
+    text-align: center;
+    border: 1px solid #cbcbcb;
+    background-color: #fafafa;
+    -webkit-box-shadow: 0 1px 3px 1px rgba(0,0,0,.05);
+    box-shadow: 0 1px 3px 1px rgba(0,0,0,.05);
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+th {
+    background: -webkit-linear-gradient(top, #e9eaec 0%,#d4d4d6 100%);
+    background: linear-gradient(top, #e9eaec 0%,#d4d4d6 100%);
+    font-size: 18px;
+    line-height: 27px;
+    padding: 22px 0;
+    border-bottom: 2px solid rgba(0,0,0,.15);
+    border-top: 1px solid rgba(255,255,255,.9);
+    border-top-left-radius:5px;
+    border-top-right-radius:5px;
+    text-shadow: 0 1px 1px #fff;
+}
+
+td {
+    border-top: 2px solid #fefefe;
+    border-bottom: 1px solid #e0e0e0;
+    border-right: 1px solid #e0e0e0;
+    padding: 13px 0;
+}

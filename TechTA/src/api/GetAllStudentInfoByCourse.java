@@ -12,30 +12,30 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.tools.Tool;
 
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
+import com.sun.corba.se.pept.protocol.MessageMediator;
+import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
 
 import task.TATool;
 import task.dbTask;
 
-import model.ClassModel;
 import model.CourseModel;
-import model.QuizModel;
+import model.MessageModel;
 
 /**
  * Servlet implementation class LoginAccount
  */
-@WebServlet("/api/AddQuizToClass")   
-public class AddQuizToClass extends HttpServlet {
+@WebServlet("/api/GetAllStudentInfoByCourse")
+public class GetAllStudentInfoByCourse extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddQuizToClass() {
+    public GetAllStudentInfoByCourse() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -49,49 +49,46 @@ public class AddQuizToClass extends HttpServlet {
 		HttpSession session = request.getSession();
 		//驗證登入狀態
 		if(!TATool.CheckLogin(session,out)) {return;}
+		
 		String account = (String) session.getAttribute("account");
 		/*Start coding*/
-
-		String [] params = new String[]{"question","choices","correctanswer","clid"};
-		if(!TATool.CheckPerem(params, request, out)){return;}
 		
-
-
-		String qid = null;
-		String question = TATool.utf8Perem(request,"question");
-		String correctAnswer =TATool.utf8Perem(request,"correctanswer");
-		String choice =TATool.utf8Perem(request,"choices");
-		String active ="0";
-		String clid =TATool.utf8Perem(request,"clid");
 		
-		Boolean IS_UPDATE =false;
-		if(request.getParameter("qid")!=null){
-			qid = TATool.utf8Perem(request,"qid");
-			IS_UPDATE = true;
-		}
+		if(!TATool.CheckPerem(new String[]{"coid"}, request, out)){return;}
+		String coid  = TATool.utf8Perem(request, "coid");
 		
-		QuizModel model = new QuizModel(qid, question, correctAnswer, choice, active, clid);
 		
-		int resultNumber = -1;		
-		String result = null;
+		int resultNumber = -1;
 		
-		if(IS_UPDATE){
-			resultNumber =  dbTask.getInstance().UpdateQuiz(model);
+		List<Map<String, String>> list = dbTask.getInstance().GetAllStudentInfoByCourse(coid);
+		
+		if(list != null){
+			resultNumber= 0;
+			int totalquiz = -1; //為了要取得最大值
+			
+			for(Map<String, String> map : list){
+				int num = Integer.parseInt(map.get("TQ"));
+				if(num > totalquiz)totalquiz = num;
+			}
+			for(Map<String, String> map : list){
+				Integer.getInteger(map.put("TQ",String.valueOf(totalquiz)));
+			}
 			
 		}else{
-			result = dbTask.getInstance().AddQuizToClass(model);
-			model.setQid(result);
-			resultNumber = (result != null)?0:1;
+			resultNumber = 1;
 		}
 		
 		
 		Map map = new HashMap<>();
 		map.put("result", resultNumber);
-		map.put("quiz", model);
+		map.put("list", list);
 		
 		Gson gson = new Gson();
-		String jsonString = gson.toJson(map);
-		out.println(jsonString);
+		String json = gson.toJson(map);
+		
+		out.println(json);
+		
+        /*end coding*/
         out.close();
 	}
 

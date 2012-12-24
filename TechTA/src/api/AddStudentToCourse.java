@@ -28,14 +28,14 @@ import model.QuizModel;
 /**
  * Servlet implementation class LoginAccount
  */
-@WebServlet("/api/AddQuizToClass")   
-public class AddQuizToClass extends HttpServlet {
+@WebServlet("/api/AddStudentToCourse")   
+public class AddStudentToCourse extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddQuizToClass() {
+    public AddStudentToCourse() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -49,45 +49,32 @@ public class AddQuizToClass extends HttpServlet {
 		HttpSession session = request.getSession();
 		//驗證登入狀態
 		if(!TATool.CheckLogin(session,out)) {return;}
-		String account = (String) session.getAttribute("account");
+		//String account = (String) session.getAttribute("account");
 		/*Start coding*/
 
-		String [] params = new String[]{"question","choices","correctanswer","clid"};
+		String [] params = new String[]{"coid","account"};
 		if(!TATool.CheckPerem(params, request, out)){return;}
 		
 
 
-		String qid = null;
-		String question = TATool.utf8Perem(request,"question");
-		String correctAnswer =TATool.utf8Perem(request,"correctanswer");
-		String choice =TATool.utf8Perem(request,"choices");
-		String active ="0";
-		String clid =TATool.utf8Perem(request,"clid");
+		String coid = TATool.utf8Perem(request,"coid");
+		String account =TATool.utf8Perem(request,"account");
 		
-		Boolean IS_UPDATE =false;
-		if(request.getParameter("qid")!=null){
-			qid = TATool.utf8Perem(request,"qid");
-			IS_UPDATE = true;
-		}
+		int resultNumber = dbTask.getInstance().CheckUserToCourse(coid, account);
 		
-		QuizModel model = new QuizModel(qid, question, correctAnswer, choice, active, clid);
 		
-		int resultNumber = -1;		
-		String result = null;
-		
-		if(IS_UPDATE){
-			resultNumber =  dbTask.getInstance().UpdateQuiz(model);
+		if(resultNumber == 0){
+			int result = dbTask.getInstance().AddUserToCourse(account, coid);
+			if(result == 0){
+				resultNumber =0;
+			}else{
+				resultNumber= 4; //system error
+			}
 			
-		}else{
-			result = dbTask.getInstance().AddQuizToClass(model);
-			model.setQid(result);
-			resultNumber = (result != null)?0:1;
 		}
-		
-		
 		Map map = new HashMap<>();
-		map.put("result", resultNumber);
-		map.put("quiz", model);
+		map.put("result", resultNumber);  //0:ok 1:already in this course  2:no account 4:error
+		
 		
 		Gson gson = new Gson();
 		String jsonString = gson.toJson(map);
