@@ -1,0 +1,123 @@
+@charset "UTF-8";
+
+.goldCoinRotate {
+	-webkit-animation: goldCoinRotate 2s;
+	-moz-animation: goldCoinRotate 2s;
+	-o-animation: goldCoinRotate 2s;
+	animation: goldCoinRotate 2s;
+}
+
+@-webkit-keyframes goldCoinRotate
+{
+	0% {
+		-webkit-transform-origin: center center;
+		-webkit-transform: rotateY(0);
+		-webkit-transform: translateY(100px);
+		opacity: 0;
+		display:block;
+	}
+	8% {
+		-webkit-transform: translateY(-50px);
+		opacity: 1;
+	}
+	10% {
+		-webkit-transform: translateY(0px);
+		opacity: 1;
+	}
+	
+	40% {
+		-webkit-transform-origin: center center;
+		-webkit-transform: rotateY(720deg);
+		opacity: 1;
+	}
+	70% {
+		-webkit-transform-origin: center center;
+		-webkit-transform: rotateY(720deg);
+		opacity: 1;
+	}
+	
+	100% {
+		-webkit-transform-origin: center center;
+		-webkit-transform: rotateY(720deg);
+		opacity: 0;
+		display:none;
+	}
+}
+
+@-moz-keyframes goldCoinRotate
+{
+	0% {
+		-moz-transform-origin: center center;
+		-moz-transform: rotateY(0);
+		opacity: 1;
+	}
+	
+	40% {
+		-moz-transform-origin: center center;
+		-moz-transform: rotateY(720deg);
+		opacity: 1;
+	}
+	70% {
+		-moz-transform-origin: center center;
+		-moz-transform: rotateY(720deg);
+		opacity: 1;
+	}
+	
+	100% {
+		-moz-transform-origin: center center;
+		-moz-transform: rotateY(720deg);
+		opacity: 0;
+	}
+}
+
+@-o-keyframes goldCoinRotate
+{
+	0% {
+		-o-transform-origin: center center;
+		-o-transform: rotateY(0);
+		opacity: 1;
+	}
+	
+	40% {
+		-o-transform-origin: center center;
+		-o-transform: rotateY(720deg);
+		opacity: 1;
+	}
+	70% {
+		-o-transform-origin: center center;
+		-o-transform: rotateY(720deg);
+		opacity: 1;
+	}
+	
+	100% {
+		-o-transform-origin: center center;
+		-o-transform: rotateY(720deg);
+		opacity: 0;
+	}
+}
+
+@keyframes goldCoinRotate
+{
+	0% {
+		transform-origin: center center;
+		transform: rotateY(0);
+		opacity: 1;
+	}
+	
+	40% {
+		transform-origin: center center;
+		transform: rotateY(720deg);
+		opacity: 1;
+	}
+	70% {
+		transform-origin: center center;
+		transform: rotateY(720deg);
+		opacity: 1;
+	}
+	
+	100% {
+		transform-origin: center center;
+		transform: rotateY(720deg);
+		opacity: 0;
+	}
+}

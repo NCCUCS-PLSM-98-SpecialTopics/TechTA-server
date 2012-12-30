@@ -219,7 +219,9 @@ public class dbTask {
 				model = new ClassModel(result.getString("cl_id"),
 										result.getString("cl_name"),
 										result.getString("week"),
-										result.getString("active"),null,null,null
+										result.getString("active"),
+										result.getString("roomid"),
+										result.getString("co_id"),null,null
 										);
 				modelList.add(model);
 			}
@@ -234,9 +236,9 @@ public class dbTask {
 	}
 	
 
-	public  List<ClassModel> GetClassByClassid(String clid){
+	public  ClassModel GetClassByClassid(String clid){
 		
-		List<ClassModel> modelList = new  ArrayList<ClassModel>();
+		
 		ClassModel model = null;
 		String queryStr = "SELECT * FROM `class` WHERE cl_id = ?";
 		String[] strArray = {clid};
@@ -247,9 +249,11 @@ public class dbTask {
 				model = new ClassModel(result.getString("cl_id"),
 										result.getString("cl_name"),
 										result.getString("week"),
-										result.getString("active"),null,null,null
-										);
-				modelList.add(model);
+										result.getString("active"),
+										result.getString("roomid"),
+										result.getString("co_id"),null,null
+														);
+				
 			}
 	
 		} catch (SQLException e) {
@@ -258,7 +262,7 @@ public class dbTask {
 		} 
 		
 		db.Close();
-		return modelList;
+		return model;
 	}
 	
 	
@@ -288,11 +292,11 @@ public class dbTask {
 		else return 1;
 	}
 	
-	public  int ActiveClass(String clid){
+	public  int ActiveClass(String clid,String roomid){
 		
-		String userSql = "UPDATE `class` SET `active`='1' WHERE  `cl_id`=? ";
+		String userSql = "UPDATE `class` SET `active`='1' , `roomid`='?' WHERE  `cl_id`=? ";
 		
-		String[] strArray = {clid};
+		String[] strArray = {roomid,clid};
 		int result = db.ChangeData(userSql, strArray);
 
 		db.Close();
@@ -303,7 +307,7 @@ public class dbTask {
 	
 	public  int DeActiveClass(String clid){
 		
-		String userSql = "UPDATE `class` SET `active`='0'  WHERE  `cl_id`=? ";
+		String userSql = "UPDATE `class` SET `active`='0'  , `roomid`=NULL WHERE  `cl_id`=? ";
 		
 		String[] strArray = {clid};
 		int result = db.ChangeData(userSql, strArray);
@@ -346,30 +350,34 @@ public class dbTask {
 
 //----- Enroll ----------
 	public  List<UserModel> GetAllUserByCourse(String coid){
-		List<String> AccountList = new  ArrayList<String>();
-		List<UserModel> modelList = new  ArrayList<UserModel>();
-		
-		
-		String queryStr = "SELECT `account` FROM `enroll` WHERE `co_id` = ?";
+
+		List<UserModel> list = new ArrayList<UserModel>();
+		String queryStr = "SELECT * FROM `enroll` natural join `user`   WHERE `co_id` = ?";
 		String[] strArray = {coid};
+		
 		ResultSet result = db.SelectTable(queryStr, strArray);
 		try {
 			while(result.next()) 
 			{ 
-				AccountList.add(result.getString("account"));
+				list.add( new UserModel(result.getString("account"),
+										result.getString("password"),
+										result.getString("name"),
+										result.getString("email"),
+										result.getString("department"),
+										result.getString("role"),
+										result.getString("chatid") ));
 			}
-		} catch (SQLException e) {
+	
+		}  catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 		
 		db.Close();
 		
-		for(String account:AccountList){
-			modelList.add(GetUser(account));
-		}
 		
-		return modelList;
+		
+		return list;
 		
 	}
 	public  int CheckUserToCourse(String coid, String account){
@@ -452,6 +460,32 @@ public class dbTask {
 		
 		db.Close();
 		return modelList;
+	}
+	public  QuizModel GetQuizByqid(String qid){
+		
+		List<QuizModel> modelList = new  ArrayList<QuizModel>();
+		QuizModel model = null;
+		String queryStr = "SELECT `q_id`, `question`, `correct_answer`, `choices`, `active`, `cl_id` FROM `quiz` WHERE `q_id` = ?";
+		String[] strArray = {qid};
+		ResultSet result = db.SelectTable(queryStr, strArray);
+		try {
+			while(result.next()) 
+			{ //(`cl_id`, `cl_name`, `week`, `active`, `co_id`) 
+				model = new QuizModel(result.getString("q_id"), 
+						result.getString("question"),
+						result.getString("correct_answer"),
+						result.getString("choices"),
+						result.getString("active"),
+						result.getString("cl_id"));
+			}
+	
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
+		db.Close();
+		return model;
 	}
 	
 	

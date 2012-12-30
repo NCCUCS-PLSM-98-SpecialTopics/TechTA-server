@@ -1,6 +1,6 @@
 package Enum;
 
-public enum RequestMethod {
+public enum RMethod {
 	GET{
 		@Override
 		public String toString(){

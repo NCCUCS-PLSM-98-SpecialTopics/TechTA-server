@@ -1,4 +1,4 @@
-package api;
+
 
 
 import java.io.IOException;
@@ -46,9 +46,9 @@ public class test extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		PrintWriter out = response.getWriter();
-		Map map = new HashMap<String,String>();
-		map.put("name", "apple");
-		map.put("id", "3251");
+		out.println("{\"GET\":\"SUCCESS\"}");
+		out.close();
+
 		
 		//JSONObject jObject =  new JSONObject(map);
 		
@@ -82,7 +82,13 @@ public class test extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		PrintWriter out = response.getWriter();
+		if(request.getParameter("q")!=null){
+			out.println("{\"q\":\""+request.getParameter("q")+"\"}");
+			
+		}
+		out.println("{\"POST\":\"SUCCESS\"}");
+		out.close();
 	}
 
 }

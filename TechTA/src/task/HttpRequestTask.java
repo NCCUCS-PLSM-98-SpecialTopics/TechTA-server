@@ -3,15 +3,18 @@ package task;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import Enum.RequestMethod;
+import org.eclipse.jdt.internal.compiler.ast.ThisReference;
+
+import Enum.RMethod;
 
 public class HttpRequestTask {
 
 	
-	public static String execute(URL ul, RequestMethod method){
+	public static String execute(URL ul, RMethod method){
 		String result ="";
 		
 		  try{
@@ -53,4 +56,6 @@ public class HttpRequestTask {
 		  return result;
 		
 	}
+
+	
 }

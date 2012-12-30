@@ -2,6 +2,7 @@ package api;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,11 +15,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.tools.Tool;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 
 import task.TATool;
+import task.WSClient;
 import task.dbTask;
 
 import model.ClassModel;
@@ -58,11 +62,47 @@ public class ActiveQuiz extends HttpServlet {
 		String qid = TATool.utf8Perem(request,"qid");
 		Boolean DoActive = (TATool.utf8Perem(request,"active").equals("true"))?true:false;
 		
+		QuizModel quiz = dbTask.getInstance().GetQuizByqid(qid);
 		
-		
-		
-		int resultNumber = -1;		
+		String roomid = dbTask.getInstance().GetClassByClassid(quiz.getClid()).getRoomid();
+		int resultNumber = -1;	
 		resultNumber = dbTask.getInstance().ActiveQuiz(qid, (DoActive)?"1":"0");
+		
+
+		if(DoActive ){
+			if(roomid!=null){
+				//發出WS 開啟了一個問題
+				Map<String,String> map = new HashMap<String,String>();
+				map.put("type", "quiz");
+				map.put("qid", quiz.getQid());
+				map.put("question", quiz.getQuestion());
+				JSONObject obj;
+				try {
+					obj = new JSONObject( quiz.getChoice());
+					map.put("A", obj.getJSONObject("A").toString());
+					map.put("B", obj.getJSONObject("B").toString());
+					map.put("C", obj.getJSONObject("C").toString());
+					map.put("D", obj.getJSONObject("D").toString());
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+				String jsonmsg = (new Gson()).toJson(map);
+				WSClient.getInstance().SendMsg(jsonmsg, roomid);
+			}
+			else{
+				resultNumber = 2; //system error wrong roomid
+			}
+		}else{
+			//發出WS 關閉了一個問題
+			Map<String,String> map = new HashMap<String,String>();
+			map.put("type", "quizclose");
+			map.put("qid", quiz.getQid());
+			String jsonmsg = (new Gson()).toJson(map);
+			WSClient.getInstance().SendMsg(jsonmsg, roomid);
+			
+		}
+		
 		
 		Map map = new HashMap<>();
 		map.put("result", resultNumber);

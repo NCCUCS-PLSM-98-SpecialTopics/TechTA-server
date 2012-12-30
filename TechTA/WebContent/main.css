@@ -4,6 +4,28 @@
 body{
 		margin:0;
 }
+#status{
+	position:absolute;
+	width:100%;
+	height:100%;
+	top:0;
+	left:0;
+	z-index:100;
+	display:none;
+	
+}
+#cash{
+	position: absolute;
+	height: 500px;
+	width: 500px;
+	
+	top: 50%;
+	left: 50%;
+	margin-left: -250px;
+	margin-top: -250px;
+	display:none;
+	
+}
 .header{
 		padding:20px;
 		height:100px;		
@@ -497,3 +519,5 @@ div {
 .regular-radio:active, .regular-radio:checked:active {
     box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);
 }
+
+

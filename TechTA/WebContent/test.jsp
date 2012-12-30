@@ -111,7 +111,7 @@ $("html").ready(function(){
 			$("#UpdateAccount").html("");
 			 $.ajax({
 			        type: "POST",
-			        url: "api/UpdateAccount",
+			        url: "api/CreateAccount",
 			        data: {
 			    		account:$("#U_account").val(),
 			    		password:$("#U_password").val(),
@@ -141,7 +141,31 @@ $("html").ready(function(){
 				$("#GetCourse").html(" ");
 				$("#LoginAccount").html(" ");
 			}	
-		)
+		);
+		
+	$('#testScriptBtn').click(function(){
+		 var url = $('#testScriptUrl').val();
+		 var method = $('#testScriptMethod').val();
+		 var html = $('#testScriptData').val();
+		 var data = JSON.parse(html);
+		  
+
+		 $.ajax({
+		        type: method,
+		        url: url,
+		        data: data,
+		        dataType: "json",
+		        success:function (data){
+                     $('#testScriptDiv').html(data);
+		    	},
+		        error:function(thrownError){
+		        	 $('#testScriptDiv').html(thrownError.responseText);
+		        }
+	      }); 
+
+	
+		
+	});
 
 })
 
@@ -211,6 +235,13 @@ $("html").ready(function(){
 <div style="width:50%; background-color:#578" id="UpdateAccount">
 </div>
 
+
+
+URL:<input id="testScriptUrl" type="text" value="api/GetAccountInfo" /> <br/>
+Method:<input id="testScriptMethod" type="text" value="GET"/><br/>
+data:<textarea id="testScriptData"  style="width:50%;">{}</textarea><br/>
+<input id="testScriptBtn" type="button" value ="GO!"></input>
+<div id="testScriptDiv"  style="width:50%; background-color:#578">test</div>
 
 <p>&nbsp;</p>
 </div>

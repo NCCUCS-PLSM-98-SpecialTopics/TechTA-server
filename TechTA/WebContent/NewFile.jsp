@@ -1,8 +1,10 @@
+<%@ page language="java" contentType="text/html; charset=BIG5"
+    pageEncoding="BIG5"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>ÁÑ°Ê®ôÈ°åÊñá‰ª∂</title>
+<title>µLº–√D§Â•Û</title>
 
 <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
 <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
@@ -36,7 +38,7 @@
             <a id="homepageBtn">HOME</a>
             <a id="courseBtn">MY Course</a>
             <a id="profileBtn"> MY Profile</a>
-            <a id="LogoutBtn"><span id="UserNameSpan">JACK</span> ÊÇ®Â•Ω, ÁôªÂá∫</a>
+            <a id="LogoutBtn"><span id="UserNameSpan">JACK</span> ±z¶n, µn•X</a>
         </div>
     </div>
 </div>
@@ -61,15 +63,15 @@
     <div id="course" style="display:none;" >
         <div id="courseContainer" class="middleArea clearfix" style="display:none;"  >
                     
-               <div class="box"><h2>Ë®àÁÆóÊ©üÊ¶ÇË´ñ</h2></div>
-               <div class="box"><h2>Ë®àÁÆóÊ©üÁ®ãÂºèË®≠Ë®à</h2></div>
-               <div class="box"><h2>Á®ãÂºèË™ûË®Ä</h2></div>
-               <div class="box"><h2>Á≥ªÁµ±Á®ãÂºè</h2></div>
-               <div class="box"><h2>‰∫∫Â∑•Êô∫ÊÖß</h2></div>
-               <div class="box"><h2>Ë®àÁÆóÊ©üÁµÑÁπîËàáÁµêÊßã</h2></div>
-                <!--ÂÖ≠ËßíÂΩ¢
+               <div class="box"><h2>≠p∫‚æ˜∑ßΩ◊</h2></div>
+               <div class="box"><h2>≠p∫‚æ˜µ{¶°≥]≠p</h2></div>
+               <div class="box"><h2>µ{¶°ªy®•</h2></div>
+               <div class="box"><h2>®t≤Œµ{¶°</h2></div>
+               <div class="box"><h2>§H§u¥ººz</h2></div>
+               <div class="box"><h2>≠p∫‚æ˜≤’¬¥ªPµ≤∫c</h2></div>
+                <!--§ª®§ßŒ
                 <div class="hex-row">
-                    <div class="hex"><div class="top"></div><div class="middle"><div class="text">Ë®àÁÆóÊ©üÊ¶ÇË´ñ</div></div><div class="bottom"></div></div>
+                    <div class="hex"><div class="top"></div><div class="middle"><div class="text">≠p∫‚æ˜∑ßΩ◊</div></div><div class="bottom"></div></div>
                     <div class="hex"><div class="top"></div><div class="middle"></div><div class="bottom"></div></div>
                     <div class="hex"><div class="top"></div><div class="middle"></div><div class="bottom"></div></div>
                 </div>
@@ -90,25 +92,25 @@
         
         <div id="addcourse" class="middleArea clearfix" style="display:none;"  >
             <form onsubmit="return false;">
-                Ë™≤Á®ãÂêçÁ®±:<input type="text" name="name"/>
-                Âπ¥‰ªΩ:<select name="year">
+                Ω“µ{¶W∫Ÿ:<input type="text" name="name"/>
+                ¶~•˜:<select name="year">
                         <option value="98">98</option>
                         <option value="99">99</option>
                         <option value="100">100</option>
                     </select>
-                Â≠∏Êúü:<select name="semester">
+                æ«¥¡:<select name="semester">
                         <option value="1">1</option>
                         <option value="2">2</option>
                     </select>
-                <input type="button" value="ÂèñÊ∂à"/>
-                <input type="submit" value="Êñ∞Â¢û"/>
+                <input type="button" value="®˙Æ¯"/>
+                <input type="submit" value="∑sºW"/>
             </form>
         </div>
         
         <div id="addclass" class="middleArea clearfix" style="display:none;"  >
              <form onsubmit="return false;">
-                Ë™≤Â†ÇÂêçÁ®±:<input type="text" name="name"/>
-                Âë®Ê¨°:<select name="week">
+                Ω“∞Û¶W∫Ÿ:<input type="text" name="name"/>
+                ©P¶∏:<select name="week">
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -130,8 +132,8 @@
                         <option value="19">19</option>
                         <option value="20">20</option>
                     </select>
-                <input type="button" value="ÂèñÊ∂à"/>
-                <input type="submit" value="Êñ∞Â¢û"/>
+                <input type="button" value="®˙Æ¯"/>
+                <input type="submit" value="∑sºW"/>
             </form>
         </div>
         
@@ -140,7 +142,7 @@
         
             <div class="class-menu middleArea" style="">
                 <div class="sidebar">
-                    <span class="title" >Ë®àÁÆóÊ©üÊ¶ÇË´ñ</span>
+                    <span class="title" >≠p∫‚æ˜∑ßΩ◊</span>
                     <nav>
                         <ul>
                             <li class="teacherFunc"><a class="classActiveLink" linkDiv="" value="active" >Active Class</a></li>
@@ -169,10 +171,10 @@
                     
                     <div class="classFunc message" style="display: none">
                         
-                        <!--Ë®äÊÅØÊ°Ü--><div id="messagebox" class="messagebox" placeholder="ÁõÆÂâçÁÑ°Êñ∞Ë®äÊÅØ"></div>
+                        <!--∞TÆßÆÿ--><div id="messagebox" class="messagebox" placeholder="•ÿ´eµL∑s∞TÆß"></div>
                         
-                        <!--ÁôºÈÄÅÊ°Ü--><input type="text" placeholder="Ë´ãËº∏ÂÖ•Ë®äÊÅØ..." />
-                        			<input type="button" value="ÈÄÅÂá∫"/>
+                        <!--µo∞eÆÿ--><input type="text" placeholder="Ω–øÈ§J∞TÆß..." />
+                        			<input type="button" value="∞e•X"/>
 
                     </div>
                     
@@ -191,92 +193,92 @@
                                         </ul>
                                     </div>
                                     <div class ="buttonContainer">
-                                        <input type="button" value="ÂïüÂãï"/>
-                                        <input type="button" value="ÈóúÈñâ" style="display:none"/>
-                                        <input type="button" value="Âà™Èô§"/>
-                                        <input type="button" value="‰øÆÊîπ"/>
+                                        <input type="button" value="±“∞ "/>
+                                        <input type="button" value="√ˆ≥¨" style="display:none"/>
+                                        <input type="button" value="ßR∞£"/>
+                                        <input type="button" value="≠◊ßÔ"/>
                                     </div>
                             </div>
                             <div class ="quiz">
                                 <form >
-                                    <div class = "question"><input type="text" required="required" name="question" placeholder="Ë´ãËº∏ÂÖ•ÂïèÈ°å.." value=""/></div>
+                                    <div class = "question"><input type="text" required="required" name="question" placeholder="Ω–øÈ§J∞›√D.." value=""/></div>
                                     <div class = "answerContainer" style="width:500px">
                                         <ul>
                                             <li><input type="radio" class="regular-radio" name="answer" value="A"/>A&nbsp;
-                                                 <input type="text" required="required" name="A" placeholder="Á≠îÊ°àA" /></li>
+                                                 <input type="text" required="required" name="A" placeholder="µ™Æ◊A" /></li>
                                             <li><input type="radio" class="regular-radio"  name="answer" value="B"/>B&nbsp;
-                                                 <input type="text" required="required" name="B" placeholder="Á≠îÊ°àB" /></li>
+                                                 <input type="text" required="required" name="B" placeholder="µ™Æ◊B" /></li>
                                             <li><input type="radio" class="regular-radio"  name="answer" value="C"/>C&nbsp;
-                                                <input type="text" required="required" name="C" placeholder="Á≠îÊ°àC" /></li>
+                                                <input type="text" required="required" name="C" placeholder="µ™Æ◊C" /></li>
                                             <li><input type="radio" class="regular-radio"  name="answer" value="D"/>D&nbsp;
-                                                <input type="text" required="required" name="D"  placeholder="Á≠îÊ°àD" /></li>
+                                                <input type="text" required="required" name="D"  placeholder="µ™Æ◊D" /></li>
                                         </ul>
                                     </div>
                                     <div class ="buttonContainer">
-                                        <input type="button" value="Âà™Èô§"/>
-                                        <input type="submit" value="Á¢∫Ë™ç"/>
+                                        <input type="button" value="ßR∞£"/>
+                                        <input type="submit" value="ΩTª{"/>
                                     </div>
                                 </form>
                             </div>
                         </div>
-                        <div id="AddQuestionBtn" > Êñ∞Â¢ûÂïèÈ°å + </div>
+                        <div id="AddQuestionBtn" > ∑sºW∞›√D + </div>
                     </div>
                     
                     <div class="classFunc control" style="display: none">
-                        <!--ÂïüÂãïÂïèÈ°å-->
+                        <!--±“∞ ∞›√D-->
 						<div>
-							<h2>ÂèäÊôÇÊ∏¨È©ó</h2>
-							<p>ÂïèÈ°å:XXXXXX 
-								<input type="button" value="ÂïüÂãï" >
-								<input type="button" value="Ë©≥Á¥∞" >
+							<h2>§ŒÆ…¥˙≈Á</h2>
+							<p>∞›√D:XXXXXX 
+								<input type="button" value="±“∞ " >
+								<input type="button" value="∏‘≤”" >
 							</p>
-							<p>ÂïèÈ°å2:XXXXXX 
-								<input type="button" value="ÂïüÂãï" >
-								<input type="button" value="Ë©≥Á¥∞" >
+							<p>∞›√D2:XXXXXX 
+								<input type="button" value="±“∞ " >
+								<input type="button" value="∏‘≤”" >
 							</p>
-							<p>„ÄÄ„ÄÄ> Ë©≥Á¥∞Ë≥áÊñô:XXXXXX <br/>
-								„ÄÄ„ÄÄ1.Áµ±Ë®àÂúñ
+							<p>°@°@> ∏‘≤”∏ÍÆ∆:XXXXXX <br/>
+								°@°@1.≤Œ≠pπœ
 							</p>
 						</div>	
 						<div >
-							<h2>Ë®äÊÅØ</h2>
+							<h2>∞TÆß</h2>
 							<div style="border:2px solid;">
-								ÂåøÂêç:ÂâõÂâõÈÇ£ÂÄãÊòØ‰ªÄÈ∫ºÊÑèÊÄù?<br/>
-								ÂåøÂêç:‰ªÄÈ∫ºÊòØsort<br/>
-								ÂåøÂêç:ÈÄôÂÄãÁ≥ªÁµ±Áúü‰∏çÈåØ<br/>
+								∞Œ¶W:≠Ë≠Ë®∫≠”¨O§∞ªÚ∑N´‰?<br/>
+								∞Œ¶W:§∞ªÚ¨Osort<br/>
+								∞Œ¶W:≥o≠”®t≤ŒØu§£ø˘<br/>
 							</div>
 						
 						</div>
 						<div >
-							<h2>Âä†ÂàÜ</h2>
+							<h2>•[§¿</h2>
 							<input type="text"><input type="button" value="send">
 						
 						</div>
 						
-                        <!--ÂïèÈ°åÁµ±Ë®à-->
+                        <!--∞›√D≤Œ≠p-->
                         <!--Message-->
-                        <!--Âä†ÂàÜ-->
+                        <!--•[§¿-->
                     </div>
                     
                     <div class="classFunc student" style="display: none">
-                        <!--Â≠∏ÁîüÂêçÂñÆ-->
+                        <!--æ«•Õ¶W≥Ê-->
 						<table border="0" cellpadding="0" cellspacing="0" class="horizontal studentContainer">
 							<tr class="BigTitle">
 								<th colspan="5">Student Management</th>
 							</tr>
 							<tr class="title">
-								<td>Â≠∏Ëôü</td>
-								<td>ÂßìÂêç</td>
-								<td>ÂõûÁ≠îÁ¥ÄÈåÑ</td>
-								<td>ÁôºÂïèÊ¨°Êï∏</td>
-								<td>Âà™Èô§Â≠∏Áîü</td>
+								<td>æ«∏π</td>
+								<td>©m¶W</td>
+								<td>¶^µ™¨ˆø˝</td>
+								<td>µo∞›¶∏º∆</td>
+								<td>ßR∞£æ«•Õ</td>
 							</tr>
 							<tr>
 								<td>98703005</td>
-								<td>ÂºµÂ≠∏Âèã</td>
-								<td>19/20(Ê≠£Á¢∫/Á∏ΩÈ°åÊï∏)</td>
-								<td>20Ê¨°</td>
-								<td>Âà™Èô§</td>
+								<td>±iæ«§Õ</td>
+								<td>19/20(•øΩT/¡`√Dº∆)</td>
+								<td>20¶∏</td>
+								<td>ßR∞£</td>
 							</tr>
 							
                         </table>
@@ -285,7 +287,7 @@
 							<div class="ui-widget">
 								<input type="text"  id="AddStudentText" />
 								<span  id="AddStudentName" ></span>
-								<input type="button" id="AddStudentBtn" value="Êñ∞Â¢ûÂ≠∏Áîü+"/>
+								<input type="button" id="AddStudentBtn" value="∑sºWæ«•Õ+"/>
 							</div>
 							
 							
@@ -304,15 +306,15 @@
 	<div id="profile" class="clearfix middleArea" style="display:none;" >
 		<form id="form1" name="form1" method="post" action="#" onsubmit="return UpdateAccount();">
 		
-			<p>   accountÔºö<input type="text" name="account" id="U_account" />   </p>
-			<p>   passwordÔºö<input type="text" name="password" id="U_password" />   </p>
-			<p>   nameÔºö<input type="text" name="name" id="U_name" />   </p>
-			<p>   emailÔºö<input type="text" name="email" id="U_email" />   </p>
-			<p>   departmentÔºö<input type="text" name="department" id="U_department" />   </p>
-			<p>   roleÔºö
+			<p>   account°G<input type="text" name="account" id="U_account" />   </p>
+			<p>   password°G<input type="text" name="password" id="U_password" />   </p>
+			<p>   name°G<input type="text" name="name" id="U_name" />   </p>
+			<p>   email°G<input type="text" name="email" id="U_email" />   </p>
+			<p>   department°G<input type="text" name="department" id="U_department" />   </p>
+			<p>   role°G
 				<select name="role"  id="U_role" >
-					<option value="teacher">ËÄÅÂ∏´</option>
-					<option value="student">Â≠∏Áîü</option>
+					<option value="teacher">¶—Æv</option>
+					<option value="student">æ«•Õ</option>
 				</select>
 			</p>
 			<p>&nbsp;</p>
@@ -337,17 +339,17 @@
 						<div class = "question">${question}</div>
 						<div class = "answerContainer" style="width:500px">
 							<ul>
-								<li><span class="correctAnswer">{{if correctA}}‚óè{{else}}‚óã{{/if}}</span> <span class="Answer" > ${A}</span></li>
-								<li><span class="correctAnswer">{{if correctB}}‚óè{{else}}‚óã{{/if}}</span> <span class="Answer" > ${B}</span></li>
-								<li><span class="correctAnswer">{{if correctC}}‚óè{{else}}‚óã{{/if}}</span> <span class="Answer" > ${C}</span></li>
-								<li><span class="correctAnswer">{{if correctD}}‚óè{{else}}‚óã{{/if}}</span> <span class="Answer" > ${D}</span></li>
+								<li><span class="correctAnswer">{{if correctA}}°¥{{else}}°≥{{/if}}</span> <span class="Answer" > ${A}</span></li>
+								<li><span class="correctAnswer">{{if correctB}}°¥{{else}}°≥{{/if}}</span> <span class="Answer" > ${B}</span></li>
+								<li><span class="correctAnswer">{{if correctC}}°¥{{else}}°≥{{/if}}</span> <span class="Answer" > ${C}</span></li>
+								<li><span class="correctAnswer">{{if correctD}}°¥{{else}}°≥{{/if}}</span> <span class="Answer" > ${D}</span></li>
 							</ul>
 						</div>
 						<div class ="buttonContainer">
-							<input type="button"class="ActiveQuiz"  value="ÂïüÂãï" style="${openStyle}" />
-							<input type="button" class="DeActiveQuiz" value="ÈóúÈñâ" style="${closeStyle}"/>
-							<input type="button" class="RemoveQuiz" value="Âà™Èô§"/>
-							<input type="button" class="ModifyQuiz" value="‰øÆÊîπ"/>
+							<input type="button"class="ActiveQuiz"  value="±“∞ " style="${openStyle}" />
+							<input type="button" class="DeActiveQuiz" value="√ˆ≥¨" style="${closeStyle}"/>
+							<input type="button" class="RemoveQuiz" value="ßR∞£"/>
+							<input type="button" class="ModifyQuiz" value="≠◊ßÔ"/>
 						</div>
 				</div>
 </script>
@@ -356,22 +358,22 @@
 
 			<div class ="quiz" index="${index}" qid="${qid}">
 				<form>
-					<div class = "question"><input type="text" required="required" name="question" placeholder="Ë´ãËº∏ÂÖ•ÂïèÈ°å.." value="${question}" /></div>
+					<div class = "question"><input type="text" required="required" name="question" placeholder="Ω–øÈ§J∞›√D.." value="${question}" /></div>
 					<div class = "answerContainer" style="width:500px">
 						<ul>
 							<li><input type="radio" class="regular-radio" name="answer" value="A" {{if correctA}}checked{{/if}}/>A&nbsp;
-								 <input type="text" required="required" name="A" placeholder="Á≠îÊ°àA" value="${A}" /></li>
+								 <input type="text" required="required" name="A" placeholder="µ™Æ◊A" value="${A}" /></li>
 							<li><input type="radio" class="regular-radio"  name="answer" value="B" {{if correctB}}checked{{/if}}/>B&nbsp;
-								 <input type="text" required="required" name="B" placeholder="Á≠îÊ°àB" value="${B}" /></li>
+								 <input type="text" required="required" name="B" placeholder="µ™Æ◊B" value="${B}" /></li>
 							<li><input type="radio" class="regular-radio"  name="answer" value="C" {{if correctC}}checked{{/if}}/>C&nbsp;
-								<input type="text" required="required" name="C" placeholder="Á≠îÊ°àC" value="${C}" /></li>
+								<input type="text" required="required" name="C" placeholder="µ™Æ◊C" value="${C}" /></li>
 							<li><input type="radio" class="regular-radio"  name="answer" value="D" {{if correctD}}checked{{/if}}/>D&nbsp;
-								<input type="text" required="required" name="D" placeholder="Á≠îÊ°àD" value="${D}" /></li>
+								<input type="text" required="required" name="D" placeholder="µ™Æ◊D" value="${D}" /></li>
 						</ul>
 					</div>
 					<div class ="buttonContainer">
-						<!--<input type="button" class="RemoveQuiz" value="Âà™Èô§"/>-->
-						<input type="submit" value="Á¢∫Ë™ç"/>
+						<!--<input type="button" class="RemoveQuiz" value="ßR∞£"/>-->
+						<input type="submit" value="ΩTª{"/>
 					</div>
 				</form>
 			</div>
@@ -381,9 +383,9 @@
 							<tr>
 								<td>${account}</td>
 								<td>${name}</td>
-								<td>${CQ}/${TQ}/(Ê≠£Á¢∫/Á∏ΩÈ°åÊï∏)</td>
-								<td>${TM}Ê¨°</td>
-								<td account=${account} class="RemoveStudentBtn">Âà™Èô§</td>
+								<td>${CQ}/${TQ}/(•øΩT/¡`√Dº∆)</td>
+								<td>${TM}¶∏</td>
+								<td account=${account} class="RemoveStudentBtn">ßR∞£</td>
 							</tr>
 </script>
 

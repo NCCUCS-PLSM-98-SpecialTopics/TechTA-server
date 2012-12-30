@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.UserModel;
 
@@ -18,14 +19,14 @@ import task.dbTask;
 /**
  * Servlet implementation class LoginAccount
  */
-@WebServlet("/api/UpdateAccount")
-public class UpdateAccount extends HttpServlet {
+@WebServlet("/api/UpdateMyAccount")
+public class UpdateMyAccount extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public UpdateAccount() {
+    public UpdateMyAccount() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -43,27 +44,26 @@ public class UpdateAccount extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
+		HttpSession session = request.getSession();
+		if(!TATool.CheckLogin(session,out)) {return;}
+		String account = (String) session.getAttribute("account");
 		
 		int returnResult = -1;
 		
-		if(!TATool.CheckPerem(new String[]{"account","password","name","email","department"}, request, out)){return;}
+		if(!TATool.CheckPerem(new String[]{"name","email","department"}, request, out)){return;}
+		String clid  = TATool.utf8Perem(request, "clid");
 		
+		UserModel model = dbTask.getInstance().GetUser(account);
 		
-		
-		
-		String account =TATool.utf8Perem(request, "account");
-		String password =TATool.utf8Perem(request, "password");
-		String name =TATool.utf8Perem(request, "name");
-		String email =TATool.utf8Perem(request, "email");
-		String department =TATool.utf8Perem(request, "department");
-		String role ="student";
-		String chatid ="";
-		
+		if(request.getParameter("password") != null){
+			model.setPassword(MD5.encode(TATool.utf8Perem(request, "password")));
+		}
+		model.setName(TATool.utf8Perem(request, "name") );
+		model.setEmail(TATool.utf8Perem(request, "email"));
+		model.setDepartment(TATool.utf8Perem(request, "department"));
  
-		if(request.getParameter("role")!=null)
-			role = request.getParameter("role").toString();
+
 		
-		UserModel model = new UserModel(account, password, name, email, department, role, chatid);
 		if(dbTask.getInstance().GetUser(account) != null){ 
 			//update account
 			
@@ -76,30 +76,7 @@ public class UpdateAccount extends HttpServlet {
 			}
 			
 		}else{     
-			//create account
-			
-			//-----驗證密碼?
-						
-			
-			
-			//-------		
-			
-			
-			//註冊chatID----------
-			//model.setChatid(chatid);
-			
-			//returnResult = 2;  //if error on chat id
-			
-			
-			//---------------------
-			
-			int resultCreate = dbTask.getInstance().CreateAccount(model);
-			 
-			if(resultCreate == 0){
-				returnResult = 0;
-			}else{
-				returnResult = 1;
-			}
+			returnResult = 2;//no such account
 		}
 		
 		

@@ -42,7 +42,11 @@ var DoRequest = function(path,method,data,callback){
 					}
 					timer = null;
 					if(result&&result.error){
-						if(result.code =="100"){alert("請重新登入!"); return;}
+						if(result.code =="100"){
+							alert("請重新登入!"); 
+							window.location = "Login";
+							return;
+						}
 					}
 					callback(result);
 			},
@@ -73,6 +77,7 @@ var TA = {
 			//main menu
 			$("#courseBtn").live("click",this.CourseBtnClick);
 			$("#homepageBtn").live("click",this.HomepageBtnClick);
+			$("#profileBtn").live("click",this.ProfileBtnClick);
 			$("#LogoutBtn").live("click",this.LogoutClick);
 			
 			//course
@@ -96,7 +101,7 @@ var TA = {
 			//share
 			$.liveReady('.teacherFunc', function() { if(IsTeacher) {$(this[0]).show();}else {$(this[0]).hide();}});
 			$.liveReady('.nonteacherFunc', function () {if(IsTeacher) {$(this[0]).hide();}else {$(this[0]).show();}});
-
+			$('.testBtn').live("click",this.test);
 		  }
 	
 	,init: function(){
@@ -134,6 +139,8 @@ var TA = {
 						//$("#course").addClass("animated fadeInDown");
 							$("#course").hide();
 							$("#banner").show();
+							$("#profile").hide();
+							
 					}
 	
 	,CourseBtnClick: function(){
@@ -144,16 +151,34 @@ var TA = {
 							$("#addclass").hide();
 							$("#class").hide();
 						$("#banner").hide();
+						$("#profile").hide();
 					}	
 	
+	,ProfileBtnClick:function(){
+						$("#course").hide();
+						$("#banner").hide();
+						$("#profile").show();
+						TA.ShowAccountInfo();
+					}	
+		
 	,LogoutClick: function(){
 		Request("api/Logout","GET",null, function(r){
 			if(r.result == "0") alert("您已登出囉!");
 			//跳轉到登入頁面
-			//********************
+			window.location = "Login";
 		});
 	}
 	
+	////////Profile ////////////////
+	,ShowAccountInfo: function(){
+				Request("api/GetAccountInfo","GET",null,function(info){
+					$("#UserNameSpan").html(info.name);
+					$("#U_account").val();
+					$("#U_name").val();
+					$("#U_email").val();
+					$("#U_department").val();
+				}) 
+			}
 	
 	//////// course menu //////////
 	,ShowCourse: function(){
@@ -165,8 +190,10 @@ var TA = {
 							$(node).appendTo("#courseContainer");
 						}
 						//老師增加課程
-						var node = "<div class='box addCourseBtn teacherFunc'><h2>+新增課程</h2></div>";
-							$(node).appendTo("#courseContainer");
+						if(IsTeacher){
+							var node = "<div class='box addCourseBtn teacherFunc'><h2>+新增課程</h2></div>";
+								$(node).appendTo("#courseContainer");
+						}
 					
 					})
 				}
@@ -189,9 +216,10 @@ var TA = {
 						}
 						 
 						 //老師增加課堂
-						var node = "<div class='box addClassBtn teacherFunc' ><h2>+新增課堂</h2></div>";
-							$(node).appendTo("#courseContainer");
-					
+						if(IsTeacher){
+							var node = "<div class='box addClassBtn teacherFunc' ><h2>+新增課堂</h2></div>";
+								$(node).appendTo("#courseContainer");
+						}
 					}
 	
 	,ClassOnClick: function(e){ 
@@ -604,6 +632,19 @@ var TA = {
 							$(node).appendTo("#courseContainer");	
 					});
 				}
+
+	,test: function(){
+		$('#status').show();
+		$('#cash').show();
+		$('#cash').addClass('goldCoinRotate');
+		
+		setTimeout(function(){
+			$('#status').hide();
+			$('#cash').hide();
+			$('#cash').removeClass('goldCoinRotate');
+		
+		},2000);
+	}
 }
 
 

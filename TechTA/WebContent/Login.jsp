@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
-    pageEncoding="utf-8"%>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 
     
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -29,11 +28,12 @@ function login(){
 	    	},
 	        dataType: "json",
 	        success:function (data){
-	    		//var jdata = JSON.parse(data);
-	    		//if(jdata.result == "2")alert("您的帳號密碼錯誤");
-	    		//if(jdata.result == "0")alert("恭喜您登入!");
-	    		if(data.result == "2")alert("您的帳號密碼錯誤");
-	    	    if(data.result == "0")alert("恭喜您登入!");
+	    		if(data.result == "2")alert("創新帳號");
+	    	    if(data.result == "1")alert("您的帳號密碼錯誤");
+	    	    if(data.result == "0"){
+	    	    	window.location = "MainPage";
+	    	    	alert("恭喜您登入!");
+	    	    }
 	    	},
 	        error:function(thrownError){
 	          alert(thrownError.responseText);

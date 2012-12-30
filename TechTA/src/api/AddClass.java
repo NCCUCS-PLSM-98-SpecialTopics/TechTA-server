@@ -63,7 +63,7 @@ public class AddClass extends HttpServlet {
 		String coid = TATool.utf8Perem(request,"coid");
 		String active  = "0";
 		
-		ClassModel model = new ClassModel(null, name, week, active, coid, null, null);
+		ClassModel model = new ClassModel(null, name, week, active, null ,coid, null, null);
 		
 		int resultNumber = -1;
 		String result = dbTask.getInstance().CreateClassFromCourse(model);
