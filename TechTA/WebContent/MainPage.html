@@ -6,19 +6,16 @@
 
 <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
 <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
-<!--<script type="text/javascript" src="jquery-1.8.2.min.js" ></script>-->
-<script type="text/javascript" src="jquery.tmpl.min.js"></script>
-<!--<script type="text/javascript" src="jquery-ui-1.9.2.custom.min.js"></script>-->
-<script type="text/javascript" src="jquery.liveready-1.0-min.js"></script>
-<!--<link rel="stylesheet" type="text/css" href="hex.css" />-->
+<script type="text/javascript" src="content/jquery.tmpl.min.js"></script>
+<script type="text/javascript" src="content/jquery.liveready-1.0-min.js"></script>
+<script type="text/javascript" src="content/mainMVC.js" ></script>
 
 
-<link rel="stylesheet" type="text/css" href="animateTA.css" />
-<link rel="stylesheet" type="text/css" href="animate.css" />
-<link rel="stylesheet" type="text/css" href="main.css" />
-<link rel="stylesheet" type="text/css" href="table.css" />
+<link rel="stylesheet" type="text/css" href="content/animateTA.css" />
+<link rel="stylesheet" type="text/css" href="content/animate.css" />
+<link rel="stylesheet" type="text/css" href="content/main.css" />
+<link rel="stylesheet" type="text/css" href="content/table.css" />
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
-<!--<link rel="stylesheet" type="text/css" href="jquery-ui-1.9.2.custom.min.css" /> -->
 
 
 </head>
@@ -171,8 +168,8 @@
                         
                         <!--訊息框--><div id="messagebox" class="messagebox" placeholder="目前無新訊息"></div>
                         
-                        <!--發送框--><input type="text" placeholder="請輸入訊息..." />
-                        			<input type="button" value="送出"/>
+                        <!--發送框--><input type="text" class = "SendMessageText" placeholder="請輸入訊息..." />
+                        			<input type="button" class = "SendMessageBtn" value="送出"/>
 
                     </div>
                     
@@ -387,6 +384,5 @@
 							</tr>
 </script>
 
-<script type="text/javascript" src="mainMVC.js" ></script>
 </body>
 </html>

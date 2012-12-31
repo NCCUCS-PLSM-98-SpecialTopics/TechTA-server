@@ -83,7 +83,7 @@ body{
 		background-color: black;
 		background-position: center bottom;
 		-webkit-transform: translate3d(0px, 0px, 0px);
-		background-image: url(bg2.jpg); opacity: 1;
+		background-image: url(../images/bg2.jpg); opacity: 1;
 }
 
 .banner .photo .topic{
@@ -147,7 +147,7 @@ body{
 	color: white;
 	text-transform: uppercase;
 	letter-spacing: 1px;
-	background: url('image/icon-play.png') no-repeat center right;
+	background: url('../images/icon-play.png') no-repeat center right;
 }
 
 .floor{
@@ -341,21 +341,28 @@ div {
 
 
 /*box*/
-	.box{
-		background-color: #000;
-		color:#FFF;
-		width:150px;
-		height:150px;
-		float:left;
-		margin: 10px;
-		padding:10px;
-	}
-	.box:nth-child(3n){
-		background-color: #732020;
-	}
-	.box:nth-child(5n){
-		background-color: #DCB14B;
-	}
+.box{
+	background-color: #000;
+	color:#FFF;
+	width:150px;
+	height:150px;
+	float:left;
+	margin: 10px;
+	padding:10px;
+}
+.box.course{
+	background-color: #1C2623;
+}
+.box.class{
+	background-color: #37A672;
+}
+.box.addCourseBtn{
+	background-color: #E2CA63;
+}
+.box.addClassBtn{
+	background-color: #F2884B;
+}
+
 
 
 /* 輸入框框 all the input except submit and checkbox   + textarea */

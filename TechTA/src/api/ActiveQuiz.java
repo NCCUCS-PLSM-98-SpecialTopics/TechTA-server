@@ -76,13 +76,14 @@ public class ActiveQuiz extends HttpServlet {
 				map.put("type", "quiz");
 				map.put("qid", quiz.getQid());
 				map.put("question", quiz.getQuestion());
+				map.put("clid", quiz.getClid());
 				JSONObject obj;
 				try {
 					obj = new JSONObject( quiz.getChoice());
-					map.put("A", obj.getJSONObject("A").toString());
-					map.put("B", obj.getJSONObject("B").toString());
-					map.put("C", obj.getJSONObject("C").toString());
-					map.put("D", obj.getJSONObject("D").toString());
+					map.put("A", obj.get("A").toString());
+					map.put("B", obj.get("B").toString());
+					map.put("C", obj.get("C").toString());
+					map.put("D", obj.get("D").toString());
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -98,6 +99,7 @@ public class ActiveQuiz extends HttpServlet {
 			Map<String,String> map = new HashMap<String,String>();
 			map.put("type", "quizclose");
 			map.put("qid", quiz.getQid());
+			map.put("clid", quiz.getClid());
 			String jsonmsg = (new Gson()).toJson(map);
 			WSClient.getInstance().SendMsg(jsonmsg, roomid);
 			

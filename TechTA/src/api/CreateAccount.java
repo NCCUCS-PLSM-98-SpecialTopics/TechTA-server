@@ -53,16 +53,18 @@ public class CreateAccount extends HttpServlet {
 		if(!TATool.CheckPerem(new String[]{"account","password","name","email","department"}, request, out)){return;}
 			
 		
-		String account =TATool.utf8Perem(request, "account");
-		String password =MD5.encode(TATool.utf8Perem(request, "password"));
-		String name =TATool.utf8Perem(request, "name");
-		String email =TATool.utf8Perem(request, "email");
-		String department =TATool.utf8Perem(request, "department");
+		String account =TATool.Perem(request, "account");
+		String password =MD5.encode(TATool.Perem(request, "password"));
+		String name =TATool.Perem(request, "name");
+		String email =TATool.Perem(request, "email");
+		String department =TATool.Perem(request, "department");
 		String role ="student";
 		String chatid ="";
 		if(request.getParameter("role")!=null)
 			role = request.getParameter("role").toString();
 		
+		String testString = request.getParameter("department");
+		System.out.println(testString);
 		UserModel model = new UserModel(account, password, name, email, department, role, chatid);
 		
 		

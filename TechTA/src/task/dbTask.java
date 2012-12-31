@@ -294,7 +294,7 @@ public class dbTask {
 	
 	public  int ActiveClass(String clid,String roomid){
 		
-		String userSql = "UPDATE `class` SET `active`='1' , `roomid`='?' WHERE  `cl_id`=? ";
+		String userSql = "UPDATE `class` SET `active`='1' , `roomid`=? WHERE  `cl_id`=? ";
 		
 		String[] strArray = {roomid,clid};
 		int result = db.ChangeData(userSql, strArray);
@@ -554,6 +554,16 @@ public class dbTask {
 		else return 1;
 	}
 
+	public  String AddTakeQuiz(String qid, String account, String answer){
+		String userSql = "INSERT INTO `tech_ta`.`takequiz` (`account`, `q_id`, `answer`) VALUES (?, ?, ?); ";
+		String[] strArray = {account, qid , answer};
+		
+		String result = db.ChangeDataAndGetKey(userSql, strArray);
+
+		db.Close();
+
+		return result;// if null then error
+	}
 	
 //-------message---
 	

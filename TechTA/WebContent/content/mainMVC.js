@@ -2,6 +2,7 @@
 jQuery(document).ready(function() {
 
 
+
 //////////////////////////////////Share Global/////////////////////////////////////////////
 var RequestObj = new Array(); ;
 var RequestOccupied =false;
@@ -57,6 +58,7 @@ var DoRequest = function(path,method,data,callback){
 			},
 		});	
 }
+var Me;
 
 var MyCourses;
 var NowCourseIndex;
@@ -85,18 +87,26 @@ var TA = {
 			$("#courseContainer .addClassBtn").live("click",this.AddClassArea);
 			$('#courseContainer .box.course').live("click",this.CourseOnClick);
 			$('#courseContainer .box.class').live("click",this.ClassOnClick);
+			$("#addcourse form").live("submit",this.CourseOnSubmit);
+			$("#addclass form").live("submit",this.ClassOnSubmit);
+			
 			
 			//class
 			$('.classfuncLink').live("click",this.ClassFuncHandler);
 			$('.classActiveLink').live("click",this.ClassActiveHandler);
-			$('#quizContainer form').live("submit",this.SubmitQuiz);
-			$('#AddQuestionBtn').live("click",this.AddQuizForm);
-			$('#quizContainer .ModifyQuiz').live("click",this.ModifyQuizForm);
-			$('#quizContainer .RemoveQuiz').live("click",this.RemoveQuizForm);
-			$('#quizContainer .ActiveQuiz').live("click",this.ActiveQuizForm);
-			$('#quizContainer .DeActiveQuiz').live("click",this.DeActiveQuizForm);
-			$('#AddStudentBtn').live("click",this.AddStudentClick);
-			$('.RemoveStudentBtn').live("click",this.RemoveStudentClick);
+				//quiz
+				$('#quizContainer form').live("submit",this.SubmitQuiz);
+				$('#AddQuestionBtn').live("click",this.AddQuizForm);
+				$('#quizContainer .ModifyQuiz').live("click",this.ModifyQuizForm);
+				$('#quizContainer .RemoveQuiz').live("click",this.RemoveQuizForm);
+				$('#quizContainer .ActiveQuiz').live("click",this.ActiveQuizForm);
+				$('#quizContainer .DeActiveQuiz').live("click",this.DeActiveQuizForm);
+				//student
+				$('#AddStudentBtn').live("click",this.AddStudentClick);
+				$('.RemoveStudentBtn').live("click",this.RemoveStudentClick);
+				//message
+				$('.SendMessageBtn').live("click",this.SendMessage);
+				
 			
 			//share
 			$.liveReady('.teacherFunc', function() { if(IsTeacher) {$(this[0]).show();}else {$(this[0]).hide();}});
@@ -117,6 +127,7 @@ var TA = {
 				
 				//取得UserInfo
 				Request("api/GetAccountInfo","GET",null,function(info){
+						Me = info;
 						$("#UserNameSpan").html(info.name);
 						if(info.role == "teacher"){IsTeacher = true;}
 						if(IsTeacher){ 	//開啟teacher功能
@@ -126,6 +137,7 @@ var TA = {
 							$(".teacherFunc").show();
 							$(".nonteacherFunc").hide();
 						}
+						WSClient.init(Me,TA.OnMessage);
 						TA.ShowCourse();
 						TA.event();
 					}) 
@@ -211,7 +223,7 @@ var TA = {
 						 
 						 //add all class
 						for(var num in MyClasses){
-							var node = "<div class='box class' datanum="+num+"><h2>"+MyClasses[num].name+"</h2></div>";
+							var node = "<div class='box class' datanum="+num+"><h2>"+(parseInt(num,10)+1)+". "+MyClasses[num].name+"</h2></div>";
 							$(node).appendTo("#courseContainer");
 						}
 						 
@@ -240,7 +252,24 @@ var TA = {
 	
 	,AddCourseArea: function(){   //CLICK 增加課程
 							$("#addcourse").show();
-							$("#addcourse form").submit(function(target){
+					}
+	
+	,AddClassArea: function(){
+						$("#addclass").show();
+						
+						//去除重複周次
+						$("#addclass select[name='week'] option").each( function(index, Element){
+							var i = $(Element).val();
+							for(var l in MyClasses){
+								if(i == MyClasses[l].week){
+									$(Element).remove();
+								}
+							}
+						})
+					
+					}
+	
+	,CourseOnSubmit: function(target){
 								var currentFrom = target.currentTarget;  //抓資料
 								var data = {
 									name : currentFrom.name.value,
@@ -263,22 +292,9 @@ var TA = {
 								$("#addcourse").hide(); //隱藏表單
 								
 								return false;
-							})
-					}
-	
-	,AddClassArea: function(){
-					$("#addclass").show();
-					
-					//去除重複周次
-					$("#addclass select[name='week'] option").each( function(index, Element){
-						var i = $(Element).val();
-						for(var l in MyClasses){
-							if(i == MyClasses[l].week){
-								$(Element).remove();
 							}
-						}
-					})
-					$("#addclass form").submit(function(target){
+	
+	,ClassOnSubmit: function(target){
 							var currentFrom = target.currentTarget;  //抓資料
 							var data = {
 								name : currentFrom.name.value,
@@ -299,11 +315,8 @@ var TA = {
 							$("#addclass").hide(); //隱藏表單
 							
 							return false;
-						})
-					}
-	
-	
-	
+						}
+						
 	//////// class menu //////////
 	,ClassInit :	function(){
 	
@@ -321,8 +334,7 @@ var TA = {
 				Request("api/GetMessageByClass","GET",{clid: NowClass.clid},function(msgs){
 					
 					for(var num in msgs){
-						var node = "<p class='msg' datanum="+num+">"+msgs[num].account+" : "+msgs[num].content+"</p>";
-						$(node).appendTo("#messagebox");
+						TA.AddMessageToBox();
 					}
 				});
 				//抓Quiz資料
@@ -615,7 +627,43 @@ var TA = {
 		}
 	}
 	
+	,SendMessage: function(e){
+		var text = $('.SendMessageText').val();
+		if(text && text!=""){
+			//DO SEND
+			//**************
+		
+		}
+	}
+	,OnMessage: function(e){
+		var data = e.data;
+		console.log("[TA/onmessage] " + data);
+		var obj = JSON.parse(data);
+		if(!obj||!obj.type){
+			console.log("[ERROR][TA/onmessage] no obj or no objtype");
+			return;
+		}
+		switch (obj.type){
+			case "message"://message加東西
+				AddMessageToBox(obj);
+				break; 
+			case "answer": break; //老師:統計問題
+			case "bonus": break; //做加分的特效
+			case "class": break; //做啟動課程的特效
+			case "closeclass": break; //關閉啟動課程的特效
+			case "quiz": break; //做考卷的特效
+			case "quizclose": break; //關閉考卷的特效
+			default : console.log("[ERROR][TA/onmessage] error type");break;
+			
+		}
+		
 	
+	}
+	
+	,AddMessageToBox:function(msg){
+			var node = "<p class='msg' datanum="+num+">"+msg[num].account+" : "+msg[num].content+"</p>";
+			$(node).appendTo("#messagebox");
+	}
 	//----------------------------share function---------------------
 	,RefershCourse: function(){
 					Request("api/GetCourse","GET",null,function(info){
@@ -648,8 +696,18 @@ var TA = {
 }
 
 
+
+
+
+
+jQuery.getScript("content/websocket.js",function() {
+	TA.init();
+
+});
+
+
  
-TA.init();
+
 
 
 })

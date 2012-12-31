@@ -4,6 +4,8 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+import model.MessageModel;
+
 import org.eclipse.jdt.internal.compiler.ast.ThisReference;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
@@ -14,17 +16,17 @@ import org.json.JSONObject;
 
 
 import com.google.gson.Gson;
+import com.sun.corba.se.pept.protocol.MessageMediator;
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
 public class WSClient extends WebSocketClient {
-	static String WSURL = "ws://dream.cs.nccu.edu.tw:8001/websocket/polling";
-	static String CHATID = "user_10b3089ab61b46cd99ee6d4eda5c6b4b"; //server用來聽room的id
+	
 	static WSClient c = null;
 	
 	public static WSClient getInstance() {
 		if (c == null) {
 			try {
-				c = new WSClient( new URI( WSURL ), new Draft_10());
+				c = new WSClient( new URI( TAConfig.WSURLPolling ), new Draft_10());
 			} catch (URISyntaxException e) {
 				return null;
 			}
@@ -46,6 +48,9 @@ public class WSClient extends WebSocketClient {
 		map.put("command", "room");
 		map.put("room", roomid);
 		map.put("msg", msg);
+		String json = new Gson().toJson(map);
+		this.send(json);
+		
 	}
 
 	@Override
@@ -55,7 +60,7 @@ public class WSClient extends WebSocketClient {
 
 		Map<String,String> map = new HashMap<String,String>();
 		map.put("command", "login");
-		map.put("user", CHATID);
+		map.put("user", TAConfig.CHATID);
 		String json = (new Gson()).toJson(map);
 		this.send(json);
 		
@@ -67,7 +72,26 @@ public class WSClient extends WebSocketClient {
 		System.out.println( "received: " + message );
 		try {
 			JSONObject msg = new JSONObject(message);
-			System.out.println( "msg.getJSONArray('data'): " + msg.getJSONArray("data").toString());	
+			System.out.println( "received data: " + msg.get("data").toString());
+			JSONObject data = new JSONObject(msg.get("data").toString());
+			String type = data.get("type").toString();
+			String account = data.get("account").toString();
+			if(type.equals("message")){
+				String content = data.get("content").toString();
+				String clid = data.get("clid").toString();
+				MessageModel model = new MessageModel(null, content, clid, account,null);
+				dbTask.getInstance().AddMessage(model);
+				
+			}else if (type.equals("answer")){
+			
+				String qid = data.get("qid").toString();
+				String answer = data.get("content").toString();
+				dbTask.getInstance().AddTakeQuiz(qid, account, answer);
+			}
+			
+
+			
+			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

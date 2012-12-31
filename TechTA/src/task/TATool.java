@@ -14,7 +14,13 @@ import javax.servlet.http.HttpSession;
 public class TATool {
 	public static String utf8Perem (HttpServletRequest request, String perem) throws UnsupportedEncodingException{
 		
-		return new String(request.getParameter(perem).getBytes("ISO-8859-1"),"UTF-8"); 
+		return new String(request.getParameter(perem).getBytes("ISO-8859-1"),"UTF-8");
+		//return new String(request.getParameter(perem)); 
+	}
+	public static String Perem (HttpServletRequest request, String perem) throws UnsupportedEncodingException{
+		
+		return new String(request.getParameter(perem).getBytes("ISO-8859-1"),"UTF-8");
+		//return new String(request.getParameter(perem)); 
 	}
 	public static Boolean CheckLogin (HttpSession session, PrintWriter out){
 		
