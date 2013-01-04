@@ -22,6 +22,7 @@ import de.roderick.weberknecht.*;
 
 import task.HttpClientRequest;
 import task.HttpRequestTask;
+import task.WSClient;
 
 import java.net.*;
 import javax.servlet.ServletException;
@@ -51,13 +52,8 @@ public class test2 extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		PrintWriter out = response.getWriter();
-		try {
-			WSClient.getInstance();
-			out.println("OK!");
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		WSClient.getInstance();
+		out.println("OK!");
 		out.close();
 	}
 

@@ -74,19 +74,26 @@ public class WSClient extends WebSocketClient {
 			JSONObject msg = new JSONObject(message);
 			System.out.println( "received data: " + msg.get("data").toString());
 			JSONObject data = new JSONObject(msg.get("data").toString());
+			String msgkey = data.get("msg_uuid").toString();
+			String timestamp = data.get("timestamp").toString();
+			
 			String type = data.get("type").toString();
 			String account = data.get("account").toString();
 			if(type.equals("message")){
 				String content = data.get("content").toString();
 				String clid = data.get("clid").toString();
-				MessageModel model = new MessageModel(null, content, clid, account,null);
+				MessageModel model = new MessageModel(msgkey, content, clid, account, timestamp, "0");
 				dbTask.getInstance().AddMessage(model);
 				
 			}else if (type.equals("answer")){
 			
 				String qid = data.get("qid").toString();
 				String answer = data.get("content").toString();
-				dbTask.getInstance().AddTakeQuiz(qid, account, answer);
+				if(dbTask.getInstance().HasTakeQuiz(qid, account, answer)){
+					dbTask.getInstance().UpdateTakeQuiz(qid, account, answer);
+				}else{
+					dbTask.getInstance().AddTakeQuiz(qid, account, answer);
+				}
 			}
 			
 

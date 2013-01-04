@@ -64,7 +64,7 @@ public class AddCourse extends HttpServlet {
 		String year = TATool.utf8Perem(request,"year");
 		String semester = TATool.utf8Perem(request,"semester");
 		List<ClassModel> classes =null;
-		CourseModel model = new CourseModel(coid, name, year, semester, classes);
+		CourseModel model = new CourseModel(coid, name, year, semester, classes,null);
 		
 		int resultNumber = -1;
 		

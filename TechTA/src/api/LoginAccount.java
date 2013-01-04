@@ -57,7 +57,7 @@ public class LoginAccount extends HttpServlet {
 		 username = request.getParameter("account").toString();
 		if(request.getParameter("password")!=null)
 		 password = request.getParameter("password").toString();
-		
+		System.out.println("Account Login:"+username+"/"+password);
 		if(true || checkpassword.execute(username,password)){
 			UserModel user = dbTask.getInstance().GetUser(username);
 			

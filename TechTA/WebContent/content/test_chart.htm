@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Highcharts Example</title>
+
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+		<script type="text/javascript">
+$(function () {
+
+	var element = $('.a').get(0);
+    var chart;
+    $(document).ready(function() {
+        chart = new Highcharts.Chart({
+				chart: {
+					renderTo: element,
+					type: 'column'
+				},
+				xAxis: {
+					categories: ['A', 'B', 'C', 'D']
+				},
+				yAxis: {
+					min: 0,
+					title: {
+						text: 'Total Number'
+					},
+					stackLabels: {
+						enabled: true,
+						style: {
+							fontWeight: 'bold',
+							color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+						}
+					}
+				},
+				title: {
+					text: ''
+				},
+				legend: {
+					enabled:false,
+					align: 'right',
+					x: -100,
+					verticalAlign: 'top',
+					y: 20,
+					floating: true,
+					backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColorSolid) || 'white',
+					borderColor: '#CCC',
+					borderWidth: 1,
+					shadow: false
+				},
+				tooltip: {
+					formatter: function() {
+						return '<b>'+ this.x +'</b><br/>'+
+							//this.series.name +': '+ this.y +'<br/>'+
+							'' +': '+ this.y +'<br/>'+
+							'Total: '+ this.point.stackTotal;
+					}
+				},
+				plotOptions: {
+					column: {
+						stacking: 'normal',
+						dataLabels: {
+							enabled: true,
+							color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+						}
+					}
+				},
+				series: [{
+                
+                data: [{"name":"<br/>李學甲","color":"#4572A7","y":1},{"name":"","color":"#AA4643","y":0},{"name":"","color":"#89A54E","y":0},{"name":"","color":"#80699B","y":0}]
+            }]
+        });
+		
+		setTimeout(function(){
+		//chart.series[0].setData([1, 2, 3, 4],1);
+		$('#container2').show();
+		},2000);
+    });
+    
+});
+		</script>
+	</head>
+	<body>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+111
+<div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+222
+<div id="container2" class ="a" style="min-width: 400px; height: 200px; margin: 0 auto;display:none;"></div>
+333
+
+	</body>
+</html>

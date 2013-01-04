@@ -20,6 +20,7 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 
 import task.TATool;
 import task.WSClient;
@@ -77,16 +78,10 @@ public class ActiveQuiz extends HttpServlet {
 				map.put("qid", quiz.getQid());
 				map.put("question", quiz.getQuestion());
 				map.put("clid", quiz.getClid());
-				JSONObject obj;
-				try {
-					obj = new JSONObject( quiz.getChoice());
-					map.put("A", obj.get("A").toString());
-					map.put("B", obj.get("B").toString());
-					map.put("C", obj.get("C").toString());
-					map.put("D", obj.get("D").toString());
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
+				map.put("choice", quiz.getChoice());
+				map.put("correctAnswer", quiz.getCorrectAnswer());
+				map.put("active", quiz.getActive());
+				 
 				
 				String jsonmsg = (new Gson()).toJson(map);
 				WSClient.getInstance().SendMsg(jsonmsg, roomid);

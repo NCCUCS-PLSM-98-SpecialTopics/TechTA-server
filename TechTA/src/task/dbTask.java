@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.jasper.tagplugins.jstl.core.ForEach;
 
 import model.*;
 
@@ -44,7 +43,7 @@ public class dbTask {
 			}
 	
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} 
 		db.Close();
@@ -71,7 +70,7 @@ public class dbTask {
 			}
 	
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} 
 		db.Close();
@@ -127,7 +126,7 @@ public class dbTask {
 	public  List<CourseModel> GetCourseByAccount(String Account){
 		List<CourseModel> courseList = new ArrayList<CourseModel>();
 		CourseModel course = null;
-		String queryStr = "SELECT * FROM `course` WHERE co_id in (SELECT co_id FROM `enroll` WHERE account = ?)";
+		String queryStr = "SELECT * FROM `course` NATURAL JOIN  ( SELECT * FROM `enroll`  WHERE account = ? ) a ";
 		String[] strArray = {Account};
 		ResultSet result = db.SelectTable(queryStr, strArray);
 		try {
@@ -136,12 +135,14 @@ public class dbTask {
 				course = new CourseModel(result.getString("co_id"),
 										result.getString("c_name"),
 										result.getString("year"),
-										result.getString("semester"),null );
+										result.getString("semester"),
+										null,
+										result.getString("score")
+										);
 				courseList.add(course);
 			}
 	
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 		db.Close();
@@ -227,7 +228,7 @@ public class dbTask {
 			}
 	
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} 
 		
@@ -257,7 +258,7 @@ public class dbTask {
 			}
 	
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} 
 		
@@ -369,7 +370,7 @@ public class dbTask {
 			}
 	
 		}  catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} 
 		
@@ -392,7 +393,7 @@ public class dbTask {
 				AlreadyInThisClass = true;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} 
 		
@@ -410,8 +411,33 @@ public class dbTask {
 		
 		
 	}
+	
+	//--------Enroll-----------
+
+	public  int AddOneBonusByStudentAndCourse(String account, String coid){
+		String userSql = "UPDATE `enroll` SET `score`=`score` +1 WHERE `account` = ? AND `co_id` =?";
+		String[] strArray = {account,coid};
+		
+		int result = db.ChangeData(userSql, strArray);
+
+		db.Close();
+		if(result == 1)return 0 ;  //success
+		else return 1;
+	}
+	
+	public  int AddBonusByStudentAndCourse(String account, String coid,int num){
+		String userSql = "UPDATE `enroll` SET `score`=`score` +"+num+" WHERE `account` = ? AND `co_id` =?";
+		String[] strArray = {account,coid};
+		
+		int result = db.ChangeData(userSql, strArray);
+
+		db.Close();
+		if(result == 1)return 0 ;  //success
+		else return 1;
+	}
+	
 	public  int AddUserToCourse(String account, String coid){
-		String userSql = "INSERT INTO `enroll`(`account`, `co_id`) VALUES (?,?) ";
+		String userSql = "INSERT INTO `enroll`(`account`, `co_id`,`score`) VALUES (?,?,0) ";
 		String[] strArray = {account,coid};
 		
 		int result = db.ChangeData(userSql, strArray);
@@ -449,21 +475,27 @@ public class dbTask {
 						result.getString("correct_answer"),
 						result.getString("choices"),
 						result.getString("active"),
-						result.getString("cl_id"));
+						result.getString("cl_id"),null);
 				modelList.add(model);
 			}
 	
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
-		} 
+		}
 		
-		db.Close();
+		db.Close(); 
+		
+		//加入統計資料
+		
+		for(QuizModel quizModel : modelList){
+			quizModel.setStudent( GetAllTakeQuizByQid(quizModel.getQid()));
+		}
+		
 		return modelList;
 	}
 	public  QuizModel GetQuizByqid(String qid){
 		
-		List<QuizModel> modelList = new  ArrayList<QuizModel>();
 		QuizModel model = null;
 		String queryStr = "SELECT `q_id`, `question`, `correct_answer`, `choices`, `active`, `cl_id` FROM `quiz` WHERE `q_id` = ?";
 		String[] strArray = {qid};
@@ -476,15 +508,17 @@ public class dbTask {
 						result.getString("correct_answer"),
 						result.getString("choices"),
 						result.getString("active"),
-						result.getString("cl_id"));
+						result.getString("cl_id"),null);
 			}
 	
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} 
 		
 		db.Close();
+		//加入統計資料
+		model.setStudent( GetAllTakeQuizByQid(model.getQid()));
 		return model;
 	}
 	
@@ -553,25 +587,80 @@ public class dbTask {
 		if(result == 1)return 0 ;  //success
 		else return 1;
 	}
+	
+	public Map<String, String> GetAllTakeQuizByQid (String qid){
+		
+		
+		String userSql = "SELECT `account`, `q_id`, `answer` FROM `takequiz` WHERE  `q_id` =? ";
+		String[] strArray = {qid };
+		Map<String, String> map = new HashMap<String,String>();
+		ResultSet result = db.SelectTable(userSql, strArray);
+		try {
+			while(result.next()) 
+			{ 
+				map.put(result.getString("account"),result.getString("answer"));
+			}
+	
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		} 
+		
+		return map;
+	}
 
-	public  String AddTakeQuiz(String qid, String account, String answer){
-		String userSql = "INSERT INTO `tech_ta`.`takequiz` (`account`, `q_id`, `answer`) VALUES (?, ?, ?); ";
+	public  Boolean HasTakeQuiz(String qid, String account, String answer){
+		String userSql = "SELECT `account`, `q_id`, `answer` FROM `takequiz` WHERE `account`= ? AND `q_id` =? ";
+		String[] strArray = {account, qid };
+		Boolean HasTakeQuiz = false;
+		ResultSet result = db.SelectTable(userSql, strArray);
+		try {
+			while(result.next()) 
+			{ 
+				HasTakeQuiz = true;
+			}
+	
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		} 
+		
+		db.Close();
+
+		return HasTakeQuiz;
+	}
+	
+	public  int AddTakeQuiz(String qid, String account, String answer){
+		String userSql = "INSERT INTO `tech_ta`.`takequiz` (`account`, `q_id`, `answer`) VALUES (?, ?, ?)";
 		String[] strArray = {account, qid , answer};
 		
-		String result = db.ChangeDataAndGetKey(userSql, strArray);
+		int result = db.ChangeData(userSql, strArray);
 
 		db.Close();
 
-		return result;// if null then error
+		if(result == 1)return 0 ;  //success
+		else return 1;
 	}
 	
+	public  int UpdateTakeQuiz(String qid, String account, String answer){
+		String userSql = "UPDATE `takequiz` SET `answer`=? WHERE `account`=? AND`q_id`=? ";
+		String[] strArray = {answer, account, qid};
+		
+		int result = db.ChangeData(userSql, strArray);
+		
+		db.Close();
+
+		if(result == 1)return 0 ;  //success
+		else return 1;
+	}
+		
 //-------message---
 	
 		public  List<MessageModel> GetMessageByClassid(String clid){
 			
 			List<MessageModel> modelList = new  ArrayList<MessageModel>();
 			MessageModel model = null;
-			String queryStr = "SELECT `m_id`, `content`, `cl_id`, `account`, `time` FROM `message` WHERE cl_id = ?";
+			String queryStr = "SELECT `m_id`, `content`, `cl_id`, `account`, `time`, `bonus` FROM `message` WHERE cl_id = ?";
 			String[] strArray = {clid};
 			ResultSet result = db.SelectTable(queryStr, strArray);
 			try {
@@ -581,13 +670,14 @@ public class dbTask {
 											result.getString("content"),
 											result.getString("cl_id"),
 											result.getString("account"),
-											result.getString("time")
+											result.getString("time"),
+											result.getString("bonus")
 											);
 					modelList.add(model);
 				}
 		
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			} 
 			
@@ -595,10 +685,51 @@ public class dbTask {
 			return modelList;
 		}
 		
+
+		public  MessageModel GetMessageByMid(String mid){
+			
+			MessageModel model = null;
+			String queryStr = "SELECT `m_id`, `content`, `cl_id`, `account`, `time`, `bonus` FROM `message` WHERE m_id = ?";
+			String[] strArray = {mid};
+			ResultSet result = db.SelectTable(queryStr, strArray);
+			try {
+				while(result.next()) 
+				{ 
+					model = new MessageModel(result.getString("m_id"),
+											result.getString("content"),
+											result.getString("cl_id"),
+											result.getString("account"),
+											result.getString("time"),
+											result.getString("bonus")
+											);
+					
+				}
+		
+			} catch (SQLException e) {
+				
+				e.printStackTrace();
+			} 
+			
+			db.Close();
+			return model;
+		}
+		public  int AddMessageBonus(String mid,Boolean minus){
+			String userSql ="UPDATE `message` SET  `bonus` =  '1' WHERE  `m_id` = ? ";
+			if(minus){
+				 userSql = "UPDATE `message` SET  `bonus` =  '0' WHERE  `m_id` = ? ";
+			}
+			String[] strArray = {mid};
+			
+			int result = db.ChangeData(userSql, strArray);
+
+			db.Close();
+			if(result == 1)return 0 ;  //success
+			else return 1;
+		}
 		
 		public  String AddMessage(MessageModel model){
-			String userSql = "INSERT INTO `message`(`m_id`, `content`, `cl_id`, `account`, `time`) VALUES (?,?,?,?)";
-			String[] strArray = {model.getMid(),model.getContent(),model.getClid(),model.getAccount()};
+			String userSql = "INSERT INTO `message`( `content`, `cl_id`, `account`, `time`) VALUES (?,?,?,?)";
+			String[] strArray = {model.getContent(),model.getClid(),model.getAccount(),model.getTime()};
 			
 			String result = db.ChangeDataAndGetKey(userSql, strArray);
 
@@ -621,35 +752,40 @@ public class dbTask {
 		
 		public  List<Map<String, String>> GetAllStudentInfoByCourse(String coid){
 			String queryStr = 
-		" SELECT P.account,P.name ,ifnull(Q.TQ, 0) TQ ,ifnull(Q.CQ, 0) CQ,ifnull(M.TM, 0) TM FROM" +
-		" 	(SELECT  c.account, c.name, enroll.co_id FROM enroll  NATURAL  join ("+
-		" 		SELECT  * FROM user where role = 'student'"+
-		" 		)c where enroll.co_id = ?"+
-		" 	)P	"+
-		" left join"+
-		" 	(SELECT account, count(m_id) TM FROM message NATURAL  join ("+
-		" 		SELECT * FROM class NATURAL  join ("+
-		" 			SELECT  c.account, c.name, enroll.co_id FROM enroll  NATURAL  join ("+
-		" 				SELECT  * FROM user"+
-		" 			)c where enroll.co_id = ?"+
-		" 		) b  "+
-		" 	)a GROUP BY account) M"+
-		" ON P.account = M.account"+
-		" left join"+
-		"  	(SELECT account ,count(q_id) CQ,TQ ,question  FROM("+
-		" 		SELECT *,count(q_id) TQ FROM takequiz   NATURAL join ("+
-		" 			SELECT cl_id, q_id,correct_answer, question, account, name FROM quiz NATURAL  join ("+
-		" 				SELECT * FROM class NATURAL  join ("+
-		" 					SELECT  c.account, c.name, enroll.co_id FROM enroll  NATURAL  join ("+
-		" 						SELECT  * FROM user"+
-		" 					)c where enroll.co_id = ?"+
-		" 				) b  "+
-		" 			)a"+
-		" 		)z GROUP BY z.account HAVING answer = correct_answer"+
-		" 	)x GROUP BY account ) Q"+
-		" ON P.account = Q.account";
+					
+			" SELECT P.account,P.name ,TQ ,ifnull(Q.CQ, 0) CQ,ifnull(M.TM, 0) TM ,ifnull(M.BM, 0) BM , score FROM"+
+			" 	(SELECT  c.account, c.name,enroll.score, enroll.co_id FROM enroll  NATURAL  join ("+
+			" 		SELECT  * FROM user where role = 'student'"+
+			" 		)c where enroll.co_id = ?"+
+			" 	)P	"+
+			" left join"+
+			" 	(SELECT account, count(m_id) TM,SUM(`bonus`) BM FROM message NATURAL  join ("+
+			" 		SELECT * FROM class NATURAL  join ("+
+			" 			SELECT  c.account, c.name, enroll.co_id FROM enroll  NATURAL  join ("+
+			" 				SELECT  * FROM user"+
+			" 			)c where enroll.co_id = ?"+
+			" 		) b  "+
+			" 	)a GROUP BY account) M"+
+			" ON P.account = M.account"+
+			" left join"+
+			"  	(SELECT account ,count(q_id) CQ ,question  FROM("+
+			" 		SELECT *,count(q_id) TQ FROM takequiz   NATURAL join ("+
+			" 			SELECT cl_id, q_id,correct_answer, question, account, name FROM quiz NATURAL  join ("+
+			" 				SELECT * FROM class NATURAL  join ("+
+			" 					SELECT  c.account, c.name, enroll.co_id FROM enroll  NATURAL  join ("+
+			" 						SELECT  * FROM user"+
+			" 					)c where enroll.co_id = ?"+
+			" 				) b  "+
+			" 			)a"+
+			" 		)z GROUP BY z.account HAVING answer = correct_answer"+
+			" 	)x GROUP BY account ) Q"+
+			" ON P.account = Q.account"+
+			" join"+
+			" (SELECT count(q_id) TQ  FROM quiz WHERE cl_id IN("+
+			" 	SELECT cl_id FROM class WHERE co_id = ?"+
+			" ) )x"		;
 			
-			String[] strArray = {coid,coid,coid};
+			String[] strArray = {coid,coid,coid,coid};
 			ResultSet result = db.SelectTable(queryStr, strArray);
 			List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 			
@@ -662,11 +798,13 @@ public class dbTask {
 					map.put("TQ", result.getString("TQ"));
 					map.put("CQ", result.getString("CQ"));
 					map.put("TM", result.getString("TM"));
+					map.put("BM", result.getString("TM"));
+					map.put("score", result.getString("score"));
 					list.add(map);
 				}
 		
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				
 				list = null;
 				e.printStackTrace();
 			} 

@@ -12,25 +12,17 @@ public class CourseModel {
 	private String year ="";
 	private String semester ="";
 	private List<ClassModel> classes =null;
-	
-	/**
-	 * @param coid
-	 * @param name
-	 * @param year
-	 * @param semester
-	 * @param classes
-	 */
+	private String score ="";
 	public CourseModel(String coid, String name, String year, String semester,
-			List<ClassModel> classes) {
+			List<ClassModel> classes, String score) {
 		super();
 		this.coid = coid;
 		this.name = name;
 		this.year = year;
 		this.semester = semester;
 		this.classes = classes;
+		this.score = score;
 	}
-	
-	
 	public String getCoid() {
 		return coid;
 	}
@@ -60,6 +52,12 @@ public class CourseModel {
 	}
 	public void setClasses(List<ClassModel> classes) {
 		this.classes = classes;
+	}
+	public String getScore() {
+		return score;
+	}
+	public void setScore(String score) {
+		this.score = score;
 	}
 	
 	

@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +18,10 @@ import org.json.*;
 import task.HttpRequestTask;
 
 
+import com.google.gson.Gson;
 import com.sixfire.websocket.WebSocket;
+import com.sun.org.apache.bcel.internal.generic.NEW;
+
 import java.net.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -47,6 +51,13 @@ public class test extends HttpServlet {
 		// TODO Auto-generated method stub
 		PrintWriter out = response.getWriter();
 		out.println("{\"GET\":\"SUCCESS\"}");
+		Map<String, String[]>  map = request.getParameterMap();
+		Map<String, String>  result = new HashMap<String, String> ();
+		for(String str : map.keySet()){
+			String test = Arrays.toString(map.get(str));
+			result.put(str, test.substring(1, test.length()-2));
+		}
+		out.print(new Gson().toJson(result));
 		out.close();
 
 		
@@ -83,11 +94,15 @@ public class test extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		if(request.getParameter("q")!=null){
-			out.println("{\"q\":\""+request.getParameter("q")+"\"}");
-			
-		}
+
 		out.println("{\"POST\":\"SUCCESS\"}");
+		Map<String, String[]>  map = request.getParameterMap();
+		Map<String, String>  result = new HashMap<String, String> ();
+		for(String str : map.keySet()){
+			String test = Arrays.toString(map.get(str));
+			result.put(str, test.substring(1, test.length()-2));
+		}
+		out.print(new Gson().toJson(result));
 		out.close();
 	}
 

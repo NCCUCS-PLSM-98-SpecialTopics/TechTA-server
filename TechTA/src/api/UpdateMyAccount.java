@@ -72,7 +72,7 @@ public class UpdateMyAccount extends HttpServlet {
 			if(resultUpdate == 0){
 				returnResult = 0;
 			}else{
-				returnResult = 1;
+				returnResult = 1; //db error
 			}
 			
 		}else{     

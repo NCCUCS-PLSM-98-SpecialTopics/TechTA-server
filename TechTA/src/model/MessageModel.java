@@ -8,21 +8,16 @@ public class MessageModel {
 	private String clid;
 	private String account;
 	private String time;
-	/**
-	 * @param mid
-	 * @param content
-	 * @param clid
-	 * @param account
-	 * @param time
-	 */
+	private String bonus;
 	public MessageModel(String mid, String content, String clid,
-			String account, String time) {
+			String account, String time, String bonus) {
 		super();
 		this.mid = mid;
 		this.content = content;
 		this.clid = clid;
 		this.account = account;
 		this.time = time;
+		this.bonus = bonus;
 	}
 	public String getMid() {
 		return mid;
@@ -53,6 +48,12 @@ public class MessageModel {
 	}
 	public void setTime(String time) {
 		this.time = time;
+	}
+	public String getBonus() {
+		return bonus;
+	}
+	public void setBonus(String bonus) {
+		this.bonus = bonus;
 	}
 	
 	

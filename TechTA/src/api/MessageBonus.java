@@ -19,25 +19,26 @@ import org.json.JSONObject;
 import com.google.gson.Gson;
 
 import task.TATool;
+import task.WSClient;
 import task.dbTask;
 
 import model.ClassModel;
 import model.CourseModel;
+import model.MessageModel;
 import model.QuizModel;
 
 /**
  * Servlet implementation class LoginAccount
  */
-@WebServlet("/api/AddQuizToClass")   
-public class AddQuizToClass extends HttpServlet {
+@WebServlet("/api/MessageBonus")   
+public class MessageBonus extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddQuizToClass() {
+    public MessageBonus() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -49,46 +50,36 @@ public class AddQuizToClass extends HttpServlet {
 		HttpSession session = request.getSession();
 		//驗證登入狀態
 		if(!TATool.CheckLogin(session,out)) {return;}
-		String account = (String) session.getAttribute("account");
+		//String account = (String) session.getAttribute("account");
 		/*Start coding*/
 
-		String [] params = new String[]{"question","choices","correctanswer","clid"};
+		String [] params = new String[]{"mid"};
 		if(!TATool.CheckPerem(params, request, out)){return;}
-		
 
-
-		String qid = null;
-		String question = TATool.utf8Perem(request,"question");
-		String correctAnswer =TATool.utf8Perem(request,"correctanswer");
-		String choice =TATool.utf8Perem(request,"choices");
-		String active ="0";
-		String clid =TATool.utf8Perem(request,"clid");
+		String mid = TATool.utf8Perem(request,"mid");
 		
-		Boolean IS_UPDATE =false;
-		if(request.getParameter("qid")!=null){
-			qid = TATool.utf8Perem(request,"qid");
-			IS_UPDATE = true;
+		Boolean minus = false;
+		if(request.getParameter("minus")!=null && !request.getParameter("minus").toString().equals("")){
+			minus=true;
 		}
+		int resultNumber = dbTask.getInstance().AddMessageBonus(mid, minus);
 		
-		QuizModel model = new QuizModel(qid, question, correctAnswer, choice, active, clid,null);
+		MessageModel msgMessageModel = dbTask.getInstance().GetMessageByMid(mid);
+		ClassModel classModel = dbTask.getInstance().GetClassByClassid(msgMessageModel.getClid());
 		
-		
-		int resultNumber = -1;		
-		String result = null;
-		
-		if(IS_UPDATE){
-			resultNumber =  dbTask.getInstance().UpdateQuiz(model);
-			
-		}else{
-			result = dbTask.getInstance().AddQuizToClass(model);
-			model = dbTask.getInstance().GetQuizByqid(result);
-			resultNumber = (result != null)?0:1;
+		if(resultNumber==0 && !minus){
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("type", "bonus");
+			map.put("clid",msgMessageModel.getClid());
+			map.put("cause","課堂加分");
+			map.put("student", msgMessageModel.getAccount());
+			String msg = new Gson().toJson(map);
+			WSClient.getInstance().SendMsg(msg, classModel.getRoomid());
 		}
-		
 		
 		Map map = new HashMap<>();
-		map.put("result", resultNumber);
-		map.put("quiz", model);
+		map.put("result", resultNumber);  //0:ok 1:error
+		
 		
 		Gson gson = new Gson();
 		String jsonString = gson.toJson(map);

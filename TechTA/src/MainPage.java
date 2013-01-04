@@ -1,6 +1,7 @@
 
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import task.WSClient;
 
 /**
  * Servlet implementation class MainPage
@@ -39,6 +42,7 @@ public class MainPage extends HttpServlet {
 			dispatcher = request.getRequestDispatcher("MainPage.html");
 		}
 		dispatcher.forward(request, response);
+		WSClient.getInstance();
 		return;
 		
 	}
