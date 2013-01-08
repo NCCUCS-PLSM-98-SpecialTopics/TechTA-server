@@ -16,6 +16,8 @@ import model.testModel;
 import org.apache.catalina.websocket.WebSocketServlet;
 import org.json.*;
 
+import com.google.gson.Gson;
+
 
 import de.roderick.weberknecht.*;
 
@@ -52,8 +54,17 @@ public class test2 extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		PrintWriter out = response.getWriter();
-		WSClient.getInstance();
-		out.println("OK!");
+		//WSClient.getInstance();
+		Map map = new HashMap();
+		Map mapinside = new HashMap();
+		mapinside.put("test", "testvalue");
+		map.put("type", "class");
+		map.put("clid", "1234");
+		map.put("map", mapinside);
+		String jsonmsg = (new Gson()).toJson(map);
+		Map map2 = (new Gson()).fromJson(jsonmsg, Map.class);
+		
+		out.println(map2.toString());
 		out.close();
 	}
 

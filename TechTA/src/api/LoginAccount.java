@@ -58,17 +58,18 @@ public class LoginAccount extends HttpServlet {
 		if(request.getParameter("password")!=null)
 		 password = request.getParameter("password").toString();
 		System.out.println("Account Login:"+username+"/"+password);
-		if(true || checkpassword.execute(username,password)){
+		
 			UserModel user = dbTask.getInstance().GetUser(username);
-			
-			if(user != null && user.getPassword().equals(MD5.encode(password))){
-				out.println("{ \"result\":\"0\" }");
-			}else{
-				out.println("{ \"result\":\"2\" }");
-			}
+		
+		if(user != null && user.getPassword().equals(MD5.encode(password))){
+			out.println("{ \"result\":\"0\" }");
 			session.setAttribute("account", username);
 		}else{
-			out.println("{ \"result\":\"1\" }");
+			if( checkpassword.execute(username,password)){
+				out.println("{ \"result\":\"2\" }");
+			}else{
+				out.println("{ \"result\":\"1\" }");
+			}
 		}
       //out.println("{ \"result\":1 }");
         

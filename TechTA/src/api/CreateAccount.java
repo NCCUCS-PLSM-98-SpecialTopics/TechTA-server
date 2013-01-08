@@ -55,15 +55,17 @@ public class CreateAccount extends HttpServlet {
 		
 		String account =TATool.Perem(request, "account");
 		String password =MD5.encode(TATool.Perem(request, "password"));
-		String name =TATool.Perem(request, "name");
+		String name = TATool.Perem(request, "name");
 		String email =TATool.Perem(request, "email");
-		String department =TATool.Perem(request, "department");
+		String department = TATool.Perem(request, "department");
 		String role ="student";
 		String chatid ="";
 		if(request.getParameter("role")!=null)
 			role = request.getParameter("role").toString();
 		
 		String testString = request.getParameter("department");
+		String testString2 = TATool.Perem(request, "department");
+		String testString3 = request.getParameter("name");
 		System.out.println(testString);
 		UserModel model = new UserModel(account, password, name, email, department, role, chatid);
 		

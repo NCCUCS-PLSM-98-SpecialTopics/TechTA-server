@@ -65,15 +65,16 @@ public class MessageBonus extends HttpServlet {
 		int resultNumber = dbTask.getInstance().AddMessageBonus(mid, minus);
 		
 		MessageModel msgMessageModel = dbTask.getInstance().GetMessageByMid(mid);
-		ClassModel classModel = dbTask.getInstance().GetClassByClassid(msgMessageModel.getClid());
 		
 		if(resultNumber==0 && !minus){
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("type", "bonus");
 			map.put("clid",msgMessageModel.getClid());
-			map.put("cause","課堂加分");
+			map.put("cause","訊息加分");
 			map.put("student", msgMessageModel.getAccount());
 			String msg = new Gson().toJson(map);
+
+			ClassModel classModel = dbTask.getInstance().GetClassByClassid(msgMessageModel.getClid());
 			WSClient.getInstance().SendMsg(msg, classModel.getRoomid());
 		}
 		

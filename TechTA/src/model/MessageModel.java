@@ -9,6 +9,22 @@ public class MessageModel {
 	private String account;
 	private String time;
 	private String bonus;
+	private String role;
+	
+	
+	
+	public MessageModel(String mid, String content, String clid,
+			String account, String time, String bonus, String role) {
+		super();
+		this.mid = mid;
+		this.content = content;
+		this.clid = clid;
+		this.account = account;
+		this.time = time;
+		this.bonus = bonus;
+		this.role = role;
+	}
+	/*
 	public MessageModel(String mid, String content, String clid,
 			String account, String time, String bonus) {
 		super();
@@ -18,7 +34,7 @@ public class MessageModel {
 		this.account = account;
 		this.time = time;
 		this.bonus = bonus;
-	}
+	}*/
 	public String getMid() {
 		return mid;
 	}
@@ -54,6 +70,12 @@ public class MessageModel {
 	}
 	public void setBonus(String bonus) {
 		this.bonus = bonus;
+	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
 	}
 	
 	

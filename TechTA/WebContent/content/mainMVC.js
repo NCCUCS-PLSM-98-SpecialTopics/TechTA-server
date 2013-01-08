@@ -77,7 +77,7 @@ var AllStudent;
 
 
 var IsTeacher = false; // not null is teacher  class="teacherFunc"
-
+var done = false;
 ///////////////////////////////Event Control///////////////////////////////////////////
 var TA = {
 	event: function(){	
@@ -94,6 +94,7 @@ var TA = {
 			$('#courseContainer .box.class').live("click",this.ClassOnClick);
 			$("#addcourse form").live("submit",this.CourseOnSubmit);
 			$("#addclass form").live("submit",this.ClassOnSubmit);
+			$("#profileForm").live("submit",this.UpdateAccount);
 			
 			
 			//class
@@ -122,6 +123,11 @@ var TA = {
 				$('.PDetailBtn').live("click",this.ShowPDetail);
 				$('.PActiveBtn').live("click",this.ActivePQuizForm);
 				$('.PDeActiveBtn').live("click",this.DeActivePQuizForm);
+				$('.PAddQuizBtn').live("click",this.PAddQuizClick);
+				$('#PAddQuizContainer form').live("submit",this.SubmitQuiz);
+				$('#PRandomBtn').live("click",this.PRandomClick);
+				//file
+				$('#fileupload .name a').live("click",this.FileClick);
 				
 				
 			//share
@@ -229,12 +235,31 @@ var TA = {
 	,ShowAccountInfo: function(){
 				Request("api/GetAccountInfo","GET",null,function(info){
 					$("#UserNameSpan").html(info.name);
-					$("#U_account").val();
-					$("#U_name").val();
-					$("#U_email").val();
-					$("#U_department").val();
+					$("#U_account").html(info.account);
+					$("#U_role").html(info.role);
+					$("#U_department").html(info.department);
+					$("#U_password").val("");
+					$("#U_name").val(info.name);
+					$("#U_email").val(info.email);
 				}) 
 			}
+	,UpdateAccount: function(){
+				var data = {
+					name :$("#U_name").val(),
+					email :$("#U_email").val()
+					}
+				if($("#U_password").val()!=""){
+					password : $("#U_password").val();
+				}
+				Request("api/UpdateMyAccount","POST",data,function(r){
+					if(r.result!=0){
+						console.log("api/UpdateMyAccount -> result"+r.toString());
+					}
+				});
+					
+		return  false;
+	}
+	
 	
 	//////// course menu //////////
 	,ShowCourse: function(){
@@ -242,8 +267,15 @@ var TA = {
 					Request("api/GetCourse","GET",null,function(info){
 						MyCourses = info;
 						for(var num in MyCourses){
-							var node = "<div class='box course' datanum="+num+"><h2>"+MyCourses[num].name+"</h2></div>";
-							$(node).appendTo("#courseContainer");
+							//var node = "<div class='box course' datanum="+num+"><h2>"+MyCourses[num].name+"</h2></div>";
+							//$(node).appendTo("#courseContainer");
+							var data = {
+								index: num,
+								name:MyCourses[num].name,
+								score:MyCourses[num].score
+							}
+							if(!IsTeacher)data.IsNotTeacher= true;
+							$('#course-box-template').tmpl(data).appendTo("#courseContainer");
 						}
 						//老師增加課程
 						if(IsTeacher){
@@ -357,6 +389,7 @@ var TA = {
 	
 	//////// class menu //////////
 	,ClassInit :	function(){
+				TA.InitFileUpload();
 	
 				//抓active 
 				var IsActiveStatus = (NowClass.active == "0")?false:true;
@@ -403,7 +436,6 @@ var TA = {
 						
 					});
 				
-				
 				if(IsTeacher){
 					
 					//抓學生資料
@@ -421,6 +453,21 @@ var TA = {
 			}			
 	,ClassFuncHandler:function(target){
 						$("#class .content .classFunc").hide();
+						if($(target.currentTarget).hasClass('student')){
+						
+						    //抓學生資料
+							Request("api/GetAllStudentInfoByCourse", "GET",{coid:NowCourse.coid},function(r){
+								if(r.result == "0" ){
+									MyStudents = r.list;
+									var c =$('.studentContainer').find("tr:not(.title):not(.BigTitle)").remove();
+									$( "#student-template" ).tmpl( MyStudents ).appendTo( ".studentContainer");
+								}
+							});
+						
+						
+						}
+						
+						
 						
 						var testTarget = $(target);
 						var divToShow = $(target.currentTarget).attr("linkDiv");
@@ -430,7 +477,7 @@ var TA = {
 		var IsActiveStatus = ($(e.currentTarget).val() == "0")?false:true;
 			if(IsActiveStatus){
 				if( confirm("是否確認關閉課程")){
-					$(".classActiveLink").html("Active Class");
+					$(".classActiveLink").html("Activate Class");
 					$(".classActiveLink").val("0");
 					NowClass.active = "0";
 					for(var i in MyQuizzes){
@@ -451,7 +498,7 @@ var TA = {
 					if(MyClasses[i].active == "1") currentActiveClass = MyClasses[i];
 				}
 				if((currentActiveClass == undefined) || confirm('您現在有一堂課「'+currentActiveClass.name+'」正啟動,啟動新課堂會自動關閉舊課堂')){
-					$(".classActiveLink").html("Deactive Class");
+					$(".classActiveLink").html("Deactivate Class");
 					$(".classActiveLink").val("1");
 					NowClass.active = "1";
 
@@ -465,6 +512,7 @@ var TA = {
 	
 	//Quiz
 	,SubmitQuiz: function(e){
+		
 		var form = e.currentTarget;
 		var quizDIV = $(form).parent();
 		var choices = {
@@ -473,6 +521,7 @@ var TA = {
 			C:form.C.value,
 			D:form.D.value
 		}
+		var answer="";
 		$(form.answer).each(function(i){
 			if(form.answer[i].checked) answer = form.answer[i].value;
 		});
@@ -487,9 +536,11 @@ var TA = {
 			data.qid = $(form).parent().attr("qid");
 		}
 		
+		var IsPanel = ($(form).parent().parent().attr("id") == "PAddQuizContainer")?true:false;
 		
 		Request("api/AddQuizToClass","GET",data,function(r){
 			if(r.result == "0"){
+				
 				//把它從form變成div
 				
 				var dataToTemplate ;
@@ -511,7 +562,7 @@ var TA = {
 					}
 					
 				}
-				
+				if(IsPanel){TA.InitPanel(); $('#PAddQuizContainer').hide();return;}
 				dataToTemplate = TA.quizModelToTemplate(MyQuizzes[index],index);
 				$( "#quiz-template" ).tmpl( dataToTemplate ).insertAfter(quizDIV);
 				$(quizDIV).remove();
@@ -540,6 +591,11 @@ var TA = {
 			$( "#quiz-add-template" ).tmpl( data ).insertAfter(thisquiz);
 			$(thisquiz).remove();
 			MyQuizzes[index].chart = undefined;
+			
+			var BarChartElement = $('#quizContainer .quiz[qid='+thisquiz("qid")+'] .BarChart').get(0);
+			TA.MakeQuizBarChart(BarChartElement, MyQuizzes[index]);
+			
+			
 	}
 	,RemoveQuizForm:function(e){
 			var t = e.currentTarget;
@@ -818,7 +874,11 @@ var TA = {
 			alert("課程未啟動時，無法發言");
 			return;
 		}
-		var text = $('.SendMessageText').val();
+		var text="";
+		$('.SendMessageText').each( function(index, Element){
+			if($(Element).val()!="")text =$(Element).val() ;
+		} );
+		
 		if(text && text!=""){
 			WSClient.sendMsg(text,NowClass);
 			//----
@@ -826,6 +886,7 @@ var TA = {
 		}
 	}
 	,BonusMessage: function(e){
+		if(!IsTeacher){return;}
 		var t = e.currentTarget;
 		var msgDiv = $(t).parent();
 		var mid = msgDiv.attr("mid");
@@ -873,7 +934,7 @@ var TA = {
 				}
 				break; //老師:統計問題
 			case "bonus": //做加分的特效
-				if(data.student = Me.account){
+				if(data.student == Me.account){
 					TA.BonusEffect();
 				}break; 
 			case "class":
@@ -947,20 +1008,25 @@ var TA = {
 	}
 	
 	//PPTStart
-	,PPTStart: function(){
+	,PPTStart: function(url){
 		
-		var url  = $('input.pptUrl').val();
-		if(!url|| url ==""){alert("您未輸入連結");return;}
+		/*var url  = $('input.pptUrl').val();
+		if(!url|| url ==""){alert("您未輸入連結");return;}*/
 		
 		$('#status').show();
 		$('#powerpoint').show();
+		$('#workspace').hide();
 		$('body').css('overflow-y', 'hidden');
+		$('body').css('overflow-X', 'hidden');
 		$('#powerpointFreme').attr("src", "https://view.officeapps.live.com/op/embed.aspx?src="+url);
 		TA.InitPanel();
 	}
 	,PPTClose: function(){
 		$('#status').hide();
 		$('#powerpoint').hide();
+		$('#Pworkspace').show();
+		$('body').css('overflow-y', '');
+		$('body').css('overflow-X', '');
 		if(NowClass!=null)TA.ClassInit();
 	}
 	,PanelOnOff: function(){
@@ -973,6 +1039,7 @@ var TA = {
 			$('#PanelClose').show();
 			$('#PanelOpen').hide();
 			$('#Pworkspace').show();
+			//$('#Pworkspace').show();
 		}
 	}
 
@@ -1020,6 +1087,88 @@ var TA = {
 				.appendTo( ul );
 		};
 	}
+	,InitFileUpload:function(){
+		$('#fileupload .files tr').remove();
+		// Initialize the jQuery File Upload widget:
+		$('#fileupload').fileupload();
+
+		// Enable iframe cross-domain access via redirect option:
+		$('#fileupload').fileupload(
+			'option',
+			'redirect',
+			window.location.href.replace(
+				/\/[^\/]*$/,
+				'/cors/result.html?%s'
+			)
+		);
+
+		if (true||window.location.hostname === 'blueimp.github.com') {
+			// Demo settings:
+			$('#fileupload').fileupload('option', {
+				url: 'UploadFile',
+				maxFileSize: 5000000,
+				acceptFileTypes: /(\.|\/)(gif|jpe?g|png|pdf|doc|docx|ppt|pptx)$/i,
+				process: [
+					{
+						action: 'load',
+						fileTypes: /^image\/(gif|jpeg|png)$/,
+						maxFileSize: 20000000 // 20MB
+					},
+					{
+						action: 'resize',
+						maxWidth: 1440,
+						maxHeight: 900
+					},
+					{
+						action: 'save'
+					}
+				]
+				,submit:function (e, data) {
+					data.formData = {clid: NowClass.clid};
+					if (!data.formData.clid) {
+					  return false;
+					}
+				}
+			});
+			// Upload server status check for browsers with CORS support:
+			if ($.support.cors) {
+				$.ajax({
+					url: 'UploadFile',
+					type: 'HEAD'
+				}).fail(function () {
+					$('<span class="alert alert-error"/>')
+						.text('Upload server currently unavailable - ' +
+								new Date())
+						.appendTo('#fileupload');
+				});
+			}
+			$('#fileupload').each(function () {
+				var that = this;
+				Request("UploadFile","GET",{clid:NowClass.clid},function(result){
+					if (result && result.length) {
+						var a = $(that).fileupload('option', 'done').call(that, null, {result: result});
+					}
+			});
+
+
+			});
+		} else {
+			// Load existing files:
+			
+		}
+	}
+	,FileClick:function(e){
+		var a = e.currentTarget;
+		var href = $(a).attr("href");
+		var path  =  location.protocol + "//" + location.host +"/TechTA/"+href;
+		
+		if(confirm("您確定要開啟嗎?")){
+			TA.PPTStart(path);
+		}
+		return false;
+	
+	}
+	
 	
 	,ActivePQuizForm:function(e){
 			var t = e.currentTarget;
@@ -1037,7 +1186,7 @@ var TA = {
 					{
 						return;
 					}else{
-						thisquiz.siblings(".quiz[qid="+MyQuizzes[i].qid+"]").find(".PDeActiveBtn").click();
+						thisquiz.siblings(".APQuiz[qid="+MyQuizzes[i].qid+"]").find(".PDeActiveBtn").click();
 					}
 				}
 			}
@@ -1088,6 +1237,8 @@ var TA = {
 			}else{//關閉詳細
 				thisquiz.find(".APQuizDetail").css("display","none");
 				$(t).attr("on","0");
+				var index = Tool.indexOfKey(MyQuizzes,"qid",thisquiz.attr("qid"));
+				MyQuizzes[index].chart = undefined;
 			}
 	
 	
@@ -1097,7 +1248,7 @@ var TA = {
 		var account = $('#PAddBonusStudentText').val();
 		var data = {
 			account :account,
-			coid: NowCourse.coid
+			clid: NowClass.clid
 		}
 		Request("api/Bonus","GET",data,function(r){
 			if(r.result == "0"){
@@ -1108,7 +1259,75 @@ var TA = {
 			}
 		});
 	}
+	,PAddQuizClick:function(){
+		if($('#PAddQuizContainer').css("display") == "none"){
+			$('#PAddQuizContainer').show();
+			$('#PAddQuizContainer').html("");
+			$( "#quiz-add-template" ).tmpl( {} ).appendTo('#PAddQuizContainer');
+		}else{
+			$('#PAddQuizContainer').hide();
+		}
+	}
+	,PRandomClick:function(){
+		done = false;
+		$('#PRandomName').show();
+		//計算比重
+		var weightedList= new Array();
+		var sum=0;
+		var totalWeight=0;
+		for(var std in MyStudents){
+			var Nstd = MyStudents[std];
+			Nstd.weight = (parseInt(Nstd.CQ) + parseInt(Nstd.BM) +parseInt(Nstd.score)+1) ; //分數越低 權重越重
+			totalWeight += Nstd.weight;
+		}
+		for(var std in MyStudents){
+			sum += (totalWeight) - MyStudents[std].weight;
+			weightedList[std] = sum;
+		}
+
+		
+		var length = sum;
+		var time = 50;
+		var MaxTime = 500;
+		var count = 33;
+		var disappear = 5000;
+		for(var i=0; i<count; i++ ){
+			setTimeout(function(){
+				var rnd = Math.floor(Math.random()*length);
+				var index=-1;
+				for(var i in weightedList){
+					if(rnd <= weightedList[i]) {
+						index =  i;
+						break;
+					}
+				}
+				$('#PRandomName').html(MyStudents[index].name);
+				
+			},	i*i);
+		}
+		for(var i=0; i<3; i++){
+			setTimeout(function(){
+				$('#PRandomName').css("background","#DDD")
+			},	count*count+(500)*i);
+			setTimeout(function(){
+				$('#PRandomName').css("background","#FFF")
+			},	count*count+(500)*i+250);
+		}
+		setTimeout(function(){
+				done = true;
+			},	count*count);
+			
+		setTimeout(function(){
+			if(done){
+				$('#PRandomName').fadeOut('fast',function(){
+					$('#PRandomName').hide();
+				});
+			}
+		},	count*count+disappear);
 	
+	}
+
+	//---------------
 	
 	,AddMessageToBox:function(msg){
 			var node;
@@ -1118,9 +1337,16 @@ var TA = {
 				,user :msg.account
 				,content :msg.content
 			}
-			if(IsTeacher){data.IsTeacher = true;}
+			if(msg.role=="student" ){
+				data.user = "匿名";
+			}
+			data.IsTeacher = true;
 			$( "#message-template" ).tmpl( data).appendTo( ".messagebox");
 			$(node).appendTo(".messagebox");
+			
+			$(".messagebox").each(function(i,e){
+			    $(e).animate({ scrollTop:  $(e)[0].scrollHeight  }, "slow");
+			 });
 	}
 	,ClearMessageBox:function(){
 			$(".messagebox").html("");
@@ -1132,8 +1358,15 @@ var TA = {
 						MyCourses = info;
 						
 						for(var num in MyCourses){
-							var node = "<div class='box course' datanum="+num+"><h2>"+MyCourses[num].name+"</h2></div>";
-							$(node).appendTo("#courseContainer");
+							//var node = "<div class='box course' datanum="+num+"><h2>"+MyCourses[num].name+"</h2></div>";
+							//$(node).appendTo("#courseContainer");
+							var data = {
+								index: num,
+								name:MyCourses[num].name,
+								score:MyCourses[num].score
+							}
+							if(!IsTeacher)data.IsNotTeacher= true;
+							$('#course-box-template').tmpl(data).appendTo("#courseContainer");
 						}
 						
 						//老師增加課程

@@ -62,7 +62,7 @@ public class Bonus extends HttpServlet {
 		int resultNumber= -1;
 		if(dbTask.getInstance().GetUser(account) == null){resultNumber = 2;} //無此帳號
 		else{
-			resultNumber = dbTask.getInstance().AddBonusByStudentAndCourse(account, model.getClid(), 1);
+			resultNumber = dbTask.getInstance().AddBonusByStudentAndCourse(account, model.getParentCourseId(), 1);
 		}
 		
 		if(resultNumber == 0){

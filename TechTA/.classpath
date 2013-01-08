@@ -25,5 +25,8 @@
 	<classpathentry exported="true" kind="lib" path="WebContent/lib/mail.jar"/>
 	<classpathentry exported="true" kind="lib" path="WebContent/lib/mysql-connector-java-5.1.22-bin.jar"/>
 	<classpathentry kind="lib" path="WebContent/lib/java_websocket.jar"/>
+	<classpathentry kind="lib" path="WebContent/lib/commons-fileupload-1.2.2.jar"/>
+	<classpathentry kind="lib" path="WebContent/lib/imgscalr-lib-4.2.jar"/>
+	<classpathentry kind="lib" path="WebContent/lib/commons-io-2.4.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

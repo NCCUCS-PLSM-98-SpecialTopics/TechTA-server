@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import com.google.gson.Gson;
 
 import task.TATool;
+import task.WSClient;
 import task.dbTask;
 
 import model.CourseModel;
@@ -50,6 +51,7 @@ public class GetCourse extends HttpServlet {
 		
 		String account = (String) session.getAttribute("account");
 		
+		WSClient.getInstance();
 		
 		List<CourseModel> result = dbTask.getInstance().GetCourseByAccount(account);
 		Gson gson = new Gson();

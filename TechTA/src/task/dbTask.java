@@ -22,6 +22,7 @@ public class dbTask {
 			instance = new dbTask();
 		}
 		return instance;
+		//return  new dbTask();
 	}
 
 	public  UserModel GetUser(String Account){
@@ -222,7 +223,8 @@ public class dbTask {
 										result.getString("week"),
 										result.getString("active"),
 										result.getString("roomid"),
-										result.getString("co_id"),null,null
+										result.getString("co_id"),null,null,
+										result.getString("file")
 										);
 				modelList.add(model);
 			}
@@ -252,7 +254,8 @@ public class dbTask {
 										result.getString("week"),
 										result.getString("active"),
 										result.getString("roomid"),
-										result.getString("co_id"),null,null
+										result.getString("co_id"),null,null,
+										result.getString("file")
 														);
 				
 			}
@@ -317,6 +320,19 @@ public class dbTask {
 		if(result == 1)return 0 ;  //success
 		else return 1;
 	}
+	
+	public  int UpdateFileToClass(String fileJson,String clid){
+		
+		String userSql = "UPDATE `class` SET `file`=?   WHERE  `cl_id`=? ";
+		
+		String[] strArray = {fileJson,clid};
+		int result = db.ChangeData(userSql, strArray);
+
+		db.Close();
+		if(result == 1)return 0 ;  //success
+		else return 1;
+	}	
+	
 	
 	public  int RemoveClass(String clid){
 		
@@ -660,7 +676,7 @@ public class dbTask {
 			
 			List<MessageModel> modelList = new  ArrayList<MessageModel>();
 			MessageModel model = null;
-			String queryStr = "SELECT `m_id`, `content`, `cl_id`, `account`, `time`, `bonus` FROM `message` WHERE cl_id = ?";
+			String queryStr = "SELECT `m_id`, `content`, `cl_id`, `account`, `time`, `bonus` , `role` FROM `message` Natural Join `user` WHERE cl_id = ? ORDER BY `time` ASC ";
 			String[] strArray = {clid};
 			ResultSet result = db.SelectTable(queryStr, strArray);
 			try {
@@ -671,7 +687,8 @@ public class dbTask {
 											result.getString("cl_id"),
 											result.getString("account"),
 											result.getString("time"),
-											result.getString("bonus")
+											result.getString("bonus"),
+											result.getString("role")
 											);
 					modelList.add(model);
 				}
@@ -689,7 +706,7 @@ public class dbTask {
 		public  MessageModel GetMessageByMid(String mid){
 			
 			MessageModel model = null;
-			String queryStr = "SELECT `m_id`, `content`, `cl_id`, `account`, `time`, `bonus` FROM `message` WHERE m_id = ?";
+			String queryStr = "SELECT `m_id`, `content`, `cl_id`, `account`, `time`, `bonus` FROM `message` WHERE m_id = ? ORDER BY `time` ASC ";
 			String[] strArray = {mid};
 			ResultSet result = db.SelectTable(queryStr, strArray);
 			try {
@@ -700,7 +717,8 @@ public class dbTask {
 											result.getString("cl_id"),
 											result.getString("account"),
 											result.getString("time"),
-											result.getString("bonus")
+											result.getString("bonus"),
+											null
 											);
 					
 				}
@@ -727,15 +745,15 @@ public class dbTask {
 			else return 1;
 		}
 		
-		public  String AddMessage(MessageModel model){
-			String userSql = "INSERT INTO `message`( `content`, `cl_id`, `account`, `time`) VALUES (?,?,?,?)";
-			String[] strArray = {model.getContent(),model.getClid(),model.getAccount(),model.getTime()};
+		public  int AddMessage(MessageModel model){
+			String userSql = "INSERT INTO `message`( `m_id`, `content`, `cl_id`, `account`, `time`) VALUES (?,?,?,?,?)";
+			String[] strArray = {model.getMid(),model.getContent(),model.getClid(),model.getAccount(),model.getTime()};
 			
-			String result = db.ChangeDataAndGetKey(userSql, strArray);
+			int result = db.ChangeData(userSql, strArray);
 
 			db.Close();
-
-			return result;// if null then error
+			if(result == 1)return 0 ;  //success
+			else return 1;
 		}
 
 		public  int RemoveMessageByClass(String clid){
@@ -753,37 +771,35 @@ public class dbTask {
 		public  List<Map<String, String>> GetAllStudentInfoByCourse(String coid){
 			String queryStr = 
 					
-			" SELECT P.account,P.name ,TQ ,ifnull(Q.CQ, 0) CQ,ifnull(M.TM, 0) TM ,ifnull(M.BM, 0) BM , score FROM"+
-			" 	(SELECT  c.account, c.name,enroll.score, enroll.co_id FROM enroll  NATURAL  join ("+
-			" 		SELECT  * FROM user where role = 'student'"+
-			" 		)c where enroll.co_id = ?"+
-			" 	)P	"+
-			" left join"+
-			" 	(SELECT account, count(m_id) TM,SUM(`bonus`) BM FROM message NATURAL  join ("+
-			" 		SELECT * FROM class NATURAL  join ("+
-			" 			SELECT  c.account, c.name, enroll.co_id FROM enroll  NATURAL  join ("+
-			" 				SELECT  * FROM user"+
-			" 			)c where enroll.co_id = ?"+
-			" 		) b  "+
-			" 	)a GROUP BY account) M"+
-			" ON P.account = M.account"+
-			" left join"+
-			"  	(SELECT account ,count(q_id) CQ ,question  FROM("+
-			" 		SELECT *,count(q_id) TQ FROM takequiz   NATURAL join ("+
-			" 			SELECT cl_id, q_id,correct_answer, question, account, name FROM quiz NATURAL  join ("+
-			" 				SELECT * FROM class NATURAL  join ("+
-			" 					SELECT  c.account, c.name, enroll.co_id FROM enroll  NATURAL  join ("+
-			" 						SELECT  * FROM user"+
-			" 					)c where enroll.co_id = ?"+
-			" 				) b  "+
-			" 			)a"+
-			" 		)z GROUP BY z.account HAVING answer = correct_answer"+
-			" 	)x GROUP BY account ) Q"+
-			" ON P.account = Q.account"+
-			" join"+
-			" (SELECT count(q_id) TQ  FROM quiz WHERE cl_id IN("+
-			" 	SELECT cl_id FROM class WHERE co_id = ?"+
-			" ) )x"		;
+			 "  SELECT P.account,P.name ,TQ ,ifnull(Q.CQ, 0) CQ,ifnull(M.TM, 0) TM ,ifnull(M.BM, 0) BM , score FROM"+
+			 "  	(SELECT  c.account, c.name,enroll.score, enroll.co_id FROM enroll  NATURAL  join ("+
+			 "  		SELECT  * FROM user where role = 'student'"+
+			 "  		)c where enroll.co_id = ?"+
+			 "  	)P	"+
+			 "  left join"+
+			 "  	(SELECT account, count(m_id) TM,SUM(`bonus`) BM FROM message NATURAL  join ("+
+			 "  		SELECT * FROM class NATURAL  join ("+
+			 "  			SELECT  c.account, c.name, enroll.co_id FROM enroll  NATURAL  join ("+
+			 "  				SELECT  * FROM user"+
+			 "  			)c where enroll.co_id = ?"+
+			 "  		) b  "+
+			 "  	)a GROUP BY account) M"+
+			 "  ON P.account = M.account"+
+			 "  left join"+
+			 "   	("+
+			 " 		SELECT account , COUNT(q_id) CQ FROM("+
+			 " 			SELECT *  FROM takequiz   INNER join ("+
+			 " 				SELECT cl_id, q_id,correct_answer, question  FROM quiz INNER  join ("+
+			 " 					SELECT * FROM class where  co_id = ?"+
+			 " 				)a USING (cl_id)"+
+			 " 			)b USING (q_id) Where  answer = correct_answer "+
+			 " 		) C GROUP BY account"+
+			 " 	) Q"+
+			 "  ON P.account = Q.account"+
+			 "  join"+
+			 "  (SELECT count(q_id) TQ  FROM quiz WHERE cl_id IN("+
+			 "  	SELECT cl_id FROM class WHERE co_id = ?"+
+			 "  ) )x"	;
 			
 			String[] strArray = {coid,coid,coid,coid};
 			ResultSet result = db.SelectTable(queryStr, strArray);

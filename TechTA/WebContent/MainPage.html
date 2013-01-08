@@ -9,17 +9,36 @@
 <script type="text/javascript" src="content/jquery.tmpl.min.js"></script>
 <script type="text/javascript" src="content/jquery.liveready-1.0-min.js"></script>
 <script type="text/javascript" src="content/highcharts.js"></script>
+<!--fileupload-->
+<script src="http://blueimp.github.com/JavaScript-Templates/tmpl.min.js"></script>
+<script src="http://blueimp.github.com/JavaScript-Load-Image/load-image.min.js"></script>
+<script src="http://blueimp.github.com/JavaScript-Canvas-to-Blob/canvas-to-blob.min.js"></script>
+<script src="http://blueimp.github.com/cdn/js/bootstrap.min.js"></script>
+<script src="http://blueimp.github.com/Bootstrap-Image-Gallery/js/bootstrap-image-gallery.min.js"></script>
+<script src="content/jquery.iframe-transport.js"></script>
+<script src="content/jquery.fileupload.js"></script>
+<script src="content/jquery.fileupload-fp.js"></script>
+<script src="content/jquery.fileupload-ui.js"></script>
+<script src="content/file_config.js"></script>
+<!--<script src="content/test_main.js"></script>-->
+
+<!--fileupload-->
+
 
 <script type="text/javascript" src="content/mainMVC.js" ></script>
 <script type="text/javascript" src="content/websocket.js" ></script>
 
 
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+<link rel="stylesheet" href="content/bootstrap.css">
+<link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap-responsive.min.css">
+<link rel="stylesheet" href="http://blueimp.github.com/Bootstrap-Image-Gallery/css/bootstrap-image-gallery.min.css">
+<link rel="stylesheet" href="content/jquery.fileupload-ui.css">
+
 <link rel="stylesheet" type="text/css" href="content/animateTA.css" />
 <link rel="stylesheet" type="text/css" href="content/animate.css" />
 <link rel="stylesheet" type="text/css" href="content/main.css" />
 <link rel="stylesheet" type="text/css" href="content/table.css" />
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
-
 
 </head>
 <body>
@@ -42,7 +61,15 @@
 						<input type="button" id="PAddBonusStudentBtn" value="加分+"/>
 					</div>
 				</div>
+				<div id="PRandom">
+					<input type="button" id="PRandomBtn" value="隨機選人"/>
+					<div id="PRandomName" style="display:none"></div>
+				</div>
 				<div id="PQuiz"></div>
+				<div id="PAddQuiz">
+					<input type="button" class="PAddQuizBtn" value="新增問題">
+					<div id="PAddQuizContainer" style="display:none"></div>
+				</div>
 				<div id="PMessage">
 					<!--訊息框-->
 					<div class="messagebox" placeholder="目前無新訊息"></div>
@@ -78,7 +105,7 @@
       <div class="photo">
           <div class="topic">
             <h1>CLASSROOM CLICKER</h1>
-            <h2>The Most Immediate Method To Learn </h2>
+            <h2>The Fastest Way To Learn ANYTHING </h2>
               <br/>
               <br/>
             
@@ -156,7 +183,7 @@
                     <span class="title" >計算機概論</span>
                     <nav>
                         <ul>
-                            <li class="teacherFunc"><a class="classActiveLink" linkDiv="" value="active" >Active Class</a></li>
+                            <li class="teacherFunc"><a class="classActiveLink" linkDiv="" value="0" >Activate Class</a></li>
                             <li class="teacherFunc" ><a class="classfuncLink" linkDiv="#class .content .control" >Start</a></li>
                             <!--<li class="teacherFunc DeAtiveClass" style="display:none;"><a class="classfuncLink DeAtiveClass" linkDiv="" >Deactive Class</a></li>-->
                             <li class="nonteacherFunc">     <a class="classfuncLink" linkDiv="#class .content .answerQuiz" >Quiz</a></li>
@@ -220,11 +247,50 @@
                     
                     <div class="classFunc control" style="display: none">
                         <!--啟動問題-->
-						請輸入PPT連結
+						<!--請輸入PPT連結
 						<input type="text"   class="pptUrl" placeholder="http://"/> 
 						<input type="button" class="pptStart" value="啟動">
-						
-						
+						-->
+						<form id="fileupload" action="UploadFile" method="POST" enctype="multipart/form-data">
+							<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+							<div class="row fileupload-buttonbar">
+								<div class="span7">
+									<!-- The fileinput-button span is used to style the file input field as button -->
+									<span class="btn btn-success fileinput-button">
+										<i class="icon-plus icon-white"></i>
+										<span>Add files...</span>
+										<input type="file" name="files[]" multiple>
+									</span>
+									<button type="submit" class="btn btn-primary start">
+										<i class="icon-upload icon-white"></i>
+										<span>Start upload</span>
+									</button>
+									<button type="reset" class="btn btn-warning cancel">
+										<i class="icon-ban-circle icon-white"></i>
+										<span>Cancel upload</span>
+									</button>
+									<button type="button" class="btn btn-danger delete">
+										<i class="icon-trash icon-white"></i>
+										<span>Delete</span>
+									</button>
+									<input type="checkbox" class="toggle">
+								</div>
+								<!-- The global progress information -->
+								<div class="span5 fileupload-progress fade">
+									<!-- The global progress bar -->
+									<div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+										<div class="bar" style="width:0%;"></div>
+									</div>
+									<!-- The extended global progress information -->
+									<div class="progress-extended">&nbsp;</div>
+								</div>
+							</div>
+							<!-- The loading indicator is shown during file processing -->
+							<div class="fileupload-loading"></div>
+							<br>
+							<!-- The table listing the files available for upload/download -->
+							<table role="presentation" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
+						</form>
                         <!--問題統計-->
                         <!--Message-->
                         <!--加分-->
@@ -275,22 +341,18 @@
 		
 	</div>
 	<div id="profile" class="clearfix middleArea" style="display:none;" >
-		<form id="form1" name="form1" method="post" action="#" onsubmit="return UpdateAccount();">
+		<form id="profileForm" name="form1" method="post" >
 		
-			<p>   account：<input type="text" name="account" id="U_account" />   </p>
-			<p>   password：<input type="text" name="password" id="U_password" />   </p>
+			<p>   account：<span id="U_account" />   </p>
+			<p>   password：<input type="text" name="password" id="U_password" placeholder="留空代表不修改" /> </p>
 			<p>   name：<input type="text" name="name" id="U_name" />   </p>
 			<p>   email：<input type="text" name="email" id="U_email" />   </p>
-			<p>   department：<input type="text" name="department" id="U_department" />   </p>
-			<p>   role：
-				<select name="role"  id="U_role" >
-					<option value="teacher">老師</option>
-					<option value="student">學生</option>
-				</select>
+			<p>   department：<span id="U_department" />   </p>
+			<p>   role：<span id="U_role" />
 			</p>
 			<p>&nbsp;</p>
 			<p>
-				<input type="button" class="UpdateAccountBtn"  value="UpdateAccount" />
+				<input type="submit" class="UpdateAccountBtn"  value="UpdateAccount" />
 				 
 			</p>
 		</form>
@@ -308,7 +370,7 @@
 				<div class ="quiz" index="${index}" qid="${qid}">
 					
 						<div class = "question">${question}</div>
-						<div class = "answerContainer" style="width:500px">
+						<div class = "answerContainer" >
 							<ul>
 								<li><span class="correctAnswer">{{if correctA}}●{{else}}○{{/if}}</span> <span class="Answer" > ${A}</span></li>
 								<li><span class="correctAnswer">{{if correctB}}●{{else}}○{{/if}}</span> <span class="Answer" > ${B}</span></li>
@@ -331,7 +393,7 @@
 			<div class ="quiz" index="${index}" qid="${qid}">
 				<form>
 					<div class = "question"><input type="text" required="required" name="question" placeholder="請輸入問題.." value="${question}" /></div>
-					<div class = "answerContainer" style="width:500px">
+					<div class = "answerContainer">
 						<ul>
 							<li><input type="radio" class="regular-radio" name="answer" value="A" {{if correctA}}checked{{/if}}/>A&nbsp;
 								 <input type="text" required="required" name="A" placeholder="答案A" value="${A}" /></li>
@@ -379,6 +441,17 @@
 						</div>
 					</div>
 </script>
+<script id="course-box-template" type="text/x-jquery-tmpl">
+		<div class='box course' datanum="${index}">
+			<h2>${name}</h2>
+			{{if IsNotTeacher}}
+			<div class="score">
+				<img src="images/bag.png">
+				${score}
+			</div>
+			{{/if}}
+		</div>
+</script>
 <script id="message-template" type="text/x-jquery-tmpl">
 	
 	<p class='msg'  mid="${mid}" bonus="${bonus}">
@@ -390,6 +463,71 @@
 		{{/if}}
 		${user}:${content}
 	</p>				
+</script>
+
+
+
+<!--上傳檔案的template-->
+
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade">
+        <td class="preview"><span class="fade"></span></td>
+        <td class="name"><span>{%=file.name%}</span></td>
+        <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+        {% if (file.error) { %}
+            <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
+        {% } else if (o.files.valid && !i) { %}
+            <td>
+                <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar" style="width:0%;"></div></div>
+            </td>
+            <td class="start">{% if (!o.options.autoUpload) { %}
+                <button class="btn btn-primary">
+                    <i class="icon-upload icon-white"></i>
+                    <span>{%=locale.fileupload.start%}</span>
+                </button>
+            {% } %}</td>
+        {% } else { %}
+            <td colspan="2"></td>
+        {% } %}
+        <td class="cancel">{% if (!i) { %}
+            <button class="btn btn-warning">
+                <i class="icon-ban-circle icon-white"></i>
+                <span>{%=locale.fileupload.cancel%}</span>
+            </button>
+        {% } %}</td>
+    </tr>
+{% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+        {% if (file.error) { %}
+            <td></td>
+            <td class="name"><span>{%=file.name%}</span></td>
+            <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+            <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
+        {% } else { %}
+            <td class="preview">{% if (file.thumbnail_url) { %}
+                <a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}"><img src="{%=file.thumbnail_url%}"></a>
+            {% } %}</td>
+            <td class="name">
+                <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
+            </td>
+            <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+            <td colspan="2"></td>
+        {% } %}
+        <td class="delete">
+            <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}">
+                <i class="icon-trash icon-white"></i>
+                <span>{%=locale.fileupload.destroy%}</span>
+            </button>
+            <input type="checkbox" name="delete" value="1">
+        </td>
+    </tr>
+{% } %}
 </script>
 </body>
 </html>

@@ -55,7 +55,7 @@ public class WSClient extends WebSocketClient {
 
 	@Override
 	public void onOpen( ServerHandshake handshakedata ) {
-		System.out.println( "opened connection" );
+		System.out.println( "WS:opened connection" );
 		
 
 		Map<String,String> map = new HashMap<String,String>();
@@ -63,7 +63,8 @@ public class WSClient extends WebSocketClient {
 		map.put("user", TAConfig.CHATID);
 		String json = (new Gson()).toJson(map);
 		this.send(json);
-		
+
+		System.out.println( "WS:Start Listening" );
 		// if you pan to refuse connection based on ip or httpfields overload: onWebsocketHandshakeReceivedAsClient
 	}
 
@@ -74,15 +75,15 @@ public class WSClient extends WebSocketClient {
 			JSONObject msg = new JSONObject(message);
 			System.out.println( "received data: " + msg.get("data").toString());
 			JSONObject data = new JSONObject(msg.get("data").toString());
-			String msgkey = data.get("msg_uuid").toString();
-			String timestamp = data.get("timestamp").toString();
+			String msgkey = msg.get("msg_uuid").toString();
+			String timestamp = msg.get("timestamp").toString();
 			
 			String type = data.get("type").toString();
 			String account = data.get("account").toString();
 			if(type.equals("message")){
 				String content = data.get("content").toString();
 				String clid = data.get("clid").toString();
-				MessageModel model = new MessageModel(msgkey, content, clid, account, timestamp, "0");
+				MessageModel model = new MessageModel(msgkey, content, clid, account, timestamp, "0",null);
 				dbTask.getInstance().AddMessage(model);
 				
 			}else if (type.equals("answer")){
@@ -108,7 +109,8 @@ public class WSClient extends WebSocketClient {
 	@Override
 	public void onClose( int code, String reason, boolean remote ) {
 		// The codecodes are documented in class org.java_websocket.framing.CloseFrame
-		System.out.println( "Connection closed by " + ( remote ? "remote peer" : "us" ) );
+		System.out.println( "WS:Connection closed by " + ( remote ? "remote peer" : "us" ) );
+		this.getInstance();
 	}
 
 	@Override

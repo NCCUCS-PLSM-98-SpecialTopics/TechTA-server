@@ -14,10 +14,12 @@ public class ClassModel {
 	private String parentCourseId = null;
 	private List<QuizModel> quizzes = null;
 	private List<MessageModel> messages = null;
+	private String file = "";
 	
+
 	public ClassModel(String clid, String name, String week, String active,
 			String roomid, String parentCourseId, List<QuizModel> quizzes,
-			List<MessageModel> messages) {
+			List<MessageModel> messages, String file) {
 		super();
 		this.clid = clid;
 		this.name = name;
@@ -27,6 +29,7 @@ public class ClassModel {
 		this.parentCourseId = parentCourseId;
 		this.quizzes = quizzes;
 		this.messages = messages;
+		this.file = file;
 	}
 
 	public String getClid() {
@@ -91,6 +94,14 @@ public class ClassModel {
 
 	public void setMessages(List<MessageModel> messages) {
 		this.messages = messages;
+	}
+
+	public String getFile() {
+		return file;
+	}
+
+	public void setFile(String file) {
+		this.file = file;
 	}
 	 
 	

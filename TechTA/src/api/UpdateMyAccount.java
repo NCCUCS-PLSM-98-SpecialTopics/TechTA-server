@@ -50,8 +50,7 @@ public class UpdateMyAccount extends HttpServlet {
 		
 		int returnResult = -1;
 		
-		if(!TATool.CheckPerem(new String[]{"name","email","department"}, request, out)){return;}
-		String clid  = TATool.utf8Perem(request, "clid");
+		if(!TATool.CheckPerem(new String[]{"name","email"}, request, out)){return;}
 		
 		UserModel model = dbTask.getInstance().GetUser(account);
 		
@@ -60,7 +59,6 @@ public class UpdateMyAccount extends HttpServlet {
 		}
 		model.setName(TATool.utf8Perem(request, "name") );
 		model.setEmail(TATool.utf8Perem(request, "email"));
-		model.setDepartment(TATool.utf8Perem(request, "department"));
  
 
 		
