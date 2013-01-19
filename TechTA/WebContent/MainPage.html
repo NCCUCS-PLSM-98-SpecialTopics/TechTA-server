@@ -74,7 +74,7 @@
 					<!--訊息框-->
 					<div class="messagebox" placeholder="目前無新訊息"></div>
 					<!--發送框-->
-					<input type="text" class = "SendMessageText" placeholder="請輸入訊息..." />
+					<input type="text" class = "SendMessageText" placeholder="請輸入訊息..." x-webkit-speech="" />
 					<input type="button" class = "SendMessageBtn" value="送出"/>
 				
 				</div>
@@ -130,7 +130,7 @@
         
         <div id="addcourse" class="middleArea clearfix" style="display:none;"  >
             <form onsubmit="return false;">
-                課程名稱:<input type="text" name="name"/>
+                課程名稱:<input type="text" name="name" x-webkit-speech=""/>
                 年份:<select name="year">
                         <option value="98">98</option>
                         <option value="99">99</option>
@@ -147,7 +147,7 @@
         
         <div id="addclass" class="middleArea clearfix" style="display:none;"  >
              <form onsubmit="return false;">
-                課堂名稱:<input type="text" name="name"/>
+                課堂名稱:<input type="text" name="name" x-webkit-speech=""/>
                 周次:<select name="week">
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -214,7 +214,7 @@
                         
                         <!--訊息框--><div class="messagebox" placeholder="目前無新訊息"></div>
                         
-                        <!--發送框--><input type="text" class = "SendMessageText" placeholder="請輸入訊息..." />
+                        <!--發送框--><input type="text" class = "SendMessageText" placeholder="請輸入訊息..." x-webkit-speech=""/>
                         			<input type="button" class = "SendMessageBtn" value="送出"/>
 
                     </div>
@@ -392,17 +392,17 @@
 
 			<div class ="quiz" index="${index}" qid="${qid}">
 				<form>
-					<div class = "question"><input type="text" required="required" name="question" placeholder="請輸入問題.." value="${question}" /></div>
+					<div class = "question"><input type="text" required="required" name="question" placeholder="請輸入問題.." value="${question}" x-webkit-speech=""  /></div>
 					<div class = "answerContainer">
 						<ul>
-							<li><input type="radio" class="regular-radio" name="answer" value="A" {{if correctA}}checked{{/if}}/>A&nbsp;
-								 <input type="text" required="required" name="A" placeholder="答案A" value="${A}" /></li>
-							<li><input type="radio" class="regular-radio"  name="answer" value="B" {{if correctB}}checked{{/if}}/>B&nbsp;
-								 <input type="text" required="required" name="B" placeholder="答案B" value="${B}" /></li>
-							<li><input type="radio" class="regular-radio"  name="answer" value="C" {{if correctC}}checked{{/if}}/>C&nbsp;
-								<input type="text" required="required" name="C" placeholder="答案C" value="${C}" /></li>
-							<li><input type="radio" class="regular-radio"  name="answer" value="D" {{if correctD}}checked{{/if}}/>D&nbsp;
-								<input type="text" required="required" name="D" placeholder="答案D" value="${D}" /></li>
+							<li><input type="radio" class="regular-radio" name="answer" value="A" {{if correctA}}checked{{/if}} x-webkit-speech="" />A&nbsp;
+								<input type="text" required="required" name="A" placeholder="答案A" value="${A}" x-webkit-speech=""  /></li>
+							<li><input type="radio" class="regular-radio"  name="answer" value="B" {{if correctB}}checked{{/if}}x-webkit-speech=""  />B&nbsp;
+								<input type="text" required="required" name="B" placeholder="答案B" value="${B}" x-webkit-speech=""  /></li>
+							<li><input type="radio" class="regular-radio"  name="answer" value="C" {{if correctC}}checked{{/if}}x-webkit-speech=""  />C&nbsp;
+								<input type="text" required="required" name="C" placeholder="答案C" value="${C}" x-webkit-speech=""  /></li>
+							<li><input type="radio" class="regular-radio"  name="answer" value="D" {{if correctD}}checked{{/if}}x-webkit-speech=""  />D&nbsp;
+								<input type="text" required="required" name="D" placeholder="答案D" value="${D}" x-webkit-speech=""  /></li>
 						</ul>
 					</div>
 					<div class ="buttonContainer">

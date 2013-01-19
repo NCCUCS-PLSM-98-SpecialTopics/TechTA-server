@@ -113,6 +113,7 @@ var TA = {
 				//message
 				$('.SendMessageBtn').live("click",this.SendMessage);
 				$('.BonusPart').live("click",this.BonusMessage);
+				$('.SendMessageText').keypress(function(e){if (e.which == 13)  TA.SendMessage(e)});
 				//Quiz
 				$('.answerQuiz .answer.box').live("click",this.TakeQuiz);
 				//Start
@@ -882,7 +883,8 @@ var TA = {
 		if(text && text!=""){
 			WSClient.sendMsg(text,NowClass);
 			//----
-			TA.AddMessageToBox({account:"Me",content:text})
+			TA.AddMessageToBox({account:"Me",content:text});
+			$('.SendMessageText').val("");
 		}
 	}
 	,BonusMessage: function(e){
@@ -914,6 +916,7 @@ var TA = {
 	
 	}
 	,OnMessage: function(e){
+		
 		var wsMessage = e.data;
 		console.log("[TA/onmessage] " + wsMessage);
 		var wsMessageObj = JSON.parse(wsMessage);
@@ -1345,7 +1348,7 @@ var TA = {
 			$(node).appendTo(".messagebox");
 			
 			$(".messagebox").each(function(i,e){
-			    $(e).animate({ scrollTop:  $(e)[0].scrollHeight  }, "slow");
+			    $(e).animate({ scrollTop:  $(e)[0].scrollHeight  }, 0);
 			 });
 	}
 	,ClearMessageBox:function(){

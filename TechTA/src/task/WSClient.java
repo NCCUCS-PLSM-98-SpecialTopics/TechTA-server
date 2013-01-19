@@ -27,6 +27,7 @@ public class WSClient extends WebSocketClient {
 		if (c == null) {
 			try {
 				c = new WSClient( new URI( TAConfig.WSURLPolling ), new Draft_10());
+				System.out.println("[websocket/getInstance]:try to init websocket");
 			} catch (URISyntaxException e) {
 				return null;
 			}
@@ -50,6 +51,7 @@ public class WSClient extends WebSocketClient {
 		map.put("msg", msg);
 		String json = new Gson().toJson(map);
 		this.send(json);
+		System.out.println("[websocket/SendMsg][send]"+json);
 		
 	}
 

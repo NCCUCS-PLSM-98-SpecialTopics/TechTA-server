@@ -2,18 +2,19 @@ var WSClient = {
 	server_host : "ws://dream.cs.nccu.edu.tw:8001/websocket/polling"
     ,ws : ''
 	,user:''
-	,onMsgFunc:''
 	,init: function(usr,onMsgFunc){
 		if(!usr)console.log("[WSClient/init] no usr ");
 		
 		this.ws = new WebSocket(this.server_host);
+		this.user = usr;
+		
 		if(onMsgFunc){
 			this.onmessage = onMsgFunc;
 		}
-		if(usr)this.user = usr;
 		this.ws.onmessage = this.onmessage;
-		this.ws.onclose = this.onclose;
-		this.ws.onopen = this.onopen;
+		this.ws.onopen = function(){
+			WSClient.login();
+		}
 		
 	}
 
@@ -25,14 +26,6 @@ var WSClient = {
 		console.log("[Login] " + JSON.stringify(data));
 		var jsondata =  JSON.stringify(data);
 		WSClient.ws.send(jsondata);
-	}
-	,onopen: function(){
-			WSClient.login();
-	}
-	,onclose: function(evt) {
-			setTimeout(function(){
-				WSClient.init();
-			},1000);
 	}
 	,send: function(msg, room) {
 		if(!room || !msg)return;
