@@ -929,7 +929,7 @@ var TA = {
 		switch (data.type){
 			case "message"://message加東西
 				data.mid = wsMessageObj.msg_uuid;
-				TA.AddMessageToBox(data);
+				TA.AddMessageToBox(data,true);
 				break; 
 			case "answer": 
 				if(IsTeacher){
@@ -1332,7 +1332,7 @@ var TA = {
 
 	//---------------
 	
-	,AddMessageToBox:function(msg){
+	,AddMessageToBox:function(msg,showfloat){
 			var node;
 			var data = {
 				mid : msg.mid
@@ -1350,6 +1350,12 @@ var TA = {
 			$(".messagebox").each(function(i,e){
 			    $(e).animate({ scrollTop:  $(e)[0].scrollHeight  }, 0);
 			 });
+			
+			if(showfloat){
+				$( "#float-message-template" ).tmpl(data).appendTo( "#FloatMessageContainer").delay('1500').fadeOut('slow');
+			}
+			
+			 
 	}
 	,ClearMessageBox:function(){
 			$(".messagebox").html("");

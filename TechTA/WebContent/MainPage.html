@@ -42,6 +42,7 @@
 
 </head>
 <body>
+<div id="FloatMessageContainer"></div>
 <div id ="status">
 	<div id="wait"></div>
 	<img id="cash" src="images/cash.png" class=""/>
@@ -465,6 +466,12 @@
 	</p>				
 </script>
 
+<script id="float-message-template" type="text/x-jquery-tmpl">
+	
+	<div class='FloatMessage'  mid="${mid}" bonus="${bonus}">
+		${user}:${content}
+	</div>				
+</script>
 
 
 <!--上傳檔案的template-->

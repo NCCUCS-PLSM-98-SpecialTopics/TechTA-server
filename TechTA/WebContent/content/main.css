@@ -22,6 +22,27 @@ a.testBtn{
 
 	color:#555;
 }
+#FloatMessageContainer{
+	z-index: 1000;
+	position:absolute;
+	top:0;
+	left:0;
+	z-index:1000;
+}
+.FloatMessage{
+	width: 150px;
+	background: #fff;
+	padding: 20px 30px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	font-size: 20px;
+	font-weight: 800;
+	-webkit-box-shadow: 10px 10px 30px 1px rgba(1, 1, 1, 0.5);
+	box-shadow: 10px 10px 30px 1px rgba(1, 1, 1, 0.5);
+	margin-bottom:15px;
+}
+
 #status{
 	position:absolute;
 	width:100%;
